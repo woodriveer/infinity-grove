@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 public class KrellController : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private Equipment _equippedItem;
+    [SerializeField] private PlayerStats _playerStats;
+    [SerializeField] private CombatManager _combatManager;
 
     private Animator _animator;
     private Coroutine _punchRoutine;
@@ -13,6 +15,7 @@ public class KrellController : MonoBehaviour, IPointerClickHandler
     private static readonly int ParamItemID      = Animator.StringToHash("ItemID");
     private static readonly int ParamAttack      = Animator.StringToHash("Attack");
     private static readonly int ParamIsAttacking = Animator.StringToHash("IsAttacking");
+    private static readonly int ParamIsWalking   = Animator.StringToHash("IsWalking");
 
     private void Awake()
     {
@@ -36,6 +39,11 @@ public class KrellController : MonoBehaviour, IPointerClickHandler
         ApplyEquipment();
     }
 
+    public void SetWalking(bool walking)
+    {
+        _animator.SetBool(ParamIsWalking, walking);
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (_punchRoutine != null)
@@ -44,11 +52,12 @@ public class KrellController : MonoBehaviour, IPointerClickHandler
         _animator.SetBool(ParamIsAttacking, true);
         _animator.SetTrigger(ParamAttack);
         _punchRoutine = StartCoroutine(WaitForPunchEnd());
+
+        _combatManager?.OnPlayerAttack(CalculateDamage());
     }
 
     private IEnumerator WaitForPunchEnd()
     {
-        // Wait for the animator to enter the punch state
         yield return null;
         yield return null;
 
@@ -60,6 +69,13 @@ public class KrellController : MonoBehaviour, IPointerClickHandler
 
         _animator.SetBool(ParamIsAttacking, false);
         _punchRoutine = null;
+    }
+
+    private int CalculateDamage()
+    {
+        int damage = _playerStats != null ? _playerStats.level * _playerStats.damagePerLevel : 0;
+        damage += _equippedItem != null ? _equippedItem.bonusDamage : 0;
+        return Mathf.Max(1, damage);
     }
 
     private void ApplyEquipment()

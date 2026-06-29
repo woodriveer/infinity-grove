@@ -7,4 +7,6 @@ public class Equipment : ScriptableObject
 
     [Tooltip("Value sent to the Animator's ItemID parameter. 0 = none, 1 = WCLAW01.")]
     public int animatorItemID;
+
+    public int bonusDamage;
 }
