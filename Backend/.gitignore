@@ -1,0 +1,14 @@
+# Build artifacts
+bin/
+obj/
+out/
+
+# IDE
+.vs/
+*.user
+
+# Local secrets — copy .env.example instead
+.env
+
+# EF Core
+*.db

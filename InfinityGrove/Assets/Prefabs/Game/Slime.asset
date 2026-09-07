@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec0ad333f7eb44a41919e733a0237990, type: 3}
   m_Name: Slime
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
-  monsterName: 
-  maxHp: 0
-  goldMin: 0
-  goldMax: 0
+  monsterName: Slime
+  sprite: {fileID: 0}
+  maxHp: 50
+  goldMin: 3
+  goldMax: 8

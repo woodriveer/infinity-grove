@@ -1,0 +1,15 @@
+@InfinityGrove.Backend.Api_HostAddress = http://localhost:5217
+
+GET {{InfinityGrove.Backend.Api_HostAddress}}/health
+Accept: application/json
+
+###
+
+POST {{InfinityGrove.Backend.Api_HostAddress}}/api/v1/auth/steam
+Content-Type: application/json
+
+{
+  "ticket": "<hex-encoded Steam Auth Session Ticket>"
+}
+
+###

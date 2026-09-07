@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Equipment
   itemName: WCLAW01
   animatorItemID: 1
+  bonusDamage: 10
