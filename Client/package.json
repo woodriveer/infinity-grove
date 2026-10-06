@@ -18,6 +18,7 @@
     "lint": "eslint . && depcruise src tools --config .dependency-cruiser.cjs && vitest run --config vitest.lint.config.ts",
     "test": "vitest run",
     "test:e2e": "npm run build:test && tsx tools/e2e.ts",
+    "test:e2e:screenshots": "npm run build:test && tsx tools/e2e.ts --screenshots",
     "validate:content": "tsx tools/validate-content.ts",
     "gen:assets": "tsx tools/gen-assets.ts",
     "gen:api": "openapi-typescript ../shared/openapi/openapi.json -o src/generated/api/schema.ts",

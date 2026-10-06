@@ -44,7 +44,7 @@ Client/
 | `npm run dev` | Vite dev server; offline (NoBackend, dev identity) by default |
 | `npm run verify` | **The CI gate**: typecheck, lint (+ layer rules and their negative fixtures), validate:content, gen:check, test, test:e2e, build, scan:secrets |
 | `npm test` | Vitest: unit, vectors, sim scenarios (fast, deterministic) |
-| `npm run test:e2e [-- --screenshots]` | Playwright on the test build; `--screenshots` writes `artifacts/screenshots/` (never asserted) |
+| `npm run test:e2e` / `npm run test:e2e:screenshots` | Playwright on the test build; the second also writes `artifacts/screenshots/` (never asserted) |
 | `npm run test:shell` | Electron smoke: sandboxed renderer, exact `igPlatform` allowlist |
 | `npm run test:sync-e2e` | Real backend sync (needs `IG_SYNC_E2E_BACKEND`, see below) |
 | `npm run typecheck` / `npm run lint` | tsc; ESLint + dependency-cruiser + lint fixture tests |
@@ -89,7 +89,7 @@ new port in `services/ports.ts` first, implemented in `platform/`.
    asserting on `window.__ig.describe()` (never pixels/DOM). Drive input with `__ig.input({gamepad:'A'})` / `{key:'Enter'}`,
    time with `__ig.advance(ms)`. Every interactive element must be in `describe()` and reachable by gamepad.
 3. Rules shared with the backend: add or extend a VectorGen family; TS must match the RFR-21 tolerance.
-4. `npm run verify` green. Screenshots (`--screenshots`) are for looking, not for gating.
+4. `npm run verify` green. Screenshots (`npm run test:e2e:screenshots`) are for looking, not for gating.
 
 ## Design freeze (refactor S6)
 

@@ -1,7 +1,7 @@
 # Fidelity Sign-off (RFR-44, DESIGN.md)
 
 Approval is by eye from side-by-side screenshots of the same state, Unity vs. Phaser (PRD S5).
-Phaser screenshots: `cd Client && npm run test:e2e -- --screenshots` → `artifacts/screenshots/`.
+Phaser screenshots: `cd Client && npm run test:e2e:screenshots` → `artifacts/screenshots/`.
 Unity screenshots: from the Unity project (still in the tree until the archive, RFR-50).
 A rejected item stays open; it does not block G3.
 
