@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "skills": {
+    "phaser-v4-new-features": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:05:18.231Z",
+      "platform": "windsurf"
+    },
+    "phaser-tweens": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:09:55.509Z",
+      "platform": "windsurf"
+    },
+    "phaser-time-and-timers": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:10:08.955Z",
+      "platform": "windsurf"
+    },
+    "phaser-tilemaps": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:10:32.128Z",
+      "platform": "windsurf"
+    },
+    "phaser-text-and-bitmaptext": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:10:47.988Z",
+      "platform": "windsurf"
+    },
+    "phaser-sprites-and-images": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:11:41.950Z",
+      "platform": "windsurf"
+    },
+    "phaser-scenes": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:12:02.617Z",
+      "platform": "windsurf"
+    },
+    "phaser-scale-and-responsive": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:42:26.673Z",
+      "platform": "windsurf"
+    },
+    "phaser-render-textures": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:42:35.544Z",
+      "platform": "windsurf"
+    },
+    "phaser-physics-matter": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:42:43.568Z",
+      "platform": "windsurf"
+    },
+    "phaser-physics-arcade": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:42:50.797Z",
+      "platform": "windsurf"
+    },
+    "phaser-particles": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:42:58.179Z",
+      "platform": "windsurf"
+    },
+    "phaser-loading-assets": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:43:05.058Z",
+      "platform": "windsurf"
+    },
+    "phaser-input-keyboard-mouse-touch": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:43:12.552Z",
+      "platform": "windsurf"
+    },
+    "phaser-groups-and-containers": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:43:19.659Z",
+      "platform": "windsurf"
+    },
+    "phaser-graphics-and-shapes": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:43:27.207Z",
+      "platform": "windsurf"
+    },
+    "phaser-geometry-and-math": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:43:34.014Z",
+      "platform": "windsurf"
+    },
+    "phaser-game-setup-and-config": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:43:41.343Z",
+      "platform": "windsurf"
+    },
+    "phaser-game-object-components": {
+      "version": "1.0.0",
+      "installedAt": "2026-10-05T22:43:49.088Z",
+      "platform": "windsurf"
+    }
+  }
+}
