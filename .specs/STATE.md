@@ -44,12 +44,12 @@
 
 ## Handoff
 
-- **Feature**: brainstorm → specs for starter-selection, stage-combat, boss-drops, equipment-enchant, rotating-shop, boss-potions, economy-tuning, season-cave
+- **Feature**: specs for starter-selection, stage-combat, boss-drops, equipment-enchant, rotating-shop, boss-potions, economy-tuning, season-cave, hero-art-pipeline
 - **Phase / Task**: Specify (specs written, awaiting developer confirmation)
 - **Completed**: none
 - **In-progress** (file:line): none
-- **Next step**: Developer reviews the eight specs; then Design for stage-combat (first in dependency order after starter-selection).
-- **Queued**: spec the `hero-art-pipeline` feature (art:export with per-layer sheets and slices, runtime composition: synced layers, armor tint, weapon sockets, enchant effects) per docs/HERO_ART_GUIDE.md; align the game DESIGN.md and image prompts with the anime style.
+- **Next step**: Developer reviews the specs (assumptions marked n); then Design for stage-combat, then hero-art-pipeline.
+- **Queued**: align the game DESIGN.md and image prompts (docs/README.md, docs/UI_PROMPTS.md) with the anime style (AD-005).
 - **Blockers**: none
 - **Uncommitted files**: .specs/
 - **Branch**: main
