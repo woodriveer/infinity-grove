@@ -1,0 +1,10 @@
+{
+  "family": "loadout-preset",
+  "source": "unity-frozen",
+  "tolerance": "exact",
+  "generator": "LoadoutPreset.SetSlot/TryGetSlot (last write wins); Archetype and EquipmentSlot order",
+  "cases": [
+    {"archetype":"Agility","heroId":"ranger","writes":[{"Weapon":"a"},{"Boots":"b"},{"Weapon":"c"}],"slots":{"Weapon":"c","Chest":null,"Boots":"b","Gloves":null}},
+    {"archetypes":["Strength","Intelligence","Agility"],"slotOrder":["Weapon","Chest","Boots","Gloves"]}
+  ]
+}

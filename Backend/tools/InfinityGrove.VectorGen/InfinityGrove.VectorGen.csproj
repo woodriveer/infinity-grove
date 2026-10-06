@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Parity oracle (refactor ARCHITECTURE AD-18). Two sources:
+    - backend: compiled against the backend projects (always available);
+    - unity-frozen: the Unity Domain/Data .cs files compiled directly with a
+      minimal UnityEngine shim. Only while InfinityGrove/ exists; after the Unity
+      archive (RFR-50) these includes drop out, UNITY_SOURCES is undefined, and the
+      checked-in unity-frozen vector files become frozen fixtures.
+    Run from Backend/: pwsh tools/generate-vectors.ps1
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <NoWarn>$(NoWarn);CS0067;CS8632;CS0649</NoWarn>
+    <UnityGameScripts>$(MSBuildThisFileDirectory)..\..\..\InfinityGrove\Assets\Scripts\Game</UnityGameScripts>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="Exists('$(UnityGameScripts)\Domain')">
+    <DefineConstants>$(DefineConstants);UNITY_SOURCES</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="Exists('$(UnityGameScripts)\Domain')">
+    <Compile Include="$(UnityGameScripts)\Domain\*.cs" Link="UnityFrozen\Domain\%(Filename)%(Extension)" />
+    <Compile Include="$(UnityGameScripts)\Data\*.cs" Link="UnityFrozen\Data\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!Exists('$(UnityGameScripts)\Domain')">
+    <Compile Remove="UnityShim\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\InfinityGrove.Backend.Domain\InfinityGrove.Backend.Domain.csproj" />
+    <ProjectReference Include="..\..\src\InfinityGrove.Backend.Application\InfinityGrove.Backend.Application.csproj" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>

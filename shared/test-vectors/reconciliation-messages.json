@@ -1,0 +1,13 @@
+{
+  "family": "reconciliation-messages",
+  "source": "unity-frozen",
+  "tolerance": "exact",
+  "generator": "ReconciliationCorrection.ToPlayerMessage",
+  "cases": [
+    {"eventType":"GoldEarned","reason":"Insufficient gold: have 5.00, need 10.00.","message":"Your gold was corrected by the server: Insufficient gold: have 5.00, need 10.00."},
+    {"eventType":"GoldSpent","reason":"Insufficient gold: have 5.00, need 10.00.","message":"Your gold was corrected by the server: Insufficient gold: have 5.00, need 10.00."},
+    {"eventType":"StageCleared","reason":"Insufficient gold: have 5.00, need 10.00.","message":"Your stage progress was corrected by the server: Insufficient gold: have 5.00, need 10.00."},
+    {"eventType":"HeroAcquired","reason":"Insufficient gold: have 5.00, need 10.00.","message":"A hero acquisition was rejected by the server: Insufficient gold: have 5.00, need 10.00."},
+    {"eventType":"ActiveSquadChanged","reason":"Insufficient gold: have 5.00, need 10.00.","message":"Your Active Squad was corrected by the server: Insufficient gold: have 5.00, need 10.00."}
+  ]
+}

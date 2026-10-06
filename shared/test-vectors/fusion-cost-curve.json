@@ -1,0 +1,22 @@
+{
+  "family": "fusion-cost-curve",
+  "source": "backend",
+  "tolerance": "exact",
+  "generator": "CardFusionCostCurve (backend star tiers are 0-based)",
+  "cases": [
+    {"currentStarTier":0,"duplicatesRequired":1,"maxStarTier":12},
+    {"currentStarTier":1,"duplicatesRequired":2,"maxStarTier":12},
+    {"currentStarTier":2,"duplicatesRequired":3,"maxStarTier":12},
+    {"currentStarTier":3,"duplicatesRequired":4,"maxStarTier":12},
+    {"currentStarTier":4,"duplicatesRequired":5,"maxStarTier":12},
+    {"currentStarTier":5,"duplicatesRequired":6,"maxStarTier":12},
+    {"currentStarTier":6,"duplicatesRequired":7,"maxStarTier":12},
+    {"currentStarTier":7,"duplicatesRequired":8,"maxStarTier":12},
+    {"currentStarTier":8,"duplicatesRequired":9,"maxStarTier":12},
+    {"currentStarTier":9,"duplicatesRequired":10,"maxStarTier":12},
+    {"currentStarTier":10,"duplicatesRequired":11,"maxStarTier":12},
+    {"currentStarTier":11,"duplicatesRequired":12,"maxStarTier":12},
+    {"currentStarTier":12,"duplicatesRequired":13,"maxStarTier":12},
+    {"currentStarTier":13,"duplicatesRequired":14,"maxStarTier":12}
+  ]
+}

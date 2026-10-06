@@ -1,0 +1,19 @@
+{
+  "family": "crafting-rules",
+  "source": "unity-frozen",
+  "tolerance": "exact",
+  "generator": "CraftingRules.AffixesForSlot / AffixRange / RerollCost (preview only; rolls are server-side, AD-22)",
+  "cases": [
+    {"op":"affixesForSlot","slot":"Weapon","affixes":["CritChance","AttackPercent","CritDamage"]},
+    {"op":"affixesForSlot","slot":"Chest","affixes":["Defense"]},
+    {"op":"affixesForSlot","slot":"Boots","affixes":["Speed"]},
+    {"op":"affixesForSlot","slot":"Gloves","affixes":["Precision"]},
+    {"op":"affixRange","affix":"CritChance","min":1,"max":25},
+    {"op":"affixRange","affix":"AttackPercent","min":1,"max":50},
+    {"op":"affixRange","affix":"CritDamage","min":5,"max":100},
+    {"op":"affixRange","affix":"Defense","min":1,"max":40},
+    {"op":"affixRange","affix":"Speed","min":1,"max":30},
+    {"op":"affixRange","affix":"Precision","min":1,"max":30},
+    {"op":"rerollCost","cost":50}
+  ]
+}

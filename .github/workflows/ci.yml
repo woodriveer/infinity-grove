@@ -53,8 +53,11 @@ jobs:
       - name: Export OpenAPI from the backend
         shell: pwsh
         run: ./Backend/tools/export-openapi.ps1
+      - name: Regenerate test vectors (backend families; unity-frozen ones are frozen once Unity is archived)
+        shell: pwsh
+        run: ./Backend/tools/generate-vectors.ps1
       - name: Regenerate the API client
         working-directory: Client
         run: npm ci && npm run gen:api
       - name: Fail on contract drift
-        run: git diff --exit-code -- shared/openapi Client/src/generated
+        run: git diff --exit-code -- shared/openapi shared/test-vectors Client/src/generated

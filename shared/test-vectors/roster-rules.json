@@ -1,0 +1,15 @@
+{
+  "family": "roster-rules",
+  "source": "unity-frozen",
+  "tolerance": "exact",
+  "generator": "RosterRules.ActiveSquadCapacity; HeroEntity.ReconcileTo",
+  "cases": [
+    {"op":"capacity","activeSquadCapacity":5},
+    {"op":"reconcileTo","ownedCount":0,"starTier":1,"resultDuplicatesOwned":0,"resultStarTier":1},
+    {"op":"reconcileTo","ownedCount":1,"starTier":1,"resultDuplicatesOwned":0,"resultStarTier":1},
+    {"op":"reconcileTo","ownedCount":2,"starTier":1,"resultDuplicatesOwned":1,"resultStarTier":1},
+    {"op":"reconcileTo","ownedCount":5,"starTier":3,"resultDuplicatesOwned":4,"resultStarTier":3},
+    {"op":"reconcileTo","ownedCount":13,"starTier":12,"resultDuplicatesOwned":12,"resultStarTier":12},
+    {"op":"reconcileTo","ownedCount":1,"starTier":0,"resultDuplicatesOwned":0,"resultStarTier":0}
+  ]
+}
