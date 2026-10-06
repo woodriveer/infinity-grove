@@ -1,5 +1,10 @@
 # Playable Vertical Slice Specification
 
+> **Status: superseded (2026-10-06).** Written for the Unity client, which is being replaced
+> (refactor-unity-to-phaser4). Its scope is re-specified for the Phaser client by
+> `starter-selection`, `stage-combat` and `boss-drops` (see `.specs/STATE.md` AD-002/AD-003).
+> Kept for history; do not implement.
+
 ## Problem Statement
 
 Infinity Grove's launch-grade PRD (`.antstack/specs/infinity-grove/PRD.md`) and its full
