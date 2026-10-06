@@ -21,7 +21,7 @@ backend crafting endpoint (RFR-41).
 | P9 | Stage select | sim `p09-stage-select`; e2e Power Gate / Mismatch / Success | done | pending / pending | none (placeholder stages, B5) |
 | P10 | Offline accrual | sim `p10-offline-accrual`; e2e welcome-back toast | done | pending / pending | none |
 | P11 | Local save | sim `p11-save-reload`; unit atomic-write and corrupt-save tests | done | pending / pending | new encrypted format (PRD S1); unsynced events are shown after a restart (B4, needs acceptance) |
-| P12 | Event log + sync + reconciliation | sim `p12-sync-reconcile`; `tests/sync-e2e` against the real backend (G2, passed locally) | done | pending / pending | backend sequence collision across devices found (B7, backend issue) |
+| P12 | Event log + sync + reconciliation | sim `p12-sync-reconcile`; `tests/sync-e2e` against the real backend (G2, passed locally) | done | pending / pending | backend sequence collision across devices found (B7); fix decided: single active session (AD-006, spec `single-active-session`) |
 | P13 | Steam identity + cloud, dev stubs | unit Steam Cloud resolution; shell smoke; dev/NoBackend stubs in every test | done | pending / pending | real Steam not exercised yet (SPIKE_G0.md criteria 1–2) |
 | P14 | Big numbers | 100% bit-exact on `bignum-*` vectors | done | n/a | B1 (subnormal hang) and B2 (`10.00e-1`) ported/guarded |
 | P15 | Hero-type display | e2e roster asserts `NAT · Nature` text badges | done | pending / pending | type name added next to the abbreviation |
@@ -32,4 +32,4 @@ backend crafting endpoint (RFR-41).
 - **G2** (end-to-end sync): passed locally against Docker PostgreSQL + API + fake Steam; CI job `sync-e2e` added.
 - **G3** (parity): **not passed** — needs (c) for every item and the backend crafting endpoint for P7.
 - **G0** (shell spike): **not passed** — see SPIKE_G0.md.
-- **G4** (fidelity): **not passed** — see FIDELITY.md.
+- **G4** (fidelity): **passed** on 2026-10-06 — developer approved every item in FIDELITY.md.

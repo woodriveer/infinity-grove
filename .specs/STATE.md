@@ -42,9 +42,17 @@
 - **Date**: 2026-10-06
 - **Status**: active
 
+### AD-006
+- **Decision**: An account plays on one device at a time: each login creates a new session and invalidates the previous one; clients renumber pending events above the server cursor on login, and the backend rejects stale unknown events instead of silently accepting them.
+- **Reason**: Fixes PORT_MAP B7 (events silently dropped when two devices played the same account). Developer rule: logging in elsewhere disconnects the other device; credentials may stay saved.
+- **Trade-off**: A player cannot keep the game open on two machines; a disconnected device shows a modal and must log in again to continue.
+- **Scope**: Backend auth/session and event ingestion; client sync and boot; spec `single-active-session`.
+- **Date**: 2026-10-06
+- **Status**: active
+
 ## Handoff
 
-- **Feature**: specs for starter-selection, stage-combat, boss-drops, equipment-enchant, rotating-shop, boss-potions, economy-tuning, season-cave, hero-art-pipeline
+- **Feature**: specs for starter-selection, stage-combat, boss-drops, equipment-enchant, rotating-shop, boss-potions, economy-tuning, season-cave, hero-art-pipeline, single-active-session
 - **Phase / Task**: Specify (specs written, awaiting developer confirmation)
 - **Completed**: none
 - **In-progress** (file:line): none
