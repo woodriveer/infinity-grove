@@ -1,0 +1,22 @@
+{
+  "heroId": "tide-caller",
+  "serverHeroId": "1f6e0000-0000-4000-8000-000000000006",
+  "displayName": "Tide Caller",
+  "heroType": "Water",
+  "portrait": "",
+  "basePower": 11,
+  "abilityByStarTier": [
+    "Tide Caller ability, tier 1 (placeholder)",
+    "Tide Caller ability, tier 2 (placeholder)",
+    "Tide Caller ability, tier 3 (placeholder)",
+    "Tide Caller ability, tier 4 (placeholder)",
+    "Tide Caller ability, tier 5 (placeholder)",
+    "Tide Caller ability, tier 6 (placeholder)",
+    "Tide Caller ability, tier 7 (placeholder)",
+    "Tide Caller ability, tier 8 (placeholder)",
+    "Tide Caller ability, tier 9 (placeholder)",
+    "Tide Caller ability, tier 10 (placeholder)",
+    "Tide Caller ability, tier 11 (placeholder)",
+    "Tide Caller ability, tier 12 (placeholder)"
+  ]
+}

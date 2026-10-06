@@ -2,10 +2,28 @@
 /* eslint-disable */
 
 export const Assets = {
-  image: {},
+  image: {
+    "characters/krell/krell-dark-claw-punch": "characters/krell/krell-dark-claw-punch.png",
+    "characters/krell/krell-dark-claw-walk": "characters/krell/krell-dark-claw-walk.png",
+    "characters/krell/krell-empty-punch": "characters/krell/krell-empty-punch.png",
+    "characters/krell/krell-empty-walk": "characters/krell/krell-empty-walk.png",
+    "characters/portraits/druid": "characters/portraits/druid.jpg",
+    "characters/portraits/ranger": "characters/portraits/ranger.jpg",
+    "effects/fireflies/diamond": "effects/fireflies/diamond.png",
+    "ui/backgrounds/forest-bg": "ui/backgrounds/forest-bg.png",
+    "ui/backgrounds/menu-bg": "ui/backgrounds/menu-bg.png",
+    "ui/buttons/buttons": "ui/buttons/buttons.png",
+    "ui/logo/logo": "ui/logo/logo.png"
+  },
   aseprite: {},
-  audio: {},
-  font: {},
+  audio: {
+    "audio/music/menu-forest": "audio/music/menu-forest.wav"
+  },
+  font: {
+    "fonts/cinzel-decorative-black": "fonts/cinzel-decorative-black.ttf",
+    "fonts/cinzel-decorative-bold": "fonts/cinzel-decorative-bold.ttf",
+    "fonts/cinzel-decorative-regular": "fonts/cinzel-decorative-regular.ttf"
+  },
 } as const;
 
 export type ImageKey = keyof typeof Assets.image;
@@ -14,4 +32,20 @@ export type AudioKey = keyof typeof Assets.audio;
 export type FontKey = keyof typeof Assets.font;
 export type AssetKey = ImageKey | AsepriteKey | AudioKey;
 
-export const ALL_ASSET_KEYS: readonly string[] = [];
+export const ALL_ASSET_KEYS: readonly string[] = [
+  "audio/music/menu-forest",
+  "characters/krell/krell-dark-claw-punch",
+  "characters/krell/krell-dark-claw-walk",
+  "characters/krell/krell-empty-punch",
+  "characters/krell/krell-empty-walk",
+  "characters/portraits/druid",
+  "characters/portraits/ranger",
+  "effects/fireflies/diamond",
+  "fonts/cinzel-decorative-black",
+  "fonts/cinzel-decorative-bold",
+  "fonts/cinzel-decorative-regular",
+  "ui/backgrounds/forest-bg",
+  "ui/backgrounds/menu-bg",
+  "ui/buttons/buttons",
+  "ui/logo/logo"
+];

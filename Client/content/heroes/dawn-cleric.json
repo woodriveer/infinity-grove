@@ -1,0 +1,22 @@
+{
+  "heroId": "dawn-cleric",
+  "serverHeroId": "1f6e0000-0000-4000-8000-000000000004",
+  "displayName": "Dawn Cleric",
+  "heroType": "Light",
+  "portrait": "",
+  "basePower": 9,
+  "abilityByStarTier": [
+    "Dawn Cleric ability, tier 1 (placeholder)",
+    "Dawn Cleric ability, tier 2 (placeholder)",
+    "Dawn Cleric ability, tier 3 (placeholder)",
+    "Dawn Cleric ability, tier 4 (placeholder)",
+    "Dawn Cleric ability, tier 5 (placeholder)",
+    "Dawn Cleric ability, tier 6 (placeholder)",
+    "Dawn Cleric ability, tier 7 (placeholder)",
+    "Dawn Cleric ability, tier 8 (placeholder)",
+    "Dawn Cleric ability, tier 9 (placeholder)",
+    "Dawn Cleric ability, tier 10 (placeholder)",
+    "Dawn Cleric ability, tier 11 (placeholder)",
+    "Dawn Cleric ability, tier 12 (placeholder)"
+  ]
+}

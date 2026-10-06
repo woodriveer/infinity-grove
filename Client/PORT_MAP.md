@@ -53,37 +53,37 @@ C# `out`/`Try*` shapes become `T | null` returns.
 
 | Unity file | Destination | Status | Notes |
 |---|---|---|---|
-| Data/BackendSyncSettings.cs | content/settings/game.json, `GameSettings` in src/domain/content/types.ts + schema | todo | |
-| Data/Equipment.cs | content/equipment/*.json (`Equipment`) | todo | WCLAW01.asset → wclaw01.json |
-| Data/EquipmentItemData.cs | content/items/*.json (`EquipmentItemData`) | todo | no Unity assets existed |
-| Data/HeroData.cs | content/heroes/*.json (`HeroData`) | todo | no Unity assets existed; see B5 |
-| Data/MonsterData.cs | content/monsters/*.json (`MonsterData`) | todo | Slime.asset → slime.json |
-| Data/PlayerStats.cs | `playerStats` in content/settings/game.json | todo | PlayerStats.asset |
-| Data/StageData.cs | content/stages/*.json (`StageData`) | todo | no Unity assets existed; see B5 |
+| Data/BackendSyncSettings.cs | content/settings/game.json (`GameSettings`, settingsSchema) | done | sync interval, timeout, accrual rate/cap, save name, plus new-game defaults |
+| Data/Equipment.cs | content/equipment/wclaw01.json (`Equipment`, equipmentSchema) | done | WCLAW01.asset (animatorItemID 1, +10 damage) |
+| Data/EquipmentItemData.cs | content/items/*.json (`EquipmentItemData`, itemSchema) | done | placeholder items (no Unity assets existed) |
+| Data/HeroData.cs | content/heroes/*.json (`HeroData`, heroSchema) | done | placeholder heroes with backend GUIDs; see B5 |
+| Data/MonsterData.cs | content/monsters/slime.json (`MonsterData`, monsterSchema) | done | Slime.asset (50 HP, 3–8 gold) |
+| Data/PlayerStats.cs | `playerStats` in content/settings/game.json | done | PlayerStats.asset (level 1, 5 per level) |
+| Data/StageData.cs | content/stages/*.json (`StageData`, stageSchema) | done | placeholder stages; see B5 |
 
 ## Service
 
 | Unity file | Destination | Status | Notes |
 |---|---|---|---|
-| Service/BackendApiClient.cs | src/services/backend/BackendApiClient.ts | todo | generated client over HttpPort (AD-10) |
-| Service/BackendSyncDtos.cs | src/generated/api/schema.ts + src/services/events/payloads.ts | todo | DTOs generated; payloads zod (AD-11) |
-| Service/CombatService.cs | src/services/combat/CombatService.ts | todo | `Task.Delay` walk → TickDriver time |
-| Service/CraftingService.cs | src/services/crafting/CraftingService.ts | todo | local roll dropped (AD-22) |
-| Service/DevSteamIdentityProvider.cs | src/services/identity/DevSteamIdentity.ts | todo | |
-| Service/EncryptedSaveFileStore.cs | src/services/save/SaveCodec.ts + platform SaveStore | todo | AES-GCM envelope (AD-12) |
-| Service/EquipmentInventoryService.cs | src/services/equipment/EquipmentInventoryService.ts | todo | |
-| Service/EquipmentService.cs | src/services/equipment/EquipmentService.ts | todo | |
+| Service/BackendApiClient.cs | src/services/backend/BackendApiClient.ts (+ BackendApi.ts, NoBackend.ts) | done | generated openapi-fetch client over HttpPort; payloads spliced in raw |
+| Service/BackendSyncDtos.cs | src/generated/api/schema.ts + src/services/events/payloads.ts | done | DTOs generated (RFR-25); payloads zod + byte-exact serializer (AD-11) |
+| Service/CombatService.cs | src/services/combat/CombatService.ts | done | walk timer driven by TickDriver; Random.Range → seeded Rng |
+| Service/CraftingService.cs | src/services/crafting/CraftingService.ts (+ AffixRollSource.ts, BackendAffixRollSource.ts) | done | local roll dropped (AD-22); requests return unavailable until the endpoint ships |
+| Service/DevSteamIdentityProvider.cs | src/services/identity/DevSteamIdentity.ts | done | optional test ticket for the fake-Steam stub |
+| Service/EncryptedSaveFileStore.cs | src/services/save/SaveCodec.ts + migrations.ts; platform FsSaveStore / IndexedDbSaveStore; WebCryptoCipher | done | AES-256-GCM, PBKDF2 app key; atomic temp + fsync + rename |
+| Service/EquipmentInventoryService.cs | src/services/equipment/EquipmentInventoryService.ts | done | bag and loadouts persisted locally (save `local`) |
+| Service/EquipmentService.cs | src/services/equipment/EquipmentService.ts | done |  |
 | Service/FacepunchSteamCloudStore.cs | src/platform/electron/SteamCloudStore.ts | todo | steamworks.js (AD-13) |
 | Service/FacepunchSteamIdentityProvider.cs | src/platform/electron/SteamIdentity.ts | todo | |
-| Service/FusionService.cs | src/services/roster/FusionService.ts | todo | |
-| Service/I*.cs (interfaces) | src/services/ports.ts and each service's exported type | todo | |
-| Service/LoadoutPresetService.cs | src/services/equipment/LoadoutPresetService.ts | todo | |
-| Service/LocalOnlyCloudStore.cs | src/services/sync/LocalOnlyCloudStore.ts | todo | |
-| Service/PlayerCombatService.cs | src/services/combat/PlayerCombatService.ts | todo | |
-| Service/PlayerEventLog.cs | src/services/events/PlayerEventLog.ts | todo | |
-| Service/RosterService.cs | src/services/roster/RosterService.ts | todo | |
-| Service/SaveSyncService.cs | src/services/sync/SaveSyncService.ts (+ SteamCloudSync.ts) | todo | |
-| Service/StageService.cs | src/services/stages/StageService.ts | todo | |
+| Service/FusionService.cs | src/services/roster/FusionService.ts | done | preview composition moved to FusionRules.preview |
+| Service/I*.cs (interfaces) | src/services/ports.ts and each service class | done | C# interfaces became ports (I/O) or the classes themselves |
+| Service/LoadoutPresetService.cs | src/services/equipment/LoadoutPresetService.ts | done |  |
+| Service/LocalOnlyCloudStore.cs | src/services/sync/LocalOnlyCloudStore.ts | done |  |
+| Service/PlayerCombatService.cs | src/services/combat/PlayerCombatService.ts | done |  |
+| Service/PlayerEventLog.cs | src/services/events/PlayerEventLog.ts | done | pending list lives in GameState.eventLog |
+| Service/RosterService.cs | src/services/roster/RosterService.ts | done | + swap() for tap-to-swap (one ActiveSquadChanged) |
+| Service/SaveSyncService.cs | src/services/sync/SaveSyncService.ts (+ SteamCloudSync.ts, state/projection.ts, tick/TickDriver.ts) | done | events emitted by commands instead of diffing (same events); B4 projection |
+| Service/StageService.cs | src/services/stages/StageService.ts | done |  |
 | Service/UnityWebRequestAwaiter.cs | — | dropped | replaced by the HttpPort (AD-19) |
 
 ## Presentation and Bootstrap
@@ -148,3 +148,10 @@ C# `out`/`Try*` shapes become `T | null` returns.
   simulation over a gap yields 0 gold while the accrual path yields squad-power gold.
   The `catch-up-equivalence` vector family is therefore not generated; this goes to
   the game PRD.
+- **B7. Two devices on one account can silently lose events (backend).** Sequence
+  numbers are per-device counters seeded from the account's `lastAppliedSequence`, so
+  two devices that synced the same state both use N+1. The backend treats the second
+  one as stale and *accepts it as a no-op* without applying or rejecting it. Found by
+  the RFR-29 sync-e2e run (`tests/sync-e2e`). Unity had the same numbering; the fix
+  (per-device sequence ranges, or rejecting stale-but-unknown events) is a backend and
+  game-PRD change.

@@ -1,0 +1,16 @@
+{
+  "syncIntervalSeconds": 60,
+  "requestTimeoutSeconds": 10,
+  "idleGoldPerSquadPowerPerHour": 1,
+  "offlineAccrualCapHours": 12,
+  "saveFileName": "infinitygrove.save",
+  "starterHeroId": "ranger",
+  "startingEquipmentId": "wclaw01",
+  "monsterPool": [
+    "slime"
+  ],
+  "playerStats": {
+    "level": 1,
+    "damagePerLevel": 5
+  }
+}

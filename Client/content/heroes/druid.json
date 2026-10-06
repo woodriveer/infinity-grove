@@ -1,0 +1,22 @@
+{
+  "heroId": "druid",
+  "serverHeroId": "1f6e0000-0000-4000-8000-000000000002",
+  "displayName": "Druid",
+  "heroType": "Water",
+  "portrait": "characters/portraits/druid",
+  "basePower": 10,
+  "abilityByStarTier": [
+    "Druid ability, tier 1 (placeholder)",
+    "Druid ability, tier 2 (placeholder)",
+    "Druid ability, tier 3 (placeholder)",
+    "Druid ability, tier 4 (placeholder)",
+    "Druid ability, tier 5 (placeholder)",
+    "Druid ability, tier 6 (placeholder)",
+    "Druid ability, tier 7 (placeholder)",
+    "Druid ability, tier 8 (placeholder)",
+    "Druid ability, tier 9 (placeholder)",
+    "Druid ability, tier 10 (placeholder)",
+    "Druid ability, tier 11 (placeholder)",
+    "Druid ability, tier 12 (placeholder)"
+  ]
+}

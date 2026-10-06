@@ -1,0 +1,22 @@
+{
+  "heroId": "shade-stalker",
+  "serverHeroId": "1f6e0000-0000-4000-8000-000000000005",
+  "displayName": "Shade Stalker",
+  "heroType": "Dark",
+  "portrait": "",
+  "basePower": 13,
+  "abilityByStarTier": [
+    "Shade Stalker ability, tier 1 (placeholder)",
+    "Shade Stalker ability, tier 2 (placeholder)",
+    "Shade Stalker ability, tier 3 (placeholder)",
+    "Shade Stalker ability, tier 4 (placeholder)",
+    "Shade Stalker ability, tier 5 (placeholder)",
+    "Shade Stalker ability, tier 6 (placeholder)",
+    "Shade Stalker ability, tier 7 (placeholder)",
+    "Shade Stalker ability, tier 8 (placeholder)",
+    "Shade Stalker ability, tier 9 (placeholder)",
+    "Shade Stalker ability, tier 10 (placeholder)",
+    "Shade Stalker ability, tier 11 (placeholder)",
+    "Shade Stalker ability, tier 12 (placeholder)"
+  ]
+}

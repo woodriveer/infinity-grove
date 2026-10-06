@@ -1,0 +1,22 @@
+{
+  "heroId": "ember-warden",
+  "serverHeroId": "1f6e0000-0000-4000-8000-000000000003",
+  "displayName": "Ember Warden",
+  "heroType": "Fire",
+  "portrait": "",
+  "basePower": 14,
+  "abilityByStarTier": [
+    "Ember Warden ability, tier 1 (placeholder)",
+    "Ember Warden ability, tier 2 (placeholder)",
+    "Ember Warden ability, tier 3 (placeholder)",
+    "Ember Warden ability, tier 4 (placeholder)",
+    "Ember Warden ability, tier 5 (placeholder)",
+    "Ember Warden ability, tier 6 (placeholder)",
+    "Ember Warden ability, tier 7 (placeholder)",
+    "Ember Warden ability, tier 8 (placeholder)",
+    "Ember Warden ability, tier 9 (placeholder)",
+    "Ember Warden ability, tier 10 (placeholder)",
+    "Ember Warden ability, tier 11 (placeholder)",
+    "Ember Warden ability, tier 12 (placeholder)"
+  ]
+}

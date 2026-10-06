@@ -1,0 +1,17 @@
+# Overlay for the RFR-29 sync-e2e job. Run from Backend/:
+#   docker compose -f docker-compose.yml -f tools/fake-steam/docker-compose.sync-e2e.yml up -d --build --wait
+# Points the API's Steam Web API base URL at the fake-Steam stub; the backend code is unchanged.
+services:
+  fake-steam:
+    build: ./tools/fake-steam
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 2s
+      retries: 15
+  api:
+    environment:
+      Steamworks__WebApiBaseUrl: "http://fake-steam:8080"
+      Steamworks__PublisherKey: "fake-publisher-key-for-ci"
+    depends_on:
+      fake-steam:
+        condition: service_healthy

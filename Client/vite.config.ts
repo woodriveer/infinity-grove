@@ -4,6 +4,8 @@ import { defineConfig } from 'vite';
 // only when MODE !== 'production' and tree-shaken otherwise.
 export default defineConfig(({ mode }) => ({
   base: './',
+  // Runtime assets are served from the root under their manifest paths (AD-9).
+  publicDir: 'assets',
   build: {
     target: 'es2023',
     sourcemap: mode !== 'production',

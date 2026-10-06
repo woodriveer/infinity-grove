@@ -1,0 +1,8 @@
+{
+  "monsterId": "slime",
+  "monsterName": "Slime",
+  "sprite": "",
+  "maxHp": 50,
+  "goldMin": 3,
+  "goldMax": 8
+}

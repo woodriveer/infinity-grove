@@ -1,0 +1,22 @@
+{
+  "heroId": "ranger",
+  "serverHeroId": "1f6e0000-0000-4000-8000-000000000001",
+  "displayName": "Ranger",
+  "heroType": "Nature",
+  "portrait": "characters/portraits/ranger",
+  "basePower": 12,
+  "abilityByStarTier": [
+    "Ranger ability, tier 1 (placeholder)",
+    "Ranger ability, tier 2 (placeholder)",
+    "Ranger ability, tier 3 (placeholder)",
+    "Ranger ability, tier 4 (placeholder)",
+    "Ranger ability, tier 5 (placeholder)",
+    "Ranger ability, tier 6 (placeholder)",
+    "Ranger ability, tier 7 (placeholder)",
+    "Ranger ability, tier 8 (placeholder)",
+    "Ranger ability, tier 9 (placeholder)",
+    "Ranger ability, tier 10 (placeholder)",
+    "Ranger ability, tier 11 (placeholder)",
+    "Ranger ability, tier 12 (placeholder)"
+  ]
+}
