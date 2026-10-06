@@ -35,9 +35,9 @@
 - **Status**: active
 
 ### AD-005
-- **Decision**: Hero art is frame-by-frame in Aseprite per hero (body once), while equipment is composed at runtime: weapons are single static images attached to per-frame Aseprite slices (/), armor is grayscale layers (, , ) tinted with each item's colors, and enchant levels are runtime effects. Process: docs/HERO_ART_GUIDE.md.
+- **Decision**: Hero art is frame-by-frame in Aseprite per hero (body once), while equipment is composed at runtime: weapons are single static images attached to per-frame Aseprite slices (`grip`/`tip`), armor is grayscale layers (`armor_chest`, `armor_gloves`, `armor_boots`) tinted with each item's colors, and enchant levels are runtime effects. Process: docs/HERO_ART_GUIDE.md.
 - **Reason**: The developer wants many items visible on heroes and already works in Aseprite; skeletal rigs (Spine/DragonBones) would add a new toolchain and per-hero rigging, and drawing every item into every frame does not scale. This makes a new weapon one drawing and new armor zero drawings.
-- **Trade-off**: Every hero must follow the layer/slice rules from the start; armor variety is limited to recoloring (plus optional socket overlays); runtime composition (layered synced sprites, tint, socket placement) and an  tool must be built. Krell's legacy sheets keep their two fixed variants until redrawn. Art style moves to Japanese anime, which the game DESIGN.md still describes as painted fantasy.
+- **Trade-off**: Every hero must follow the layer/slice rules from the start; armor variety is limited to recoloring (plus optional socket overlays); runtime composition (layered synced sprites, tint, socket placement) and an `art:export` tool must be built. Krell's legacy sheets keep their two fixed variants until redrawn. Art style moves to Japanese anime, which the game DESIGN.md still describes as painted fantasy.
 - **Scope**: All hero and equipment art; extends refactor ARCHITECTURE AD-9 (Aseprite JSON stays the single animation format).
 - **Date**: 2026-10-06
 - **Status**: active
