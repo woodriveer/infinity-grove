@@ -1,0 +1,60 @@
+# AD-21: the same gates the agent runs locally, on every push.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  client-verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: Client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: Client/.nvmrc
+          cache: npm
+          cache-dependency-path: Client/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run verify
+
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      # RFR-18 AC: the backend must build with the Unity tree absent.
+      - run: rm -rf InfinityGrove
+      - run: dotnet build Backend/InfinityGrove.Backend.sln -c Release
+      - run: dotnet test Backend/InfinityGrove.Backend.sln -c Release --no-build
+
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: Client/.nvmrc
+          cache: npm
+          cache-dependency-path: Client/package-lock.json
+      - name: Export OpenAPI from the backend
+        shell: pwsh
+        run: ./Backend/tools/export-openapi.ps1
+      - name: Regenerate the API client
+        working-directory: Client
+        run: npm ci && npm run gen:api
+      - name: Fail on contract drift
+        run: git diff --exit-code -- shared/openapi Client/src/generated

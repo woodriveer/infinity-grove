@@ -1,0 +1,77 @@
+{
+  "name": "infinity-grove-client",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Infinity Grove game client: Phaser 4 + TypeScript renderer and Electron desktop shell.",
+  "type": "module",
+  "main": "dist-desktop/main/main.js",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:test": "vite build --mode test --outDir dist-test",
+    "build:desktop": "npm run build && tsc -p desktop/tsconfig.json && electron-builder --dir --win --linux --x64",
+    "preview:test": "vite preview --mode test --outDir dist-test --port 4173 --strictPort",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p desktop/tsconfig.json",
+    "lint": "eslint . && depcruise src tools --config .dependency-cruiser.cjs && vitest run --config vitest.lint.config.ts",
+    "test": "vitest run",
+    "test:e2e": "npm run build:test && playwright test",
+    "validate:content": "tsx tools/validate-content.ts",
+    "gen:assets": "tsx tools/gen-assets.ts",
+    "gen:api": "openapi-typescript ../shared/openapi/openapi.json -o src/generated/api/schema.ts",
+    "gen:check": "tsx tools/gen-check.ts",
+    "art:slice": "tsx tools/art-slice.ts",
+    "sim": "tsx tools/sim.ts",
+    "soak": "node --expose-gc --import tsx tools/soak.ts",
+    "scan:secrets": "tsx tools/scan-secrets.ts",
+    "verify": "npm run typecheck && npm run lint && npm run validate:content && npm run gen:check && npm test && npm run test:e2e && npm run build && npm run scan:secrets dist"
+  },
+  "build": {
+    "appId": "io.infinitygrove.game",
+    "productName": "Infinity Grove",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**",
+      "dist-desktop/**",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "**/*.node"
+    ],
+    "win": {
+      "target": "dir"
+    },
+    "linux": {
+      "target": "dir",
+      "executableName": "infinity-grove"
+    }
+  },
+  "dependencies": {
+    "@preact/signals": "2.11.3",
+    "openapi-fetch": "0.17.0",
+    "phaser": "4.2.1",
+    "preact": "11.0.0",
+    "steamworks.js": "0.4.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.63.0",
+    "@types/node": "24.19.1",
+    "dependency-cruiser": "18.5.0",
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3",
+    "eslint": "10.12.0",
+    "globals": "17.13.0",
+    "openapi-typescript": "7.13.0",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.1",
+    "vite": "8.3.3",
+    "vitest": "5.0.3"
+  }
+}
