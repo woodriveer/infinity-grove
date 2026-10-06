@@ -13,6 +13,22 @@ Steam sandbox microtransaction access, a Steam Deck, and a signed-in Steam clien
 the game. Per RFR-31 they are recorded as **not run**, not as passing. Phase 1+ work continued in
 this session as code only; nothing here should be read as G0 sign-off.
 
+## Gate split (developer decision, 2026-10-06)
+
+The Steam App ID costs the US$100 Steam Direct fee, which the developer will pay when the game is
+ready. G0 is therefore split:
+
+- **G0a: shell** (sandboxed renderer, bridge allowlist, Windows/Linux packages, footprint baseline):
+  **passed** by the automated checks below. Development continues on it.
+- **G0b: real Steam** (criteria 1–5 with the project App ID and publisher key): a **pre-launch gate**,
+  run after registering the app. Validation platforms: Windows and a **Linux desktop** with Steam
+  (Big Picture for controller and overlay checks). Steam Deck suspend/resume stays open until a Deck
+  is available.
+
+Until then: offline/NoBackend for play, Docker backend + fake Steam (`Backend/tools/fake-steam`) for
+sync, and App ID 480 (Spacewar) for client-side Steamworks smoke tests. A web build can serve
+playtests without Steam features.
+
 ## Criteria
 
 | # | Criterion | Windows | Steam Deck | Evidence / how to run |

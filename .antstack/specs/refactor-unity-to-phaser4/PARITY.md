@@ -31,5 +31,5 @@ backend crafting endpoint (RFR-41).
 - **G1** (Domain port): passed — all Domain rows `done`, vector suite green.
 - **G2** (end-to-end sync): passed locally against Docker PostgreSQL + API + fake Steam; CI job `sync-e2e` added.
 - **G3** (parity): **not passed** — needs (c) for every item and the backend crafting endpoint for P7.
-- **G0** (shell spike): **not passed** — see SPIKE_G0.md.
+- **G0** (shell spike): split on 2026-10-06 — **G0a (shell) passed**; **G0b (real Steam) deferred to pre-launch** (needs the paid App ID). See SPIKE_G0.md.
 - **G4** (fidelity): **passed** on 2026-10-06 — developer approved every item in FIDELITY.md.
