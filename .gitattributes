@@ -1,0 +1,9 @@
+# Cross-language contracts are diffed in CI on Windows and Linux.
+shared/** text eol=lf
+Client/** text=auto eol=lf
+*.png binary
+*.jpg binary
+*.wav binary
+*.mp3 binary
+*.ttf binary
+*.woff2 binary

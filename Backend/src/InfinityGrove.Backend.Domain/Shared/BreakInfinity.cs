@@ -8,10 +8,10 @@ namespace BreakInfinity
     /// Architecture AD-7). Represented as a normalized (mantissa, exponent) pair —
     /// value = Mantissa * 10^Exponent — so it survives growth from low hundreds into
     /// indefinite exponential territory without overflow, at the cost of exact
-    /// low-order precision (double-precision mantissa only). This exact type is
-    /// shared, source-for-source, between the Unity client and the ASP.NET Core
-    /// backend (see Backend/src/InfinityGrove.Backend.Domain's linked-file reference
-    /// to this path) so both sides agree on formatting, comparison and arithmetic.
+    /// low-order precision (double-precision mantissa only). The backend owns this
+    /// file (refactor-unity-to-phaser4 RFR-18). The Phaser client mirrors its
+    /// behavior in Client/src/domain/bignum, proven by the vectors VectorGen emits
+    /// into shared/test-vectors/ (AD-7/AD-18).
     /// </summary>
     [Serializable]
     public struct BigDouble : IComparable<BigDouble>, IEquatable<BigDouble>, IComparable

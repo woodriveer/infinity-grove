@@ -1,16 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <!-- AD-7: BreakInfinity.cs is shared, source-for-source, with the Unity client.
-         This links the single canonical file physically under the Unity project
-         (where Unity auto-compiles it) instead of duplicating it here. -->
-    <Compile Include="..\..\..\InfinityGrove\Assets\Scripts\Shared\BreakInfinity.cs" Link="Shared\BreakInfinity.cs" />
-  </ItemGroup>
 
 </Project>
