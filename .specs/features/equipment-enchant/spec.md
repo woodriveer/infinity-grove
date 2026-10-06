@@ -10,7 +10,7 @@ the server (AD-001).
 
 ## Goals
 
-- [ ] Any item (hero gear and Krell's weapon) can be enchanted from +0 to +15 with scrolls.
+- [ ] Any hero equipment item can be enchanted from +0 to +15 with scrolls.
 - [ ] Success chances, the failure rule and the affix growth are exact, visible before committing, and server-decided.
 
 ## Out of Scope
@@ -31,9 +31,10 @@ the server (AD-001).
 | Level range | +0 to +15 | Developer | y |
 | Success table (current → next) | +0…+4 → next: 100%; +5→+6 and +6→+7: 70%; +7→+8, +8→+9, +9→+10: 50%; +10→+11 … +14→+15: 5% | Developer chose fixed bands | y |
 | Failure | Item level becomes +5; item is never destroyed | Developer | y |
-| Affix growth | Each enchant level multiplies every affix the item has by (1 + 0.10 × level); the 10% step lives in economy-tuning content | "Upgrades raise the item's affix values" | n |
+| Affix growth | Each enchant level multiplies every affix value the item rolled by (1 + 0.10 × level), e.g. Crit chance 12% at +15 = 30%; the 10% step lives in economy-tuning content | "Upgrades raise the item's affix values" | n |
 | Base stat | Items keep their existing stats; enchant scales affixes only (crit, attack%, defense, speed, precision) | Developer described affix growth | n |
-| Krell's weapon | Enchantable; its click bonus scales with the same multiplier | Krell weapon is equipment | n |
+| Hero base affix stats | None: a hero's crit chance, crit damage, speed etc. are the sum of its items' affixes | Developer: "multiplies the affix, but no base" | y |
+| Crit chance cap | Total crit chance is capped at 100%; at 100% every attack is a critical hit. Other affixes (e.g. crit damage 200%) are uncapped | Developer | y |
 | Where it runs | Backend endpoint `POST /api/v1/items/{id}/enchant` consumes one scroll, rolls, persists, returns the new level and affixes | AD-001 | y |
 | Equipped items | Can be enchanted while equipped | Avoids pointless unequip steps | n |
 | Display | Enchant panel shows: current level, next level, success chance, current and next affix values, scrolls owned, and the failure rule text | FR-22-style "show before committing" | n |
@@ -92,8 +93,11 @@ the server (AD-001).
 
 **Acceptance Criteria**:
 
-1. The system SHALL compute each affix value as base value × (1 + step × level), with step from content (default 0.10).
-2. WHEN an equipped item's level changes THEN the system SHALL update the hero's power and DPS on the next combat step.
+1. The system SHALL compute each affix value as the item's rolled value × (1 + step × level), with step from content (default 0.10).
+2. The system SHALL compute a hero's total for each affix as the sum of its equipped items' affix values, with no hero base value.
+3. The system SHALL cap a hero's total crit chance at 100%.
+4. WHILE a hero's total crit chance is 100% the system SHALL make every attack of that hero a critical hit.
+5. WHEN an equipped item's level changes THEN the system SHALL update the hero's power and DPS on the next combat step.
 
 **Independent Test**: unit test on the formula; sim: enchanting an equipped weapon raises squad DPS by the expected factor.
 

@@ -41,6 +41,7 @@
 - **Completed**: none
 - **In-progress** (file:line): none
 - **Next step**: Developer reviews the eight specs; then Design for stage-combat (first in dependency order after starter-selection).
+- **Queued**: hero art system design (anime style, animation list, frame counts, frame size for 1080p/Deck) including visible equipment; leading option is skeletal animation with slot attachments (Spine/DragonBones), pending a check of Spine runtime support for Phaser 4 (would amend refactor ARCHITECTURE AD-9).
 - **Blockers**: none
 - **Uncommitted files**: .specs/
 - **Branch**: main

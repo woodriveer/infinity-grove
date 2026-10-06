@@ -53,7 +53,7 @@ pacing with the simulator instead of a spreadsheet.
 
 **Acceptance Criteria**:
 
-1. The system SHALL read monster HP, gold per kill, boss HP, boss damage, boss timer, hero star multipliers, fusion costs, drop chances, potion drop chance, scroll price, shop prices, sell ratio, enchant success table, enchant affix step and offline cap from `content/economy/*.json`.
+1. The system SHALL read monster HP, gold per kill, boss HP, boss damage, boss timer, hero star multipliers, fusion costs, drop chances, potion drop chance, scroll price, shop prices, sell ratio, enchant success table, enchant affix step, click DPS share and offline cap from `content/economy/*.json`.
 2. IF any economy file is missing a field, has a negative value, a probability outside [0, 1] or a boss timer above 60 s THEN `validate:content` SHALL fail naming the file and field.
 3. The system SHALL contain no economy literal outside content (lint check over `domain/` and `services/` for known economy identifiers).
 

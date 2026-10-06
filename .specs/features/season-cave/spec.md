@@ -32,7 +32,7 @@ The developer chose a stage-climb format. Rankings carry status, so results are 
 | Format | Stage climb with season rules; rank = highest cave stage cleared, tie-break = earliest server time | Developer | y |
 | Season length | 8 weeks | Genre norm; content value | n |
 | Entry gate (FR-36) | Minimum unique heroes owned, value per season in content (default 8), reachable by free play within a season (economy-tuning documents the time) | FR-36 | n |
-| Normalization (FR-35) | Every hero fights at a fixed base power × its star multiplier; equipment, enchant levels and Krell's weapon are ignored in the cave | "Star quality is the only differentiator" | n |
+| Normalization (FR-35) | Every hero fights at a fixed base power × its star multiplier; equipment and enchant levels are ignored in the cave | "Star quality is the only differentiator" | n |
 | Season rules (FR-37) | Content per season: type damage modifiers (e.g., Water +30%, Fire −30%) and optional new heroes | FR-37 | n |
 | Cave combat | Same boss rules as stage-combat (timer ≤ 60 s, AD-004 damage); every cave stage is a boss | Fast climbs; reuses one combat model | n |
 | Validation | The client submits squad, stage and seed; the backend re-simulates the fight deterministically and accepts the result only if it reproduces a win | AD-001; ranking forgery is the top cheat target | n |

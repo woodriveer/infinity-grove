@@ -2,7 +2,7 @@
 
 ## Problem Statement
 
-Today combat and stages are two unrelated mechanics: Krell clicks a Slime for gold, while a
+Today combat and stages are two unrelated mechanics: the player clicks a Slime for gold, while a
 stage "Attempt" instantly compares squad power with a floor. The Active Squad never fights,
 idle time earns nothing online (PORT_MAP B6), and the game PRD's FR-9 ("all 5 heroes attack
 automatically and simultaneously on screen") is unmet. AD-002 decides the replacement:
@@ -42,7 +42,8 @@ continuous stage progression with fast, timed boss fights.
 | Knocked-out hero | Deals no damage for the rest of that boss fight | Natural consequence of HP | n |
 | Failure conditions | Timer reaches 0, or the leader is knocked out | Mismatch kills the leader; weak squads run out of time | y |
 | Failure label | Always the FR-11 classifier (power below floor → Power Gate, checked first; otherwise no favored type → Composition Mismatch; otherwise Power Gate) | Keeps FR-11 guarantees independent of how the fight physically ended | n |
-| Krell's click | Click damage = base click damage + Krell's weapon bonus (including its enchant level); Krell is not a squad hero and takes no damage | Developer: Krell is the player avatar | n |
+| Click damage | Each click deals a share of the Active Squad's total DPS (`clickDpsShare` in economy-tuning content, default 5%); there is no player avatar or click-specific gear | Developer: clicks are influenced by the team's total damage | y |
+| Krell | Krell is a regular hero in content (the only one with a full sprite sheet today), not a special character | Developer: Krell was only an example | y |
 | Type modifier on normal stages | Normal monsters have no type effect; types matter only on bosses | Keeps farming composition-free; mismatch is a boss concept | n |
 | Gold per kill | Each monster pays the stage's gold value (curve in economy-tuning); offline accrual uses the current stage's gold/second at the squad's DPS, capped at 12 h | One rate online and offline | y (cap) |
 | Backend validation of progress | Boss victories are `BossDefeated` events; the backend accepts a stage only in order (existing StageCleared rule) and bounds gold income per AD-001 (economy-tuning) | AD-001 | n |
@@ -64,7 +65,7 @@ continuous stage progression with fast, timed boss fights.
 
 1. WHILE a monster is alive the system SHALL apply each living Active Squad hero's damage at that hero's attack rate.
 2. The system SHALL apply no damage from benched heroes (FR-4).
-3. WHEN the player clicks the combat area, presses Space, or presses gamepad A on the Combat View THEN the system SHALL apply one click of Krell's damage to the current monster.
+3. WHEN the player clicks the combat area, presses Space, or presses gamepad A on the Combat View THEN the system SHALL apply damage equal to `clickDpsShare` × the Active Squad's current total DPS to the current monster.
 4. WHEN a monster's HP reaches 0 THEN the system SHALL award that stage's gold per kill and spawn the next monster within 500 ms of game time.
 5. The system SHALL show every Active Squad hero on the field and play an attack animation for each of its attacks.
 6. WHERE a hero has no sprite sheet the system SHALL render its portrait as a sprite and tween it forward on each attack.
