@@ -7,6 +7,8 @@
  * and the pair is then the checked-in runtime source. Frames keep a common canvas
  * (sourceSize) and are centered in it, matching Unity's center pivot.
  *
+ * A spec may also list "crops": single rects written as their own PNGs (9-slice frames).
+ *
  * Deterministic: same spec + sources → identical bytes.
  */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -34,8 +36,28 @@ if (specPaths.length === 0) {
 }
 
 for (const specPath of specPaths) {
-  const spec = JSON.parse(readFileSync(specPath, 'utf8')) as { variants: Spec[] };
-  for (const variant of spec.variants) sliceVariant(variant, dirname(resolve(specPath)));
+  const spec = JSON.parse(readFileSync(specPath, 'utf8')) as { variants?: Spec[]; crops?: Crop[] };
+  for (const variant of spec.variants ?? []) sliceVariant(variant, dirname(resolve(specPath)));
+  for (const crop of spec.crops ?? []) cropOne(crop, dirname(resolve(specPath)));
+}
+
+/** A single sub-rect of a sheet written as its own PNG (e.g. a 9-slice plaque for CSS border-image). */
+interface Crop {
+  png: string;
+  /** Unity rect (bottom-left origin). */
+  rect: Rect;
+  output: string;
+}
+
+function cropOne(crop: Crop, baseDir: string): void {
+  const src = decodePng(readFileSync(join(baseDir, crop.png)), crop.output);
+  const r = crop.rect;
+  const out = blank(r.w, r.h);
+  blit(src, r.x, src.height - r.y - r.h, r.w, r.h, out, 0, 0);
+  const file = resolve('assets', crop.output);
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(`${file}.png`, encodePng(out));
+  console.log(`art:slice: ${crop.output} ← ${crop.png} (${r.w}x${r.h})`);
 }
 
 function sliceVariant(spec: Spec, baseDir: string): void {
@@ -72,21 +94,23 @@ function sliceVariant(spec: Spec, baseDir: string): void {
   }
 
   const name = spec.output.split('/').pop() as string;
-  const frames: Record<string, unknown> = {};
+  // Aseprite "Array" export format: Phaser createFromAseprite indexes frames by timeline position.
+  const frames: Array<Record<string, unknown>> = [];
   const frameTags: Array<{ name: string; from: number; to: number; direction: string; repeat?: string }> = [];
   let n = 0;
   for (const tag of spec.tags) {
     const from = n;
     for (const f of tag.frames) {
       const p = packed.get(`${f.source}#${f.index}`)!;
-      frames[`${name} ${n}.aseprite`] = {
+      frames.push({
+        filename: `${name} ${n}.aseprite`,
         frame: p,
         rotated: false,
         trimmed: true,
         spriteSourceSize: { x: Math.floor((canvasW - p.w) / 2), y: Math.floor((canvasH - p.h) / 2), w: p.w, h: p.h },
         sourceSize: { w: canvasW, h: canvasH },
         duration: f.durationMs,
-      };
+      });
       n += 1;
     }
     frameTags.push({ name: tag.name, from, to: n - 1, direction: 'forward', ...(tag.repeat ? {} : { repeat: '1' }) });

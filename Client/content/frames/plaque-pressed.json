@@ -1,0 +1,16 @@
+{
+  "frameId": "plaque-pressed",
+  "image": "ui/frames/plaque-pressed",
+  "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 389,
+    "h": 100
+  },
+  "insets": {
+    "left": 44,
+    "right": 44,
+    "top": 24,
+    "bottom": 24
+  }
+}

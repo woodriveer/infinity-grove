@@ -1,6 +1,7 @@
 {
-  "frames": {
-    "krell-empty 0.aseprite": {
+  "frames": [
+    {
+      "filename": "krell-empty 0.aseprite",
       "frame": {
         "x": 0,
         "y": 0,
@@ -21,7 +22,8 @@
       },
       "duration": 417
     },
-    "krell-empty 1.aseprite": {
+    {
+      "filename": "krell-empty 1.aseprite",
       "frame": {
         "x": 156,
         "y": 0,
@@ -42,7 +44,8 @@
       },
       "duration": 333
     },
-    "krell-empty 2.aseprite": {
+    {
+      "filename": "krell-empty 2.aseprite",
       "frame": {
         "x": 312,
         "y": 0,
@@ -63,7 +66,8 @@
       },
       "duration": 417
     },
-    "krell-empty 3.aseprite": {
+    {
+      "filename": "krell-empty 3.aseprite",
       "frame": {
         "x": 156,
         "y": 0,
@@ -84,7 +88,8 @@
       },
       "duration": 333
     },
-    "krell-empty 4.aseprite": {
+    {
+      "filename": "krell-empty 4.aseprite",
       "frame": {
         "x": 0,
         "y": 0,
@@ -105,7 +110,8 @@
       },
       "duration": 17
     },
-    "krell-empty 5.aseprite": {
+    {
+      "filename": "krell-empty 5.aseprite",
       "frame": {
         "x": 156,
         "y": 0,
@@ -126,7 +132,8 @@
       },
       "duration": 250
     },
-    "krell-empty 6.aseprite": {
+    {
+      "filename": "krell-empty 6.aseprite",
       "frame": {
         "x": 466,
         "y": 0,
@@ -147,7 +154,8 @@
       },
       "duration": 217
     },
-    "krell-empty 7.aseprite": {
+    {
+      "filename": "krell-empty 7.aseprite",
       "frame": {
         "x": 618,
         "y": 0,
@@ -168,7 +176,8 @@
       },
       "duration": 200
     },
-    "krell-empty 8.aseprite": {
+    {
+      "filename": "krell-empty 8.aseprite",
       "frame": {
         "x": 781,
         "y": 0,
@@ -189,7 +198,8 @@
       },
       "duration": 200
     },
-    "krell-empty 9.aseprite": {
+    {
+      "filename": "krell-empty 9.aseprite",
       "frame": {
         "x": 937,
         "y": 0,
@@ -210,7 +220,8 @@
       },
       "duration": 17
     },
-    "krell-empty 10.aseprite": {
+    {
+      "filename": "krell-empty 10.aseprite",
       "frame": {
         "x": 0,
         "y": 0,
@@ -231,7 +242,8 @@
       },
       "duration": 167
     },
-    "krell-empty 11.aseprite": {
+    {
+      "filename": "krell-empty 11.aseprite",
       "frame": {
         "x": 1094,
         "y": 0,
@@ -252,7 +264,8 @@
       },
       "duration": 167
     },
-    "krell-empty 12.aseprite": {
+    {
+      "filename": "krell-empty 12.aseprite",
       "frame": {
         "x": 1311,
         "y": 0,
@@ -273,7 +286,8 @@
       },
       "duration": 167
     },
-    "krell-empty 13.aseprite": {
+    {
+      "filename": "krell-empty 13.aseprite",
       "frame": {
         "x": 1546,
         "y": 0,
@@ -294,7 +308,8 @@
       },
       "duration": 200
     },
-    "krell-empty 14.aseprite": {
+    {
+      "filename": "krell-empty 14.aseprite",
       "frame": {
         "x": 312,
         "y": 0,
@@ -315,7 +330,7 @@
       },
       "duration": 17
     }
-  },
+  ],
   "meta": {
     "app": "infinity-grove art:slice (Aseprite JSON format)",
     "version": "1",

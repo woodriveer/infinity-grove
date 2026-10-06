@@ -13,6 +13,9 @@ import type { GameState } from '../state/types';
 export class RosterService {
   constructor(private readonly deps: ServiceDeps) {}
 
+  /** FR-3 cap, for presentation (which may not import domain values, F5). */
+  readonly capacity = RosterRules.ActiveSquadCapacity;
+
   allHeroes(): readonly HeroEntity[] {
     return this.deps.store.get().heroes;
   }

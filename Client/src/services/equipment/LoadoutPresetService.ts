@@ -1,4 +1,4 @@
-import type { Archetype } from '../../domain/Archetype';
+import { ARCHETYPES, type Archetype } from '../../domain/Archetype';
 import { EQUIPMENT_SLOTS } from '../../domain/EquipmentSlot';
 import { newLoadoutPreset, setSlot, type LoadoutPreset } from '../../domain/LoadoutPreset';
 import type { ServiceDeps } from '../core';
@@ -6,6 +6,9 @@ import type { EquipmentInventoryService } from './EquipmentInventoryService';
 
 /** Per-archetype loadout presets (P8, Unity LoadoutPresetService). Local only. */
 export class LoadoutPresetService {
+  /** Strength, Intelligence, Agility (Unity order), for presentation. */
+  readonly archetypes: readonly Archetype[] = ARCHETYPES;
+
   constructor(
     private readonly deps: ServiceDeps,
     private readonly inventory: EquipmentInventoryService,

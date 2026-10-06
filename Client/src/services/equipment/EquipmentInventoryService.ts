@@ -1,10 +1,13 @@
 import type { EquipmentInstance } from '../../domain/EquipmentInstance';
-import type { EquipmentSlot } from '../../domain/EquipmentSlot';
+import { EQUIPMENT_SLOTS, type EquipmentSlot } from '../../domain/EquipmentSlot';
 import type { ServiceDeps } from '../core';
 
 /** Shared bag + per-hero 4-slot loadout (P6, Unity EquipmentInventoryService). Local only. */
 export class EquipmentInventoryService {
   constructor(private readonly deps: ServiceDeps) {}
+
+  /** The four slots in Unity order, for presentation. */
+  readonly slots: readonly EquipmentSlot[] = EQUIPMENT_SLOTS;
 
   bag(): readonly EquipmentInstance[] {
     return this.deps.store.get().equipment.bag;

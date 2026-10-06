@@ -17,7 +17,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p desktop/tsconfig.json",
     "lint": "eslint . && depcruise src tools --config .dependency-cruiser.cjs && vitest run --config vitest.lint.config.ts",
     "test": "vitest run",
-    "test:e2e": "npm run build:test && playwright test",
+    "test:e2e": "npm run build:test && tsx tools/e2e.ts",
     "validate:content": "tsx tools/validate-content.ts",
     "gen:assets": "tsx tools/gen-assets.ts",
     "gen:api": "openapi-typescript ../shared/openapi/openapi.json -o src/generated/api/schema.ts",

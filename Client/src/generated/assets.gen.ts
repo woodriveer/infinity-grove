@@ -8,7 +8,8 @@ export const Assets = {
     "effects/fireflies/diamond": "effects/fireflies/diamond.png",
     "ui/backgrounds/forest-bg": "ui/backgrounds/forest-bg.png",
     "ui/backgrounds/menu-bg": "ui/backgrounds/menu-bg.png",
-    "ui/buttons/buttons": "ui/buttons/buttons.png",
+    "ui/frames/plaque": "ui/frames/plaque.png",
+    "ui/frames/plaque-pressed": "ui/frames/plaque-pressed.png",
     "ui/logo/logo": "ui/logo/logo.png"
   },
   aseprite: {
@@ -27,7 +28,9 @@ export const Assets = {
   font: {
     "fonts/cinzel-decorative-black": "fonts/cinzel-decorative-black.ttf",
     "fonts/cinzel-decorative-bold": "fonts/cinzel-decorative-bold.ttf",
-    "fonts/cinzel-decorative-regular": "fonts/cinzel-decorative-regular.ttf"
+    "fonts/cinzel-decorative-regular": "fonts/cinzel-decorative-regular.ttf",
+    "fonts/inter-400": "fonts/inter-400.woff2",
+    "fonts/inter-600": "fonts/inter-600.woff2"
   },
 } as const;
 
@@ -47,8 +50,11 @@ export const ALL_ASSET_KEYS: readonly string[] = [
   "fonts/cinzel-decorative-black",
   "fonts/cinzel-decorative-bold",
   "fonts/cinzel-decorative-regular",
+  "fonts/inter-400",
+  "fonts/inter-600",
   "ui/backgrounds/forest-bg",
   "ui/backgrounds/menu-bg",
-  "ui/buttons/buttons",
+  "ui/frames/plaque",
+  "ui/frames/plaque-pressed",
   "ui/logo/logo"
 ];

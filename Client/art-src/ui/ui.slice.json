@@ -1,0 +1,25 @@
+{
+  "$comment": "Plaque rects from InfinityGrove/Assets/Art/UI/Buttons/buttons.png.meta (Unity rects, bottom-left origin). Run: npm run art:slice -- art-src/ui/ui.slice.json",
+  "crops": [
+    {
+      "png": "buttons.png",
+      "rect": {
+        "x": 110,
+        "y": 72,
+        "w": 387,
+        "h": 99
+      },
+      "output": "ui/frames/plaque"
+    },
+    {
+      "png": "buttons.png",
+      "rect": {
+        "x": 108,
+        "y": 197,
+        "w": 389,
+        "h": 100
+      },
+      "output": "ui/frames/plaque-pressed"
+    }
+  ]
+}

@@ -73,8 +73,8 @@ C# `out`/`Try*` shapes become `T | null` returns.
 | Service/EncryptedSaveFileStore.cs | src/services/save/SaveCodec.ts + migrations.ts; platform FsSaveStore / IndexedDbSaveStore; WebCryptoCipher | done | AES-256-GCM, PBKDF2 app key; atomic temp + fsync + rename |
 | Service/EquipmentInventoryService.cs | src/services/equipment/EquipmentInventoryService.ts | done | bag and loadouts persisted locally (save `local`) |
 | Service/EquipmentService.cs | src/services/equipment/EquipmentService.ts | done |  |
-| Service/FacepunchSteamCloudStore.cs | src/platform/electron/SteamCloudStore.ts | todo | steamworks.js (AD-13) |
-| Service/FacepunchSteamIdentityProvider.cs | src/platform/electron/SteamIdentity.ts | todo | |
+| Service/FacepunchSteamCloudStore.cs | src/platform/electron/ElectronPorts.ts (SteamCloudStore) + desktop/main/steam.ts | done | steamworks.js in main only (AD-13); real-Steam check is G0 criterion 2 |
+| Service/FacepunchSteamIdentityProvider.cs | src/platform/electron/ElectronPorts.ts (SteamWebApiIdentity) + desktop/main/steam.ts | done | Web API ticket; real-Steam check is G0 criterion 1 |
 | Service/FusionService.cs | src/services/roster/FusionService.ts | done | preview composition moved to FusionRules.preview |
 | Service/I*.cs (interfaces) | src/services/ports.ts and each service class | done | C# interfaces became ports (I/O) or the classes themselves |
 | Service/LoadoutPresetService.cs | src/services/equipment/LoadoutPresetService.ts | done |  |
@@ -91,20 +91,20 @@ C# `out`/`Try*` shapes become `T | null` returns.
 | Unity file | Destination | Status | Notes |
 |---|---|---|---|
 | Bootstrap/GameLifetimeScope.cs | src/app/compose.ts | dropped | replaced by the code composition root (AD-4) |
-| Presentation/CombatPresenter.cs | src/presentation/screens/CombatController.ts | todo | |
-| Presentation/CraftingPresenter.cs | src/presentation/screens/EquipmentController.ts (crafting panel) | todo | |
-| Presentation/EquipmentPresenter.cs | src/presentation/screens/EquipmentController.ts | todo | |
-| Presentation/FusionPresenter.cs | src/presentation/screens/FusionController.ts | todo | |
-| Presentation/HeroTypeDisplay.cs | src/presentation/HeroTypeDisplay.ts | todo | |
-| Presentation/KrellPresenter.cs | src/presentation/world/KrellView.ts | todo | Animator → Aseprite tags |
-| Presentation/LoadoutPresetPresenter.cs | src/presentation/screens/EquipmentController.ts (preset tabs) | todo | |
-| Presentation/MainMenuPresenter.cs | src/presentation/scenes/MainMenuScene.ts | todo | |
-| Presentation/MonsterPresenter.cs | src/presentation/world/MonsterView.ts | todo | |
-| Presentation/ReconciliationNotificationPresenter.cs | src/presentation/screens/ToastController.ts | todo | |
-| Presentation/RosterPresenter.cs | src/presentation/screens/RosterController.ts | todo | |
+| Presentation/CombatPresenter.cs | src/presentation/screens/GameScreenController.ts + src/app/boot.ts (combat.begin on Play) | done | Start() → Begin() when the game is entered |
+| Presentation/CraftingPresenter.cs | src/presentation/screens/EquipmentController.ts (crafting section) | done | preview + re-roll request; result is server-side (AD-22) |
+| Presentation/EquipmentPresenter.cs | src/presentation/screens/EquipmentController.ts | done | hero selection became LB/RB tabs (EXPERIENCE) |
+| Presentation/FusionPresenter.cs | src/presentation/screens/FusionController.ts | done | + irreversible-action confirm with focus on Cancel (EXPERIENCE) |
+| Presentation/HeroTypeDisplay.cs | src/presentation/HeroTypeDisplay.ts | done | colors are theme tokens; label adds the full type name (NFR-3) |
+| Presentation/KrellPresenter.cs | src/presentation/scenes/WorldScene.ts (Krell sprites) | done | Animator → Aseprite tags idle/walk/punch per weapon variant (content/animations/krell.json) |
+| Presentation/LoadoutPresetPresenter.cs | src/presentation/screens/EquipmentController.ts (presets section) | done | same Save/Apply + confirm wording |
+| Presentation/MainMenuPresenter.cs | src/presentation/screens/MenuControllers.ts + WorldScene menu backdrop | done | Config button → Settings (music volume, RFR-47) |
+| Presentation/MonsterPresenter.cs | src/presentation/scenes/WorldScene.ts (monster) | done | Slime has no sprite in Unity; drawn as a placeholder body (FIDELITY item) |
+| Presentation/ReconciliationNotificationPresenter.cs | GameScreenController notices + src/presentation/NoticeTimer.ts | done | toasts top-right, 6 s on the game clock |
+| Presentation/RosterPresenter.cs | src/presentation/screens/RosterController.ts | done | + tap-to-swap when the squad is full (EXPERIENCE) |
 | Presentation/SaveSyncDriver.cs | — | dropped | replaced by TickDriver sync interval + lifecycle hooks (AD-19) |
-| Presentation/StageSelectPresenter.cs | src/presentation/screens/StageSelectController.ts | todo | |
-| Presentation/UiFactory.cs | src/presentation/ui/* | todo | Preact components (hybrid, pending RFR-48) |
+| Presentation/StageSelectPresenter.cs | src/presentation/screens/StageSelectController.ts | done | same risk and result wording |
+| Presentation/UiFactory.cs | src/presentation/ui/App.tsx + model.ts + base.css | done | rows of labels/buttons rendered from semantic models (hybrid, RFR-48) |
 
 ## Amendments to the architecture (recorded per AD-3/AD-21)
 
@@ -155,3 +155,6 @@ C# `out`/`Try*` shapes become `T | null` returns.
   the RFR-29 sync-e2e run (`tests/sync-e2e`). Unity had the same numbering; the fix
   (per-device sequence ranges, or rejecting stale-but-unknown events) is a backend and
   game-PRD change.
+- **B8. The Unity Slime has no sprite.** `Slime.asset` has `sprite: {fileID: 0}`, so the Unity
+  MonsterPresenter showed an empty Image. The Phaser client draws a placeholder slime body;
+  real monster art is a content task (FIDELITY.md).

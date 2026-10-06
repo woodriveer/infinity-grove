@@ -5,7 +5,7 @@ import { BackendApiClient } from '../services/backend/BackendApiClient';
 import { NoBackend } from '../services/backend/NoBackend';
 import { CombatService } from '../services/combat/CombatService';
 import { PlayerCombatService } from '../services/combat/PlayerCombatService';
-import { loadContent, type ContentCatalog } from '../services/content/ContentLoader';
+import { loadContent } from '../services/content/ContentLoader';
 import { rngIdGenerator, type ServiceDeps } from '../services/core';
 import { BackendAffixRollSource } from '../services/crafting/BackendAffixRollSource';
 import { CraftingService } from '../services/crafting/CraftingService';
@@ -20,32 +20,18 @@ import { RosterService } from '../services/roster/RosterService';
 import { SaveCodec } from '../services/save/SaveCodec';
 import { GameStore } from '../services/state/GameStore';
 import { emptyGameState } from '../services/state/projection';
-import type { ReadonlyStore } from '../services/state/types';
 import { StageService } from '../services/stages/StageService';
 import { SaveSyncService } from '../services/sync/SaveSyncService';
 import { SteamCloudSync } from '../services/sync/SteamCloudSync';
 import { TickDriver } from '../services/tick/TickDriver';
+import type { AppServices } from '../services/AppServices';
 import type { AppConfig } from './config';
 
-/** Everything the game needs, built once (AD-4). Presentation receives this; never globals. */
-export interface AppContext {
+/** Everything the game needs, built once (AD-4). Presentation receives the AppServices part; never globals. */
+export interface AppContext extends AppServices {
   readonly config: AppConfig;
-  readonly content: ContentCatalog;
-  readonly store: ReadonlyStore;
   readonly rng: Rng;
   readonly platform: PlatformPorts;
-  readonly tick: TickDriver;
-  readonly combat: CombatService;
-  readonly playerCombat: PlayerCombatService;
-  readonly equipment: EquipmentService;
-  readonly roster: RosterService;
-  readonly fusion: FusionService;
-  readonly inventory: EquipmentInventoryService;
-  readonly presets: LoadoutPresetService;
-  readonly crafting: CraftingService;
-  readonly stages: StageService;
-  readonly sync: SaveSyncService;
-  readonly notices: NoticeService;
 }
 
 /** Test/harness seams: swap one implementation without touching wiring elsewhere (RFR-6). */
