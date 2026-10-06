@@ -233,9 +233,7 @@ describe('sync and reconciliation (P12, RFR-27)', () => {
   it('flushes events, adopts the canonical state, and surfaces a rejected event as a correction notice', async () => {
     const platform = createNodePlatform({ seed: 3 });
     const backend = new ReplayBackend();
-    const app = compose({ ...defaultConfig('test'), backend: 'http://unused.invalid', devTicket: 'test-76561198000000001' }, platform);
-    // Swap the HTTP client for the replay double (same BackendApi seam the sync service uses).
-    (app.sync as unknown as { backend: BackendApi }).backend = backend;
+    const app = compose({ ...defaultConfig('test'), backend: 'replay://in-process', devTicket: 'test-76561198000000001' }, platform, { backend });
     await app.sync.load();
     app.combat.addGold(40);
     await app.sync.connect();

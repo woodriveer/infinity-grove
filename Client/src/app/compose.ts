@@ -48,15 +48,21 @@ export interface AppContext {
   readonly notices: NoticeService;
 }
 
+/** Test/harness seams: swap one implementation without touching wiring elsewhere (RFR-6). */
+export interface ComposeOverrides {
+  readonly backend?: BackendApi;
+}
+
 /** The single composition root (AD-4). The browser, Electron, sim and soak all call this. */
-export function compose(config: AppConfig, platform: PlatformPorts): AppContext {
+export function compose(config: AppConfig, platform: PlatformPorts, overrides: ComposeOverrides = {}): AppContext {
   const content = loadContent(platform.content.entries(), ALL_ASSET_KEYS);
   const store = new GameStore(emptyGameState());
   const rng = createRng(platform.rngSeed);
   const deps: ServiceDeps = { store, clock: platform.clock, rng, ids: rngIdGenerator(rng), content, logger: platform.logger };
 
   const backend: BackendApi =
-    config.backend === 'none' ? new NoBackend() : new BackendApiClient(config.backend, platform.http, platform.logger);
+    overrides.backend ??
+    (config.backend === 'none' ? new NoBackend() : new BackendApiClient(config.backend, platform.http, platform.logger));
   const identity = config.identity === 'dev' ? new DevSteamIdentity(config.devTicket) : platform.steamIdentity;
 
   const combat = new CombatService(deps);

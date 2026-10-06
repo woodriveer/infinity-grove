@@ -3,10 +3,6 @@
 
 export const Assets = {
   image: {
-    "characters/krell/krell-dark-claw-punch": "characters/krell/krell-dark-claw-punch.png",
-    "characters/krell/krell-dark-claw-walk": "characters/krell/krell-dark-claw-walk.png",
-    "characters/krell/krell-empty-punch": "characters/krell/krell-empty-punch.png",
-    "characters/krell/krell-empty-walk": "characters/krell/krell-empty-walk.png",
     "characters/portraits/druid": "characters/portraits/druid.jpg",
     "characters/portraits/ranger": "characters/portraits/ranger.jpg",
     "effects/fireflies/diamond": "effects/fireflies/diamond.png",
@@ -15,7 +11,16 @@ export const Assets = {
     "ui/buttons/buttons": "ui/buttons/buttons.png",
     "ui/logo/logo": "ui/logo/logo.png"
   },
-  aseprite: {},
+  aseprite: {
+    "characters/krell/krell-dark-claw": {
+      "png": "characters/krell/krell-dark-claw.png",
+      "json": "characters/krell/krell-dark-claw.json"
+    },
+    "characters/krell/krell-empty": {
+      "png": "characters/krell/krell-empty.png",
+      "json": "characters/krell/krell-empty.json"
+    }
+  },
   audio: {
     "audio/music/menu-forest": "audio/music/menu-forest.wav"
   },
@@ -34,10 +39,8 @@ export type AssetKey = ImageKey | AsepriteKey | AudioKey;
 
 export const ALL_ASSET_KEYS: readonly string[] = [
   "audio/music/menu-forest",
-  "characters/krell/krell-dark-claw-punch",
-  "characters/krell/krell-dark-claw-walk",
-  "characters/krell/krell-empty-punch",
-  "characters/krell/krell-empty-walk",
+  "characters/krell/krell-dark-claw",
+  "characters/krell/krell-empty",
   "characters/portraits/druid",
   "characters/portraits/ranger",
   "effects/fireflies/diamond",

@@ -1,0 +1,60 @@
+{
+  "description": "P8: save a Strength preset, change gear, apply the preset to restore it",
+  "save": "crafting-ready",
+  "steps": [
+    {
+      "do": "equip",
+      "heroId": "ranger",
+      "itemId": "bark-blade"
+    },
+    {
+      "do": "savePreset",
+      "archetype": "Strength",
+      "heroId": "ranger"
+    },
+    {
+      "do": "equip",
+      "heroId": "ranger",
+      "itemId": "sage-staff"
+    },
+    {
+      "do": "applyPreset",
+      "archetype": "Strength",
+      "heroId": "ranger"
+    }
+  ],
+  "expect": {
+    "results": [
+      {
+        "step": 0,
+        "do": "equip",
+        "result": true
+      },
+      {
+        "step": 2,
+        "do": "equip",
+        "result": true
+      },
+      {
+        "step": 3,
+        "do": "applyPreset",
+        "result": true
+      }
+    ],
+    "final": {
+      "equipment": {
+        "bag": [
+          "wind-boots",
+          "thorn-gloves",
+          "sage-staff"
+        ],
+        "equipped": {
+          "ranger": {
+            "Chest": "leaf-mail",
+            "Weapon": "bark-blade"
+          }
+        }
+      }
+    }
+  }
+}

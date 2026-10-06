@@ -1,0 +1,38 @@
+{
+  "description": "P6: shared bag, per-hero slots; equipping into a filled slot returns the old item to the bag",
+  "save": "crafting-ready",
+  "steps": [
+    {
+      "do": "equip",
+      "heroId": "ranger",
+      "itemId": "bark-blade"
+    },
+    {
+      "do": "equip",
+      "heroId": "ranger",
+      "itemId": "sage-staff"
+    },
+    {
+      "do": "unequip",
+      "heroId": "ranger",
+      "slot": "Chest"
+    }
+  ],
+  "expect": {
+    "final": {
+      "equipment": {
+        "bag": [
+          "wind-boots",
+          "thorn-gloves",
+          "bark-blade",
+          "leaf-mail"
+        ],
+        "equipped": {
+          "ranger": {
+            "Weapon": "sage-staff"
+          }
+        }
+      }
+    }
+  }
+}

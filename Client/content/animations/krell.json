@@ -1,0 +1,43 @@
+{
+  "characterId": "krell",
+  "variants": {
+    "empty": {
+      "sheet": "characters/krell/krell-empty",
+      "states": {
+        "idle": {
+          "tag": "idle",
+          "repeat": -1
+        },
+        "walk": {
+          "tag": "walk",
+          "repeat": -1
+        },
+        "punch": {
+          "tag": "punch",
+          "repeat": 0
+        }
+      }
+    },
+    "dark-claw": {
+      "sheet": "characters/krell/krell-dark-claw",
+      "states": {
+        "idle": {
+          "tag": "idle",
+          "repeat": -1
+        },
+        "walk": {
+          "tag": "walk",
+          "repeat": -1
+        },
+        "punch": {
+          "tag": "punch",
+          "repeat": 0
+        }
+      }
+    }
+  },
+  "variantByItemId": {
+    "0": "empty",
+    "1": "dark-claw"
+  }
+}

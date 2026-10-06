@@ -1,0 +1,59 @@
+{
+  "formatVersion": 1,
+  "steamId64": "76561198000000001",
+  "lastReconciledAtMs": 1767225600000,
+  "lastSeenAtMs": 1767225600000,
+  "lastReconciledState": {
+    "goldMantissa": 0,
+    "goldExponent": 0,
+    "furthestStageCleared": 0,
+    "lastAppliedSequence": 11,
+    "roster": [
+      {
+        "heroDefinitionId": "1f6e0000-0000-4000-8000-000000000001",
+        "ownedCount": 1,
+        "starTier": 0
+      },
+      {
+        "heroDefinitionId": "1f6e0000-0000-4000-8000-000000000002",
+        "ownedCount": 1,
+        "starTier": 0
+      },
+      {
+        "heroDefinitionId": "1f6e0000-0000-4000-8000-000000000003",
+        "ownedCount": 1,
+        "starTier": 0
+      },
+      {
+        "heroDefinitionId": "1f6e0000-0000-4000-8000-000000000004",
+        "ownedCount": 1,
+        "starTier": 0
+      },
+      {
+        "heroDefinitionId": "1f6e0000-0000-4000-8000-000000000005",
+        "ownedCount": 1,
+        "starTier": 0
+      },
+      {
+        "heroDefinitionId": "1f6e0000-0000-4000-8000-000000000006",
+        "ownedCount": 1,
+        "starTier": 0
+      }
+    ],
+    "activeSquadHeroIds": [
+      "1f6e0000-0000-4000-8000-000000000001",
+      "1f6e0000-0000-4000-8000-000000000002",
+      "1f6e0000-0000-4000-8000-000000000003",
+      "1f6e0000-0000-4000-8000-000000000004",
+      "1f6e0000-0000-4000-8000-000000000005"
+    ]
+  },
+  "unsyncedEvents": [],
+  "nextSequenceNumber": 12,
+  "local": {
+    "equipmentBag": [],
+    "equippedByHero": {},
+    "presets": [],
+    "krellEquipmentId": "wclaw01"
+  }
+}

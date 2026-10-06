@@ -1,0 +1,353 @@
+{
+  "frames": {
+    "krell-dark-claw 0.aseprite": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 170,
+        "h": 230
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 40,
+        "y": 2,
+        "w": 170,
+        "h": 230
+      },
+      "sourceSize": {
+        "w": 251,
+        "h": 235
+      },
+      "duration": 417
+    },
+    "krell-dark-claw 1.aseprite": {
+      "frame": {
+        "x": 172,
+        "y": 0,
+        "w": 167,
+        "h": 231
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 42,
+        "y": 2,
+        "w": 167,
+        "h": 231
+      },
+      "sourceSize": {
+        "w": 251,
+        "h": 235
+      },
+      "duration": 333
+    },
+    "krell-dark-claw 2.aseprite": {
+      "frame": {
+        "x": 341,
+        "y": 0,
+        "w": 168,
+        "h": 229
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 41,
+        "y": 3,
+        "w": 168,
+        "h": 229
+      },
+      "sourceSize": {
+        "w": 251,
+        "h": 235
+      },
+      "duration": 417
+    },
+    "krell-dark-claw 3.aseprite": {
+      "frame": {
+        "x": 172,
+        "y": 0,
+        "w": 167,
+        "h": 231
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 42,
+        "y": 2,
+        "w": 167,
+        "h": 231
+      },
+      "sourceSize": {
+        "w": 251,
+        "h": 235
+      },
+      "duration": 333
+    },
+    "krell-dark-claw 4.aseprite": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 170,
+        "h": 230
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 40,
+        "y": 2,
+        "w": 170,
+        "h": 230
+      },
+      "sourceSize": {
+        "w": 251,
+        "h": 235
+      },
+      "duration": 17
+    },
+    "krell-dark-claw 5.aseprite": {
+      "frame": {
+        "x": 172,
+        "y": 0,
+        "w": 167,
+        "h": 231
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 42,
+        "y": 2,
+        "w": 167,
+        "h": 231
+      },
+      "sourceSize": {
+        "w": 251,
+        "h": 235
+      },
+      "duration": 250
+    },
+    "krell-dark-claw 6.aseprite": {
+      "frame": {
+        "x": 511,
+        "y": 0,
+        "w": 164,
+        "h": 235
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 43,
+        "y": 0,
+        "w": 164,
+        "h": 235
+      },
+      "sourceSize": {
+        "w": 251,
+        "h": 235
+      },
+      "duration": 217
+    },
+    "krell-dark-claw 7.aseprite": {
+      "frame": {
+        "x": 677,
+        "y": 0,
+        "w": 167,
+        "h": 231
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 42,
+        "y": 2,
+        "w": 167,
+        "h": 231
+      },
+      "sourceSize": {
+        "w": 251,
+        "h": 235
+      },
+      "duration": 200
+    },
+    "krell-dark-claw 8.aseprite": {
+      "frame": {
+        "x": 846,
+        "y": 0,
+        "w": 165,
+        "h": 235
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 43,
+        "y": 0,
+        "w": 165,
+        "h": 235
+      },
+      "sourceSize": {
+        "w": 251,
+        "h": 235
+      },
+      "duration": 200
+    },
+    "krell-dark-claw 9.aseprite": {
+      "frame": {
+        "x": 1013,
+        "y": 0,
+        "w": 167,
+        "h": 235
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 42,
+        "y": 0,
+        "w": 167,
+        "h": 235
+      },
+      "sourceSize": {
+        "w": 251,
+        "h": 235
+      },
+      "duration": 17
+    },
+    "krell-dark-claw 10.aseprite": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 170,
+        "h": 230
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 40,
+        "y": 2,
+        "w": 170,
+        "h": 230
+      },
+      "sourceSize": {
+        "w": 251,
+        "h": 235
+      },
+      "duration": 167
+    },
+    "krell-dark-claw 11.aseprite": {
+      "frame": {
+        "x": 1182,
+        "y": 0,
+        "w": 224,
+        "h": 229
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 13,
+        "y": 3,
+        "w": 224,
+        "h": 229
+      },
+      "sourceSize": {
+        "w": 251,
+        "h": 235
+      },
+      "duration": 167
+    },
+    "krell-dark-claw 12.aseprite": {
+      "frame": {
+        "x": 1408,
+        "y": 0,
+        "w": 251,
+        "h": 233
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 1,
+        "w": 251,
+        "h": 233
+      },
+      "sourceSize": {
+        "w": 251,
+        "h": 235
+      },
+      "duration": 167
+    },
+    "krell-dark-claw 13.aseprite": {
+      "frame": {
+        "x": 1661,
+        "y": 0,
+        "w": 230,
+        "h": 222
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 10,
+        "y": 6,
+        "w": 230,
+        "h": 222
+      },
+      "sourceSize": {
+        "w": 251,
+        "h": 235
+      },
+      "duration": 200
+    },
+    "krell-dark-claw 14.aseprite": {
+      "frame": {
+        "x": 341,
+        "y": 0,
+        "w": 168,
+        "h": 229
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 41,
+        "y": 3,
+        "w": 168,
+        "h": 229
+      },
+      "sourceSize": {
+        "w": 251,
+        "h": 235
+      },
+      "duration": 17
+    }
+  },
+  "meta": {
+    "app": "infinity-grove art:slice (Aseprite JSON format)",
+    "version": "1",
+    "image": "krell-dark-claw.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 1893,
+      "h": 235
+    },
+    "scale": "1",
+    "frameTags": [
+      {
+        "name": "idle",
+        "from": 0,
+        "to": 4,
+        "direction": "forward"
+      },
+      {
+        "name": "walk",
+        "from": 5,
+        "to": 9,
+        "direction": "forward"
+      },
+      {
+        "name": "punch",
+        "from": 10,
+        "to": 14,
+        "direction": "forward",
+        "repeat": "1"
+      }
+    ],
+    "layers": [],
+    "slices": []
+  }
+}

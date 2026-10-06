@@ -1,0 +1,26 @@
+{
+  "description": "P10: eight hours away credit Active Squad power x rate x hours on launch, with a welcome-back notice",
+  "save": "offline-8h",
+  "steps": [],
+  "expect": {
+    "final": {
+      "gold": 426,
+      "notices": [
+        {
+          "kind": "offline-accrual",
+          "message": "Welcome back! Your Active Squad earned 176.00 gold over 8h offline."
+        }
+      ]
+    },
+    "events": [
+      {
+        "seq": 8,
+        "type": "GoldEarned",
+        "payload": {
+          "goldMantissa": 1.76,
+          "goldExponent": 2
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "description": "P11: progress survives an encrypted save + reload, including unsynced events (B4 projection)",
+  "save": "new-player",
+  "steps": [
+    {
+      "do": "addGold",
+      "amount": 77
+    },
+    {
+      "do": "addHero",
+      "heroId": "druid"
+    },
+    {
+      "do": "activate",
+      "heroId": "druid"
+    },
+    {
+      "do": "reload",
+      "awayMs": 0
+    }
+  ],
+  "expect": {
+    "final": {
+      "gold": 77,
+      "activeSquad": [
+        "ranger",
+        "druid"
+      ],
+      "sync": {
+        "authenticated": false,
+        "pendingEvents": 5
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "description": "P12: unsynced events flush to the backend; one is rejected because another device spent the gold; the client reconciles and shows a correction",
+  "save": "pending-reconciliation",
+  "backend": "replay",
+  "steps": [
+    {
+      "do": "serverSetGold",
+      "mantissa": 0,
+      "exponent": 0
+    },
+    {
+      "do": "connect"
+    }
+  ],
+  "expect": {
+    "final": {
+      "gold": 30,
+      "notices": [
+        {
+          "kind": "correction",
+          "message": "Your gold was corrected by the server: Insufficient gold: have 30.00, need 50.00."
+        }
+      ],
+      "sync": {
+        "authenticated": true,
+        "pendingEvents": 0
+      },
+      "canonical": {
+        "gold": {
+          "m": 3,
+          "e": 1
+        },
+        "furthestStageCleared": 1,
+        "lastAppliedSequence": 10
+      }
+    }
+  }
+}

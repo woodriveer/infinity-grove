@@ -1,0 +1,40 @@
+{
+  "description": "P7: the crafting request goes to the server; with no crafting endpoint it is unavailable and changes nothing (RFR-41 AC)",
+  "save": "crafting-ready",
+  "steps": [
+    {
+      "do": "reroll",
+      "itemId": "bark-blade",
+      "affix": "CritChance"
+    }
+  ],
+  "expect": {
+    "results": [
+      {
+        "step": 0,
+        "do": "reroll",
+        "result": {
+          "status": "unavailable",
+          "reason": "Crafting is not available yet: the server crafting endpoint has not shipped."
+        }
+      }
+    ],
+    "final": {
+      "gold": 500,
+      "equipment": {
+        "bag": [
+          "bark-blade",
+          "sage-staff",
+          "wind-boots",
+          "thorn-gloves"
+        ],
+        "equipped": {
+          "ranger": {
+            "Chest": "leaf-mail"
+          }
+        }
+      }
+    },
+    "events": []
+  }
+}

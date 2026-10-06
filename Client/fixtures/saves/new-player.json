@@ -1,0 +1,41 @@
+{
+  "formatVersion": 1,
+  "steamId64": "",
+  "lastReconciledAtMs": 0,
+  "lastSeenAtMs": 1767225600000,
+  "lastReconciledState": {
+    "goldMantissa": 0,
+    "goldExponent": 0,
+    "furthestStageCleared": 0,
+    "lastAppliedSequence": 0,
+    "roster": [],
+    "activeSquadHeroIds": []
+  },
+  "unsyncedEvents": [
+    {
+      "clientEventId": "2948179c-0922-488c-a4ec-7566bb265887",
+      "sequenceNumber": 1,
+      "type": "HeroAcquired",
+      "occurredAtMs": 1767225600000,
+      "payloadJson": "{\"heroDefinitionId\":\"1f6e0000-0000-4000-8000-000000000001\"}",
+      "syncStatus": "Pending",
+      "rejectionReason": null
+    },
+    {
+      "clientEventId": "07b7545a-dca1-4810-b93e-6f72ea11af9a",
+      "sequenceNumber": 2,
+      "type": "ActiveSquadChanged",
+      "occurredAtMs": 1767225600000,
+      "payloadJson": "{\"heroDefinitionIds\":[\"1f6e0000-0000-4000-8000-000000000001\"]}",
+      "syncStatus": "Pending",
+      "rejectionReason": null
+    }
+  ],
+  "nextSequenceNumber": 3,
+  "local": {
+    "equipmentBag": [],
+    "equippedByHero": {},
+    "presets": [],
+    "krellEquipmentId": "wclaw01"
+  }
+}

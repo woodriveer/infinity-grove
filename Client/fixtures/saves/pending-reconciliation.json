@@ -1,0 +1,69 @@
+{
+  "formatVersion": 1,
+  "steamId64": "76561198000000001",
+  "lastReconciledAtMs": 1767225600000,
+  "lastSeenAtMs": 1767225600000,
+  "lastReconciledState": {
+    "goldMantissa": 2.5,
+    "goldExponent": 2,
+    "furthestStageCleared": 1,
+    "lastAppliedSequence": 7,
+    "roster": [
+      {
+        "heroDefinitionId": "1f6e0000-0000-4000-8000-000000000001",
+        "ownedCount": 1,
+        "starTier": 0
+      },
+      {
+        "heroDefinitionId": "1f6e0000-0000-4000-8000-000000000002",
+        "ownedCount": 1,
+        "starTier": 0
+      },
+      {
+        "heroDefinitionId": "1f6e0000-0000-4000-8000-000000000003",
+        "ownedCount": 1,
+        "starTier": 0
+      }
+    ],
+    "activeSquadHeroIds": [
+      "1f6e0000-0000-4000-8000-000000000001",
+      "1f6e0000-0000-4000-8000-000000000002"
+    ]
+  },
+  "unsyncedEvents": [
+    {
+      "clientEventId": "89c73047-fa40-4197-9354-4a30a9166e14",
+      "sequenceNumber": 8,
+      "type": "GoldEarned",
+      "occurredAtMs": 1767225600000,
+      "payloadJson": "{\"goldMantissa\":3,\"goldExponent\":1}",
+      "syncStatus": "Pending",
+      "rejectionReason": null
+    },
+    {
+      "clientEventId": "d9850847-8953-4695-8f5a-75a5ca04f3d3",
+      "sequenceNumber": 9,
+      "type": "GoldSpent",
+      "occurredAtMs": 1767225600000,
+      "payloadJson": "{\"goldMantissa\":5,\"goldExponent\":1}",
+      "syncStatus": "Pending",
+      "rejectionReason": null
+    },
+    {
+      "clientEventId": "b315e9a3-f14f-4056-9914-04a26f214ba9",
+      "sequenceNumber": 10,
+      "type": "HeroAcquired",
+      "occurredAtMs": 1767225600000,
+      "payloadJson": "{\"heroDefinitionId\":\"1f6e0000-0000-4000-8000-000000000006\"}",
+      "syncStatus": "Pending",
+      "rejectionReason": null
+    }
+  ],
+  "nextSequenceNumber": 11,
+  "local": {
+    "equipmentBag": [],
+    "equippedByHero": {},
+    "presets": [],
+    "krellEquipmentId": "wclaw01"
+  }
+}

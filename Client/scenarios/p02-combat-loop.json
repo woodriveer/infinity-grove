@@ -1,0 +1,49 @@
+{
+  "description": "P2: Krell walks, meets a monster, clicks kill it, gold is awarded, the loop continues",
+  "save": "new-player",
+  "steps": [
+    {
+      "do": "begin"
+    },
+    {
+      "do": "advance",
+      "ms": 1900
+    },
+    {
+      "do": "advance",
+      "ms": 100
+    },
+    {
+      "do": "attackUntilKill",
+      "kills": 3
+    },
+    {
+      "do": "advance",
+      "ms": 500
+    }
+  ],
+  "expect": {
+    "results": [
+      {
+        "step": 3,
+        "do": "attackUntilKill",
+        "result": {
+          "kills": 3
+        }
+      }
+    ],
+    "final": {
+      "gold": 19,
+      "combat": {
+        "state": "Walking",
+        "kills": 3,
+        "monster": null
+      },
+      "attackDamage": 15,
+      "sync": {
+        "authenticated": false,
+        "pendingEvents": 5
+      }
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "description": "P4: Active Squad caps at 5; a sixth hero stays on the bench; tap-to-swap replaces a slot",
+  "save": "full-squad-plus-bench",
+  "steps": [
+    {
+      "do": "activate",
+      "heroId": "tide-caller"
+    },
+    {
+      "do": "swap",
+      "activeHeroId": "druid",
+      "benchedHeroId": "tide-caller"
+    },
+    {
+      "do": "bench",
+      "heroId": "shade-stalker"
+    },
+    {
+      "do": "activate",
+      "heroId": "druid"
+    }
+  ],
+  "expect": {
+    "results": [
+      {
+        "step": 0,
+        "do": "activate",
+        "result": false
+      },
+      {
+        "step": 1,
+        "do": "swap",
+        "result": true
+      },
+      {
+        "step": 3,
+        "do": "activate",
+        "result": true
+      }
+    ],
+    "final": {
+      "activeSquad": [
+        "ranger",
+        "tide-caller",
+        "ember-warden",
+        "dawn-cleric",
+        "druid"
+      ]
+    }
+  }
+}

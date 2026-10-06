@@ -1,0 +1,41 @@
+{
+  "description": "P3: WCLAW01 adds +10 to the level 1 x 5 base damage; unequipping removes it",
+  "save": "new-player",
+  "steps": [
+    {
+      "do": "begin"
+    },
+    {
+      "do": "advance",
+      "ms": 2000
+    },
+    {
+      "do": "attack"
+    },
+    {
+      "do": "unequipKrell"
+    },
+    {
+      "do": "attack"
+    },
+    {
+      "do": "equipKrell",
+      "equipmentId": "wclaw01"
+    }
+  ],
+  "expect": {
+    "final": {
+      "attackDamage": 15,
+      "krellEquipmentId": "wclaw01",
+      "combat": {
+        "state": "Fighting",
+        "kills": 0,
+        "monster": {
+          "name": "Slime",
+          "currentHp": 30,
+          "maxHp": 50
+        }
+      }
+    }
+  }
+}

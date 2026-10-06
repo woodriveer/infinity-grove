@@ -27,7 +27,8 @@
     "soak": "node --expose-gc --import tsx tools/soak.ts",
     "scan:secrets": "tsx tools/scan-secrets.ts",
     "verify": "npm run typecheck && npm run lint && npm run validate:content && npm run gen:check && npm test && npm run test:e2e && npm run build && npm run scan:secrets dist",
-    "test:sync-e2e": "vitest run --config vitest.sync.config.ts"
+    "test:sync-e2e": "vitest run --config vitest.sync.config.ts",
+    "fixtures:gen": "tsx tools/gen-fixtures.ts"
   },
   "build": {
     "appId": "io.infinitygrove.game",

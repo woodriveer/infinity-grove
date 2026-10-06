@@ -1,0 +1,66 @@
+{
+  "description": "P9: Power Gate below the floor, Composition Mismatch with power but no matching type, Success clears",
+  "save": "full-squad-plus-bench",
+  "steps": [
+    {
+      "do": "attemptStage",
+      "stageId": "shadow-canopy"
+    },
+    {
+      "do": "bench",
+      "heroId": "ranger"
+    },
+    {
+      "do": "attemptStage",
+      "stageId": "mossy-hollow"
+    },
+    {
+      "do": "activate",
+      "heroId": "ranger"
+    },
+    {
+      "do": "attemptStage",
+      "stageId": "mossy-hollow"
+    },
+    {
+      "do": "attemptStage",
+      "stageId": "ember-ridge"
+    }
+  ],
+  "expect": {
+    "results": [
+      {
+        "step": 0,
+        "do": "attemptStage",
+        "result": "PowerGate"
+      },
+      {
+        "step": 2,
+        "do": "attemptStage",
+        "result": "CompositionMismatch"
+      },
+      {
+        "step": 3,
+        "do": "activate",
+        "result": true
+      },
+      {
+        "step": 4,
+        "do": "attemptStage",
+        "result": "Success"
+      },
+      {
+        "step": 5,
+        "do": "attemptStage",
+        "result": "Success"
+      }
+    ],
+    "final": {
+      "furthestStageCleared": 2,
+      "lastStageAttempt": {
+        "stageId": "ember-ridge",
+        "outcome": "Success"
+      }
+    }
+  }
+}

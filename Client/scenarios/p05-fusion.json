@@ -1,0 +1,39 @@
+{
+  "description": "P5: two duplicates fuse ranger 1 to 2 stars; a second fuse is refused for lack of duplicates",
+  "save": "fusion-ready",
+  "steps": [
+    {
+      "do": "fuse",
+      "heroId": "ranger"
+    },
+    {
+      "do": "fuse",
+      "heroId": "ranger"
+    }
+  ],
+  "expect": {
+    "results": [
+      {
+        "step": 0,
+        "do": "fuse",
+        "result": true
+      },
+      {
+        "step": 1,
+        "do": "fuse",
+        "result": false
+      }
+    ],
+    "final": {
+      "heroes": [
+        {
+          "heroId": "ranger",
+          "starTier": 2,
+          "duplicatesOwned": 0,
+          "active": true
+        }
+      ]
+    },
+    "events": []
+  }
+}
