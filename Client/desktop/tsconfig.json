@@ -1,15 +1,25 @@
 {
   "compilerOptions": {
     "target": "ES2023",
-    "lib": ["ES2023", "DOM"],
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "lib": [
+      "ES2023",
+      "DOM"
+    ],
+    "module": "CommonJS",
+    "moduleResolution": "Node10",
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "outDir": "../dist-desktop",
-    "rootDir": "."
+    "rootDir": ".",
+    "esModuleInterop": true
   },
-  "include": ["main", "preload", "bridge.ts"]
+  "include": [
+    "main",
+    "preload",
+    "bridge.ts"
+  ]
 }

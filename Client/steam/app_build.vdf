@@ -1,0 +1,12 @@
+"AppBuild"
+{
+	"AppID"	"480"
+	"Desc"	"Infinity Grove (Phaser client) - set by npm run steam:upload"
+	"ContentRoot"	"../release/"
+	"BuildOutput"	"../release/steam-output/"
+	"Depots"
+	{
+		"481"	"depot_build_windows.vdf"
+		"482"	"depot_build_linux.vdf"
+	}
+}

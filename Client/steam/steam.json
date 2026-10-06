@@ -1,0 +1,7 @@
+{
+  "$comment": "Steam app and depot configuration (RFR-36, AD-13). appId 480 (Spacewar) is a placeholder until the project's own App ID is filled in here and in app_build.vdf; depot ids follow Steam's appId+1/+2 convention.",
+  "appId": 480,
+  "depots": { "windows": 481, "linux": 482 },
+  "webApiIdentity": "",
+  "cloudSaveFile": "save.bin"
+}
