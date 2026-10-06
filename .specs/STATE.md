@@ -52,12 +52,12 @@
 
 ## Handoff
 
-- **Feature**: specs for starter-selection, stage-combat, boss-drops, equipment-enchant, rotating-shop, boss-potions, economy-tuning, season-cave, hero-art-pipeline, single-active-session
-- **Phase / Task**: Specify (specs written, awaiting developer confirmation)
-- **Completed**: none
+- **Feature**: specs written for starter-selection, stage-combat, boss-drops, equipment-enchant, rotating-shop, boss-potions, economy-tuning, season-cave, hero-art-pipeline, single-active-session (all pass validate_spec.py)
+- **Phase / Task**: Next: **Design for stage-combat** (`.specs/features/stage-combat/spec.md`), then Design for hero-art-pipeline
+- **Completed**: Specify for all ten features; refactor-unity-to-phaser4 T001–T007 + T008 (except the Unity archive)
 - **In-progress** (file:line): none
-- **Next step**: Developer reviews the specs (assumptions marked n); then Design for stage-combat, then hero-art-pipeline.
-- **Queued**: align the game DESIGN.md and image prompts (docs/README.md, docs/UI_PROMPTS.md) with the anime style (AD-005).
-- **Blockers**: none
-- **Uncommitted files**: .specs/
+- **Next step**: Ask the developer to review or accept the spec assumptions marked `n` (they asked to start the stage-combat Design after clearing context), then write `.specs/features/stage-combat/design.md` following references/design.md of the tlc-spec-driven skill.
+- **Blockers**: none. Steam App ID deferred to pre-launch (SPIKE_G0.md G0b); Unity archive waits for G3 (playthroughs; G4 approved).
+- **Queued**: align the game DESIGN.md and docs/README.md / docs/UI_PROMPTS.md with the anime style (AD-005); implement single-active-session (B7).
+- **Uncommitted files**: none (commit 524d596 not pushed yet)
 - **Branch**: main
