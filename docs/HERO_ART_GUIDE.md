@@ -113,9 +113,9 @@ por quadro):
 | `tip` | sim | Para onde a arma aponta | Slice de 1 × 1 px na direção da lâmina/cajado; o jogo gira a arma de `grip` para `tip` |
 | `head` | não | Elmo/acessório de cabeça | Centro do topo da cabeça |
 | `shoulder` | não | Ombreira (lado visível) | Centro do ombro |
+| `grip_behind` | não | Quadros em que a arma passa **atrás** do corpo | Slice de 1 × 1 px com chave **somente** nesses quadros (ex.: braço recolhido); sem user data |
 
-Na **user data** do slice `grip`, escreva `behind` nos quadros em que a arma passa **atrás** do
-corpo (ex.: braço recolhido); nos demais deixe vazio (arma na frente).
+Nos quadros em que `grip_behind` tem chave, a arma fica atrás do corpo; nos demais, na frente.
 
 ---
 
@@ -178,7 +178,7 @@ O CI **não** roda o Aseprite (precisa de licença local): os PNG/JSON exportado
 
 ## 8. Como o jogo monta o herói (alvo da implementação)
 
-1. Empilha as camadas na ordem: arma (se `behind`) → `body` → `armor_boots` → `armor_gloves` →
+1. Empilha as camadas na ordem: arma (se `grip_behind`) → `body` → `armor_boots` → `armor_gloves` →
    `armor_chest` → acessórios → arma (se na frente) → `fx`. Todas tocam a mesma animação no
    mesmo quadro.
 2. Tinge cada camada de armadura com as cores do item equipado naquele slot (slot vazio: cinza
@@ -194,11 +194,12 @@ O CI **não** roda o Aseprite (precisa de licença local): os PNG/JSON exportado
 - [ ] Tags `idle`, `attack` (com `hit`), `hurt`, `ko` presentes; `attack` ≤ 0,6 s.
 - [ ] Camadas `body`, `armor_chest`, `armor_gloves`, `armor_boots` com os nomes exatos; armaduras em
       escala de cinza.
-- [ ] Slices `grip` e `tip` presentes em **todos** os quadros; `behind` marcado onde a arma passa
+- [ ] Slices `grip` e `tip` presentes em **todos** os quadros; `grip_behind` com chave só onde a arma passa
       atrás.
 - [ ] Testado com 3 cores de armadura bem diferentes (clara, escura, saturada) e 2 armas de tamanhos
       diferentes.
 - [ ] Retrato 512 × 512.
+- [ ] Cada PNG de camada exportado com no máximo 4096 × 4096 px (use `--trim` e folha empacotada).
 - [ ] Exportado com `art:export`, `npm run gen:assets` e `npm run validate:content` sem erros.
 
 ---

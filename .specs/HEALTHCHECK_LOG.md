@@ -188,3 +188,9 @@
 - Commit: docs(hero-art-pipeline): amend spec for grip_behind and sheet size cap
 - Decisions: size cap is AC 9, not AC 7 as tasks.md says (AC 7 already exists).
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: hero-art-pipeline T2
+- Result: done. Guide §5.2 (new `grip_behind` slice row, `behind` user data removed), §8 and §9 (checklist adds the 4096 × 4096 layer cap). Docs only.
+- Commit: docs(art): grip_behind slice and layer size cap in the hero art guide
+- Decisions: none beyond the design.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
