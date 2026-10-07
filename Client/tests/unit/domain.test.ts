@@ -15,7 +15,7 @@ import { StageOutcomeClassifier } from '../../src/domain/StageOutcomeClassifier'
 import { getAffix, setAffix } from '../../src/domain/EquipmentInstance';
 
 const hero = (id: string, basePower: number): HeroData => ({
-  heroId: id, serverHeroId: '', displayName: id, heroType: 'Fire', portrait: '', basePower,
+  heroId: id, serverHeroId: '', displayName: id, heroType: 'Fire', portrait: '', basePower, baseHp: 100, baseDefense: 0, attackIntervalMs: 1000,
   abilityByStarTier: Array.from({ length: 12 }, (_, i) => `A${i + 1}`),
 });
 

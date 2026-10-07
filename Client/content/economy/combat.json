@@ -1,0 +1,23 @@
+{
+  "monstersPerStage": 10,
+  "bossEvery": 5,
+  "spawnDelayMs": 300,
+  "defaultBossTimerSeconds": 30,
+  "typeBonus": 1.5,
+  "clickDpsShare": 0.05,
+  "dpsPerPower": 1,
+  "defenseK": 50,
+  "monster": {
+    "hpBase": 50,
+    "hpGrowth": 1.15,
+    "goldBase": 5,
+    "goldGrowth": 1.12,
+    "dpsBase": 2,
+    "dpsGrowth": 1.12
+  },
+  "boss": {
+    "hpMultiplier": 10,
+    "dpsMultiplier": 3,
+    "goldMultiplier": 10
+  }
+}

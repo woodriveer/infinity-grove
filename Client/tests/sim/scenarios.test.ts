@@ -72,12 +72,15 @@ describe('adding content needs no code change (RFR-12 AC)', () => {
         join(dir, 'heroes/fixture-golem.json'),
         JSON.stringify({
           heroId: 'fixture-golem', serverHeroId: '1f6e0000-0000-4000-8000-0000000000aa', displayName: 'Fixture Golem', heroType: 'Light',
-          portrait: '', basePower: 20, abilityByStarTier: Array.from({ length: 12 }, (_, i) => `Golem ${i + 1}`),
+          portrait: '', basePower: 20, baseHp: 100, baseDefense: 0, attackIntervalMs: 1000, abilityByStarTier: Array.from({ length: 12 }, (_, i) => `Golem ${i + 1}`),
         }),
       );
       writeFileSync(
         join(dir, 'stages/fixture-crag.json'),
-        JSON.stringify({ stageId: 'fixture-crag', stageNumber: 5, displayName: 'Fixture Crag', favoredType: 'Light', powerFloor: 20 }),
+        JSON.stringify({
+          stageId: 'fixture-crag', stageNumber: 5, displayName: 'Fixture Crag', favoredType: 'Light', powerFloor: 20,
+          monsters: ['slime'], boss: { monsterId: 'slime', powerFloor: 20 },
+        }),
       );
       const app = compose(defaultConfig('test'), createNodePlatform({ contentRoot: dir }));
       app.sync.loadFrom(null);

@@ -5,6 +5,9 @@
   "heroType": "Nature",
   "portrait": "characters/portraits/ranger",
   "basePower": 12,
+  "baseHp": 100,
+  "baseDefense": 5,
+  "attackIntervalMs": 1000,
   "abilityByStarTier": [
     "Ranger ability, tier 1 (placeholder)",
     "Ranger ability, tier 2 (placeholder)",

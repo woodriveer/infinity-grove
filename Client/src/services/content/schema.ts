@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { ARCHETYPES } from '../../domain/Archetype';
 import type {
+  CombatEconomy,
   Equipment,
   EquipmentItemData,
   GameSettings,
@@ -21,6 +22,11 @@ const id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'must be a kebab-case id
 const guidOrEmpty = z.union([z.literal(''), z.string().uuid('must be a GUID or empty')]);
 const nonNegInt = z.number().int().nonnegative();
 
+/** A boss fight lasts at most 60 s (AD-002, COMBAT-04 AC 2). */
+export const MAX_BOSS_TIMER_SECONDS = 60;
+/** Combat advances in 100 ms steps (AD-007). */
+const COMBAT_STEP_MS = 100;
+
 export const heroSchema = z
   .object({
     heroId: id,
@@ -29,6 +35,9 @@ export const heroSchema = z
     heroType: z.enum(HERO_TYPES),
     portrait: z.string(),
     basePower: z.number().int().positive(),
+    baseHp: z.number().int().positive(),
+    baseDefense: nonNegInt,
+    attackIntervalMs: z.number().int().positive(),
     abilityByStarTier: z.array(z.string()).length(12, 'must list 12 star tiers'),
   })
   .strict() satisfies z.ZodType<HeroData>;
@@ -52,8 +61,46 @@ export const stageSchema = z
     displayName: z.string().min(1),
     favoredType: z.enum(HERO_TYPES),
     powerFloor: nonNegInt,
+    monsters: z.array(id).min(1),
+    boss: z
+      .object({
+        monsterId: id,
+        powerFloor: nonNegInt,
+        timerSeconds: z.number().int().positive().max(MAX_BOSS_TIMER_SECONDS, `must be at most ${MAX_BOSS_TIMER_SECONDS} s`).optional(),
+      })
+      .strict()
+      .optional(),
   })
   .strict() satisfies z.ZodType<StageData>;
+
+/** content/economy/combat.json (stage-combat design, Data Models). */
+export const combatEconomySchema = z
+  .object({
+    monstersPerStage: z.number().int().positive(),
+    bossEvery: z.number().int().positive(),
+    spawnDelayMs: nonNegInt
+      .max(500, 'must be at most 500 ms')
+      .refine((ms) => ms % COMBAT_STEP_MS === 0, `must be a multiple of ${COMBAT_STEP_MS} ms (one combat step)`),
+    defaultBossTimerSeconds: z.number().int().positive().max(MAX_BOSS_TIMER_SECONDS, `must be at most ${MAX_BOSS_TIMER_SECONDS} s`),
+    typeBonus: z.number().positive(),
+    clickDpsShare: z.number().nonnegative(),
+    dpsPerPower: z.number().positive(),
+    defenseK: z.number().positive(),
+    monster: z
+      .object({
+        hpBase: z.number().positive(),
+        hpGrowth: z.number().positive(),
+        goldBase: z.number().nonnegative(),
+        goldGrowth: z.number().positive(),
+        dpsBase: z.number().nonnegative(),
+        dpsGrowth: z.number().positive(),
+      })
+      .strict(),
+    boss: z
+      .object({ hpMultiplier: z.number().positive(), dpsMultiplier: z.number().nonnegative(), goldMultiplier: z.number().nonnegative() })
+      .strict(),
+  })
+  .strict() satisfies z.ZodType<CombatEconomy>;
 
 export const itemSchema = z
   .object({

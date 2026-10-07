@@ -182,18 +182,19 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] `content.test.ts`: one accepting and one rejecting case per rule; the timer case asserts the file name and `boss.timerSeconds` in the message
-- [ ] `npm run validate:content` passes on the repository content; Quick gate passes
+- [x] `content.test.ts`: one accepting and one rejecting case per rule; the timer case asserts the file name and `boss.timerSeconds` in the message
+- [x] `npm run validate:content` passes on the repository content; Quick gate passes
 
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(content): combat economy kind and boss stage schema`
+**Status**: Done (heartbeat 2026-10-07): `content.test.ts` 15 tests (11 new: economy load/missing, hero fields, boss required/forbidden, bossEvery read from content, timer 60 accepted / 61 rejected as `stages/boss-den.json: boss.timerSeconds: must be at most 60 s`, default timer > 60, stage/boss monster refs, spawnDelayMs 500 ok / 250 / 600, gaps); Vitest 165 (was 154); validate:content, gen:check and build pass; mutants "contiguity check removed" and "bossEvery hard-coded to 5" killed. Decided in heartbeat: legacy fields stay until their cutover (stage top-level `powerFloor` until T20 retires `attemptStage`; monster `maxHp`/`goldMin`/`goldMax` until T18), so the old loop keeps working; `content/economy/combat.json` is required and is added here with the design defaults plus placeholder curves (`dpsPerPower` 1, `defenseK` 50, monster hp 50×1.15ⁿ, gold 5×1.12ⁿ, dps 2×1.12ⁿ, boss ×10 hp / ×3 dps / ×10 gold), because the boss-presence rule needs `bossEvery`; every hero gets placeholder `baseHp` 100, `baseDefense` 5, `attackIntervalMs` 1000 (T6 sets per-hero values); `defaultBossTimerSeconds` is also capped at 60; only the first stage-number gap is reported.
 
 ---
 
 ### T6: Placeholder combat content and Krell hero
 
-**What**: Add `content/economy/combat.json` (design defaults), `content/heroes/krell.json` (new `serverHeroId` GUID, `animations: krell`), HP/defense/interval on every hero, and stages up to 10 so that stages 5 and 10 are boss stages with favored types; regenerate assets if new keys are used. The backend needs no seed: `HeroAcquired` accepts any hero GUID (design amendment).
+**What**: Review `content/economy/combat.json` (added with design defaults in T5), `content/heroes/krell.json` (new `serverHeroId` GUID, `animations: krell`), HP/defense/interval on every hero, and stages up to 10 so that stages 5 and 10 are boss stages with favored types; regenerate assets if new keys are used. The backend needs no seed: `HeroAcquired` accepts any hero GUID (design amendment).
 **Where**: `Client/content/economy/combat.json` (plus `content/heroes/*.json`, `content/stages/*.json`)
 **Depends on**: T5
 **Reuses**: existing stage and hero files

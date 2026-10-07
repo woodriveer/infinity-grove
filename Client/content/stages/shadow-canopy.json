@@ -3,5 +3,8 @@
   "stageNumber": 4,
   "displayName": "Shadow Canopy",
   "favoredType": "Dark",
-  "powerFloor": 120
+  "powerFloor": 120,
+  "monsters": [
+    "slime"
+  ]
 }

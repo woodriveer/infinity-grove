@@ -5,6 +5,9 @@
   "heroType": "Light",
   "portrait": "",
   "basePower": 9,
+  "baseHp": 100,
+  "baseDefense": 5,
+  "attackIntervalMs": 1000,
   "abilityByStarTier": [
     "Dawn Cleric ability, tier 1 (placeholder)",
     "Dawn Cleric ability, tier 2 (placeholder)",

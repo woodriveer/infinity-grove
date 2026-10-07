@@ -5,6 +5,9 @@
   "heroType": "Water",
   "portrait": "",
   "basePower": 11,
+  "baseHp": 100,
+  "baseDefense": 5,
+  "attackIntervalMs": 1000,
   "abilityByStarTier": [
     "Tide Caller ability, tier 1 (placeholder)",
     "Tide Caller ability, tier 2 (placeholder)",

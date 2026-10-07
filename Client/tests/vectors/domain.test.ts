@@ -78,7 +78,7 @@ describe('fusion-rules (unity-frozen)', () => {
   };
   const file = loadVectors<C>('fusion-rules');
   const data: HeroData = {
-    heroId: 'frozen-hero', serverHeroId: '', displayName: 'frozen-hero', heroType: 'Fire', portrait: '', basePower: 10,
+    heroId: 'frozen-hero', serverHeroId: '', displayName: 'frozen-hero', heroType: 'Fire', portrait: '', basePower: 10, baseHp: 100, baseDefense: 0, attackIntervalMs: 1000,
     abilityByStarTier: Array.from({ length: 12 }, (_, i) => (i % 4 === 3 ? '' : `Ability ${i + 1}`)),
   };
   it('matches preview and fusion for every tier/duplicate pair', () => {

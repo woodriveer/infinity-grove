@@ -1,7 +1,8 @@
 /**
  * `npm run validate:content` (RFR-10, AD-8): schema, unique ids, id = file name and
- * every cross-reference (stage monsters, hero portraits, item icons, animation sheets,
- * settings references) against the generated asset manifest. Every problem names
+ * every cross-reference (stage monsters and bosses, hero portraits, item icons, animation sheets,
+ * settings references) against the generated asset manifest, plus the combat rules (boss on
+ * every bossEvery-th stage, boss timer <= 60 s, spawn delay, contiguous stage numbers). Every problem names
  * the file and field (RNFR-11). Exit 1 on any problem.
  *
  * Usage: npm run validate:content [-- --content <dir>]

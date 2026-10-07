@@ -3,5 +3,8 @@
   "stageNumber": 3,
   "displayName": "Moonlit Fen",
   "favoredType": "Water",
-  "powerFloor": 60
+  "powerFloor": 60,
+  "monsters": [
+    "slime"
+  ]
 }

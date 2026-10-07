@@ -1,5 +1,6 @@
 import type { z } from 'zod';
 import type {
+  CombatEconomy,
   Equipment,
   EquipmentItemData,
   GameSettings,
@@ -10,6 +11,7 @@ import type {
 import type { ContentEntry } from '../ports';
 import {
   CONTENT_KINDS,
+  combatEconomySchema,
   settingsSchema,
   type AnimationData,
   type ContentKind,
@@ -20,6 +22,7 @@ import {
 /** Validated, cross-referenced content (AD-8). Every list is sorted by id. */
 export interface ContentCatalog {
   readonly settings: GameSettings;
+  readonly combat: CombatEconomy;
   readonly heroes: readonly HeroData[];
   readonly monsters: readonly MonsterData[];
   readonly stages: readonly StageData[];
@@ -44,6 +47,7 @@ export class ContentError extends Error {
 }
 
 const SETTINGS_PATH = 'settings/game.json';
+const COMBAT_PATH = 'economy/combat.json';
 
 /**
  * Validates schema, id/file-name agreement, uniqueness and every cross-reference;
@@ -56,6 +60,8 @@ export function loadContent(entries: readonly ContentEntry[], assetKeys: readonl
     heroes: [], monsters: [], stages: [], items: [], equipment: [], animations: [], effects: [], frames: [],
   };
   let settings: GameSettings | null = null;
+  let combat: CombatEconomy | null = null;
+  let combatFound = false;
   const assets = new Set(assetKeys);
   const seenIds: Record<string, Map<string, string>> = {};
 
@@ -68,9 +74,16 @@ export function loadContent(entries: readonly ContentEntry[], assetKeys: readonl
       else problems.push(...issues(path, r.error));
       continue;
     }
+    if (path === COMBAT_PATH) {
+      combatFound = true;
+      const r = combatEconomySchema.safeParse(entry.json);
+      if (r.success) combat = r.data;
+      else problems.push(...issues(path, r.error));
+      continue;
+    }
     const [kind, file] = path.split('/');
     if (!kind || !file || !(kind in CONTENT_KINDS)) {
-      problems.push(`${path}: unknown content kind '${kind ?? ''}' (expected one of ${Object.keys(CONTENT_KINDS).join(', ')}, or ${SETTINGS_PATH})`);
+      problems.push(`${path}: unknown content kind '${kind ?? ''}' (expected one of ${Object.keys(CONTENT_KINDS).join(', ')}, ${SETTINGS_PATH} or ${COMBAT_PATH})`);
       continue;
     }
     const def = CONTENT_KINDS[kind as ContentKind];
@@ -117,10 +130,25 @@ export function loadContent(entries: readonly ContentEntry[], assetKeys: readonl
   for (const m of monsters) assetRef(`monsters/${m.monsterId}.json`, 'sprite', m.sprite);
   for (const i of items) assetRef(`items/${i.itemId}.json`, 'icon', i.icon);
   const stageNumbers = new Map<number, string>();
+  const monsterRef = (path: string, field: string, monsterId: string) => {
+    if (!monsters.some((m) => m.monsterId === monsterId)) problems.push(`${path}: ${field} '${monsterId}' has no monsters/${monsterId}.json`);
+  };
   for (const s of stages) {
+    const path = `stages/${s.stageId}.json`;
     const other = stageNumbers.get(s.stageNumber);
-    if (other) problems.push(`stages/${s.stageId}.json: stageNumber ${s.stageNumber} duplicates stages/${other}.json`);
+    if (other) problems.push(`${path}: stageNumber ${s.stageNumber} duplicates stages/${other}.json`);
     stageNumbers.set(s.stageNumber, s.stageId);
+    s.monsters.forEach((m, i) => monsterRef(path, `monsters[${i}]`, m));
+    if (s.boss) monsterRef(path, 'boss.monsterId', s.boss.monsterId);
+    if (combat) {
+      const bossStage = s.stageNumber % combat.bossEvery === 0;
+      if (bossStage && !s.boss) problems.push(`${path}: boss is required on stage ${s.stageNumber} (a multiple of bossEvery ${combat.bossEvery} in ${COMBAT_PATH})`);
+      if (!bossStage && s.boss) problems.push(`${path}: boss is only allowed on boss stages (multiples of bossEvery ${combat.bossEvery} in ${COMBAT_PATH})`);
+    }
+  }
+  const firstGap = [...stageNumbers.keys()].sort((a, b) => a - b).find((n, i) => n !== i + 1);
+  if (firstGap !== undefined) {
+    problems.push(`stages/${stageNumbers.get(firstGap)}.json: stageNumber ${firstGap} leaves a gap (stage numbers must be contiguous from 1)`);
   }
   for (const a of animations) {
     for (const [name, v] of Object.entries(a.variants)) {
@@ -147,6 +175,8 @@ export function loadContent(entries: readonly ContentEntry[], assetKeys: readonl
     });
   }
 
+  if (!combatFound) problems.push(`${COMBAT_PATH}: missing`);
+
   if (problems.length > 0) throw new ContentError(problems);
 
   const index = <T>(list: T[], key: (t: T) => string) => new Map(list.map((t) => [key(t), t]));
@@ -164,6 +194,7 @@ export function loadContent(entries: readonly ContentEntry[], assetKeys: readonl
 
   return {
     settings: settings as GameSettings,
+    combat: combat as CombatEconomy,
     heroes: [...heroes].sort((a, b) => a.heroId.localeCompare(b.heroId)),
     monsters,
     stages: [...stages].sort((a, b) => a.stageNumber - b.stageNumber),

@@ -18,6 +18,12 @@ export interface HeroData {
   /** Asset key of the portrait image. */
   portrait: string;
   basePower: number;
+  /** Field hit points (stage-combat; curves come with economy-tuning). */
+  baseHp: number;
+  /** Boss damage reduction: damage taken × (1 − def / (def + CombatEconomy.defenseK)). */
+  baseDefense: number;
+  /** Attack animation pacing only; damage is continuous (AD-007). */
+  attackIntervalMs: number;
   /** Ability text per star tier, index 0 = 1★ .. index 11 = 12★. */
   abilityByStarTier: string[];
 }
@@ -28,18 +34,49 @@ export interface MonsterData {
   monsterName: string;
   /** Asset key of the monster sprite (empty = none, as the Unity Slime asset). */
   sprite: string;
+  /** Legacy click-combat fields, read by CombatService until the stage-combat loop replaces it (T18). */
   maxHp: number;
   goldMin: number;
   goldMax: number;
 }
 
-/** Data/StageData.cs: a stage's type modifier and power requirement (FR-10/FR-11/FR-15). */
+/** A boss stage's boss (stage-combat COMBAT-04). */
+export interface StageBoss {
+  monsterId: string;
+  /** FR-11 Power Gate threshold that labels a boss failure. */
+  powerFloor: number;
+  /** Countdown; defaults to CombatEconomy.defaultBossTimerSeconds. At most 60 s. */
+  timerSeconds?: number;
+}
+
+/** Data/StageData.cs: a stage's type modifier, monsters and boss (FR-10/FR-11/FR-15, AD-002). */
 export interface StageData {
   stageId: string;
+  /** Contiguous from 1. */
   stageNumber: number;
   displayName: string;
   favoredType: HeroType;
+  /** Legacy Attempt power floor, read by StageService.attemptStage until it is retired (T20). */
   powerFloor: number;
+  /** Monster ids drawn in order (visual identity only; numbers come from CombatEconomy). */
+  monsters: string[];
+  /** Present iff stageNumber % CombatEconomy.bossEvery === 0. */
+  boss?: StageBoss;
+}
+
+/** content/economy/combat.json: combat constants and placeholder curves (economy-tuning replaces them). */
+export interface CombatEconomy {
+  monstersPerStage: number;
+  bossEvery: number;
+  /** Multiple of 100 (one combat step), at most 500. */
+  spawnDelayMs: number;
+  defaultBossTimerSeconds: number;
+  typeBonus: number;
+  clickDpsShare: number;
+  dpsPerPower: number;
+  defenseK: number;
+  monster: { hpBase: number; hpGrowth: number; goldBase: number; goldGrowth: number; dpsBase: number; dpsGrowth: number };
+  boss: { hpMultiplier: number; dpsMultiplier: number; goldMultiplier: number };
 }
 
 /** Data/EquipmentItemData.cs: a droppable/craftable gear template (FR-19). */
