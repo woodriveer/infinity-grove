@@ -170,3 +170,9 @@
 - Commit: docs(stage-combat): verifier report
 - Decisions: gaps non-blocking; combatJump wall-clock test to move to bench/soak later.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: hero-art-pipeline Design
+- Result: design.md written and approved under heartbeat autonomy (docs only, no gate run).
+- Commit: docs(hero-art-pipeline): design
+- Decisions: `grip_behind` slice for behind frames (Aseprite user data is per slice); trimmed packed sheets, layer PNG <= 4096; enchant level read through `enchantLevelOf` until equipment-enchant adds the field; code-generated test-hero; hex colors in content. Spec/guide amendments go in task 1.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
