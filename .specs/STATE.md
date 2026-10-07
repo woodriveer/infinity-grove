@@ -61,11 +61,16 @@
 ## Handoff
 
 - **Feature**: stage-combat
-- **Phase / Task**: Design written (`.specs/features/stage-combat/design.md`, Draft); spec assumptions all confirmed (review 2026-10-07: normal monsters hit back, per-hero HP + % defense, type bonus on every stage, HP restored per stage)
-- **Completed**: Specify for all ten features; refactor-unity-to-phaser4 T001–T007 + T008 (except the Unity archive)
+- **Phase / Task**: Tasks approved (`.specs/features/stage-combat/tasks.md`, 24 tasks in 4 phases; validate_tasks.py 0 errors); design Approved with two amendments. All decided in healthcheck 2026-10-07.
+- **Healthcheck decisions (stage-combat notes, decided in healthcheck)**:
+  - Design approved as written, except: no Krell backend seed (the backend has no hero-definition table; `HeroAcquired` accepts any GUID), and a new `Backend/tests/InfinityGrove.Backend.Tests` xUnit project is task T1 (no backend test project existed although CI runs `dotnet test`).
+  - Backend stores `HighestBossDefeated` (new EF column + migration, T3) so `StageCleared` of a boss stage can require its `BossDefeated`.
+  - Placeholder content grows to 10 stages (boss stages 5 and 10) in T6, since 4 stages contain no boss stage.
+  - Cutover order: new services are additive (T13–T17); T18 switches the loop and rewrites p02/p03, services tests and the menu-and-combat e2e in one commit; T19/T20 retire offline gold and `attemptStage` with their scenarios.
+- **Completed**: Specify for all ten features; stage-combat Design + Tasks; refactor-unity-to-phaser4 T001–T007 + T008 (except the Unity archive)
 - **In-progress** (file:line): none
-- **Next step**: Developer approves the stage-combat design, then Tasks (`tasks.md`, validate_tasks.py); after that, Design for hero-art-pipeline.
+- **Next step**: stage-combat T1 (backend xUnit project), then T2… in order, one task per healthcheck run. Developer may review the healthcheck decisions above and the Test Coverage Matrix in tasks.md.
 - **Blockers**: none. Steam App ID deferred to pre-launch (SPIKE_G0.md G0b); Unity archive waits for G3 (playthroughs; G4 approved).
-- **Queued**: align the game DESIGN.md and docs/README.md / docs/UI_PROMPTS.md with the anime style (AD-005); implement single-active-session (B7).
-- **Uncommitted files**: stage-combat spec.md, design.md, STATE.md (main is 2 commits ahead of origin)
+- **Queued**: Design for hero-art-pipeline; align the game DESIGN.md and docs/README.md / docs/UI_PROMPTS.md with the anime style (AD-005); implement single-active-session (B7).
+- **Pending for the developer**: `git push` (main is ahead of origin); untracked `AGENTS.md` left as is.
 - **Branch**: main

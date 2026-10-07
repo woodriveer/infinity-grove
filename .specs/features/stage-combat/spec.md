@@ -165,16 +165,16 @@ continuous stage progression with fast, timed boss fights.
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| COMBAT-01 | P1: Squad fights (AC 1–4, 7–8) | - | Pending |
-| COMBAT-02 | P1: Squad fights (AC 5–6, field sprites) | - | Pending |
-| COMBAT-03 | P1: Continuous progression | - | Pending |
-| COMBAT-04 | P1: Timed boss fights (AC 1–2, 6–8) | - | Pending |
-| COMBAT-05 | P1: Timed boss fights (AC 3–5, damage + AD-004) | - | Pending |
-| COMBAT-06 | P1: Failure labels | - | Pending |
-| COMBAT-07 | P2: Idle gold from the squad | - | Pending |
-| COMBAT-08 | Edge cases | - | Pending |
+| COMBAT-01 | P1: Squad fights (AC 1–4, 7–8) | T7–T9, T13, T15, T18 | Pending |
+| COMBAT-02 | P1: Squad fights (AC 5–6, field sprites) | T6, T22 | Pending |
+| COMBAT-03 | P1: Continuous progression | T6, T9, T14–T16, T18, T20, T21, T23, T24 | Pending |
+| COMBAT-04 | P1: Timed boss fights (AC 1–2, 6–8) | T1–T5, T7, T9, T15, T21, T23 | Pending |
+| COMBAT-05 | P1: Timed boss fights (AC 3–5, damage + AD-004) | T9, T21 | Pending |
+| COMBAT-06 | P1: Failure labels | T12, T15, T16, T21, T23 | Pending |
+| COMBAT-07 | P2: Idle gold from the squad | T10, T11, T17, T19 | Pending |
+| COMBAT-08 | Edge cases | T3, T9, T15, T16, T23 | Pending |
 
-**Coverage:** 8 total, 0 mapped to tasks, 8 unmapped ⚠️
+**Coverage:** 8 total, 8 mapped to tasks, 0 unmapped
 
 ---
 
