@@ -92,3 +92,10 @@
 - **Commits**: `feat(domain): FR-11 label for boss failures`.
 - **Decisions (decided in heartbeat)**: none beyond the task.
 - **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.
+
+## 2026-10-07 — stage-combat T13: CombatParamsBuilder
+
+- **Result**: done. `Client/src/services/combat/CombatParamsBuilder.ts`: `build(content, state, stageNumber)` → `CombatParams` (squad in slot order, power = basePower × starTier, stages sorted). 6 unit tests in `Client/tests/unit/combatParamsBuilder.test.ts`. Quick gate green: typecheck, lint, Vitest 227 passed (was 218 + 3 other).
+- **Commits**: `feat(services): combat params from content and squad`.
+- **Decisions (decided in heartbeat)**: a static function taking the content catalog and state (not a class with deps); `stageNumber` is only validated against content because `CombatParams.stages` already holds every stage; unknown stage throws.
+- **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.

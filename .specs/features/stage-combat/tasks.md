@@ -370,8 +370,8 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] Unit tests: slot order (leader = slot 0), benched heroes excluded, empty squad → no heroes, star tier scales power
-- [ ] Quick gate passes
+- [x] Unit tests: slot order (leader = slot 0), benched heroes excluded, empty squad → no heroes, star tier scales power
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick
