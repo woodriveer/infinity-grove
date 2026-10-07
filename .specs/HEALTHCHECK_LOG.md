@@ -194,3 +194,9 @@
 - Commit: docs(art): grip_behind slice and layer size cap in the hero art guide
 - Decisions: none beyond the design.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: hero-art-pipeline T3
+- Result: done. `HexColor`, `HeroArt`, `ItemVisual`, `EnchantBand`, `EnchantBandsData` types plus optional `HeroData.art` and `EquipmentItemData.visual` in `Client/src/domain/content/types.ts`. Typecheck, lint, tests green (the combatJump 50 ms wall-clock test flaked once, passed on rerun).
+- Commit: feat(content): types for hero art and item visuals
+- Decisions: extracted `HeroArt` and `ItemVisual` as named interfaces for T4's `satisfies` checks.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
