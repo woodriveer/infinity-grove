@@ -176,3 +176,9 @@
 - Commit: docs(hero-art-pipeline): design
 - Decisions: `grip_behind` slice for behind frames (Aseprite user data is per slice); trimmed packed sheets, layer PNG <= 4096; enchant level read through `enchantLevelOf` until equipment-enchant adds the field; code-generated test-hero; hex colors in content. Spec/guide amendments go in task 1.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: hero-art-pipeline Tasks
+- Result: tasks.md written (18 tasks, 4 phases) and approved under heartbeat autonomy (docs only, no gate run); validate_tasks.py 0 errors.
+- Commit: docs(hero-art-pipeline): tasks
+- Decisions: cross-phase dependencies written as "None (phase N complete)" to satisfy the diagram check; T14 view covered by T15 e2e; no backend tasks (art is presentation only).
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
