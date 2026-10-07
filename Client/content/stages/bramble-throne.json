@@ -3,7 +3,6 @@
   "stageNumber": 5,
   "displayName": "Bramble Throne",
   "favoredType": "Nature",
-  "powerFloor": 200,
   "monsters": [
     "slime"
   ],

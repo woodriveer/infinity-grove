@@ -39,7 +39,8 @@ const midGame = (app: AppContext) => {
   app.roster.addHeroCard('ember-warden');
   app.roster.tryActivate('druid');
   app.combat.addGold(250);
-  app.stages.attemptStage('mossy-hollow');
+  // Stage 1 is cleared by fighting it (AD-002).
+  for (let i = 0; i < 100 && app.store.get().furthestStageCleared < 1; i++) app.combat.step(10_000);
 };
 
 // The default new-game state: starter in the squad, its two events not yet synced.
@@ -86,3 +87,15 @@ await build(
   { reconcile: false },
 );
 await build('offline-8h', midGame, { reconcile: true, lastSeenOffsetMs: -8 * HOUR });
+// A full squad that has fought through stages 1-4 and stands at the stage 5 boss (stage select boss rows).
+await build(
+  'boss-ready',
+  (app) => {
+    for (const id of ['druid', 'ember-warden', 'dawn-cleric', 'shade-stalker']) {
+      app.roster.addHeroCard(id);
+      app.roster.tryActivate(id);
+    }
+    for (let i = 0; i < 100_000 && app.store.get().furthestStageCleared < 4; i++) app.combat.step(100);
+  },
+  { reconcile: true },
+);

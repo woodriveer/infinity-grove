@@ -4,10 +4,10 @@
   "lastReconciledAtMs": 1767225600000,
   "lastSeenAtMs": 1767196800000,
   "lastReconciledState": {
-    "goldMantissa": 2.5,
+    "goldMantissa": 3.1799999999999997,
     "goldExponent": 2,
     "furthestStageCleared": 1,
-    "lastAppliedSequence": 7,
+    "lastAppliedSequence": 8,
     "roster": [
       {
         "heroDefinitionId": "1f6e0000-0000-4000-8000-000000000001",
@@ -31,14 +31,14 @@
     ]
   },
   "unsyncedEvents": [],
-  "nextSequenceNumber": 8,
+  "nextSequenceNumber": 9,
   "local": {
     "equipmentBag": [],
     "equippedByHero": {},
     "presets": [],
     "krellEquipmentId": "wclaw01",
     "combat": {
-      "stageNumber": 1,
+      "stageNumber": 2,
       "autoAdvance": true
     }
   }

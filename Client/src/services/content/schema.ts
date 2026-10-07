@@ -60,7 +60,6 @@ export const stageSchema = z
     stageNumber: z.number().int().positive(),
     displayName: z.string().min(1),
     favoredType: z.enum(HERO_TYPES),
-    powerFloor: nonNegInt,
     monsters: z.array(id).min(1),
     boss: z
       .object({

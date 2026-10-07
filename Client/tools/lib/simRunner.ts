@@ -34,7 +34,7 @@ export type Step =
   | { do: 'savePreset'; archetype: Archetype; heroId: string }
   | { do: 'applyPreset'; archetype: Archetype; heroId: string }
   | { do: 'reroll'; itemId: string; affix: AffixType }
-  | { do: 'attemptStage'; stageId: string }
+  | { do: 'jumpToStage'; stageNumber: number }
   | { do: 'equipKrell'; equipmentId: string }
   | { do: 'unequipKrell' }
   | { do: 'addGold'; amount: number }
@@ -193,8 +193,8 @@ export async function runScenario(scenario: Scenario, opts: { seed?: number; sav
         result = item ? await app.crafting.requestReroll(item, step.affix) : { status: 'rejected', reason: 'no such item' };
         break;
       }
-      case 'attemptStage':
-        result = app.stages.attemptStage(step.stageId);
+      case 'jumpToStage':
+        result = app.combat.jumpToStage(step.stageNumber);
         break;
       case 'equipKrell':
         app.equipment.equip(step.equipmentId);
@@ -289,7 +289,6 @@ export function summarize(app: AppContext) {
       ),
     },
     presets: s.presets.map((p) => ({ archetype: p.archetype, heroId: p.heroId, slots: Object.keys(p.instanceIdBySlot) })),
-    lastStageAttempt: s.lastStageAttempt,
     notices: s.notices.map((n) => ({ kind: n.kind, message: n.message })),
     sync: { authenticated: s.sync.authenticated, pendingEvents: s.eventLog.pending.length },
     canonical: {

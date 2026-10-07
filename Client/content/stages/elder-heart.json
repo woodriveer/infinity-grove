@@ -3,7 +3,6 @@
   "stageNumber": 10,
   "displayName": "Elder Heart",
   "favoredType": "Light",
-  "powerFloor": 1200,
   "monsters": [
     "slime"
   ],

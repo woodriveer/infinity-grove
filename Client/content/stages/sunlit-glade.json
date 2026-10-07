@@ -3,7 +3,6 @@
   "stageNumber": 6,
   "displayName": "Sunlit Glade",
   "favoredType": "Light",
-  "powerFloor": 300,
   "monsters": [
     "slime"
   ]

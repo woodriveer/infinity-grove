@@ -36,7 +36,6 @@ const stages: StageData[] = [2, 1].map((n) => ({
   stageNumber: n,
   displayName: `S${n}`,
   favoredType: 'Nature',
-  powerFloor: 0,
   monsters: ['slime'],
 }));
 

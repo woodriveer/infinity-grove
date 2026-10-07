@@ -134,3 +134,9 @@
 - Result: done. Gate: all green except pre-existing ui-gate criterion 3 (focus p95 ~147 ms); build and scan:secrets pass.
 - Decisions: `OfflineAccrualCalculator` stays only for the vector cap/hours cases; offline gold is `fastForward`. 8 h offline at placeholder tuning pays 68,570 gold, flagged for T21 tuning review.
 - Pending for the developer: push; ui-gate criterion 3.
+
+## 2026-10-07 heartbeat: stage-combat T20
+- Result: done. Gate: typecheck, lint, validate:content, gen:check, npm test (251), build, scan:secrets green; e2e green except pre-existing ui-gate criterion 3 (the other ui-gate tests pass).
+- Commit: refactor(stages)!: stage select lists stages to jump to
+- Decisions: see tasks.md T20 status. sync-e2e edited but unverified (needs the Docker backend).
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.

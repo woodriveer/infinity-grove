@@ -5,7 +5,6 @@ import type { HeroEntity } from '../../domain/HeroEntity';
 import type { LoadoutPreset } from '../../domain/LoadoutPreset';
 import type { PlayerEventRecord } from '../../domain/PlayerEventRecord';
 import type { PlayerStateSnapshot } from '../../domain/PlayerStateSnapshot';
-import type { StageOutcome } from '../../domain/StageOutcome';
 
 /**
  * The whole game state as one immutable snapshot (AD-5). Services are the only
@@ -30,7 +29,6 @@ export interface GameState {
   readonly krellEquipmentId: string | null;
   readonly equipment: EquipmentState;
   readonly presets: readonly LoadoutPreset[];
-  readonly lastStageAttempt: { readonly stageId: string; readonly outcome: StageOutcome } | null;
 
   readonly eventLog: EventLogState;
   readonly sync: SyncStatus;

@@ -27,6 +27,11 @@ async function waitForBackend(url: string): Promise<void> {
   throw new Error(`Backend at ${url} did not become healthy in 90 s.`);
 }
 
+/** Fights stage 1 (the squad's kills pay gold and the first clear emits StageCleared). */
+function clearStage1(app: AppContext): void {
+  for (let i = 0; i < 500 && app.store.get().furthestStageCleared < 1; i++) app.combat.step(1000);
+}
+
 async function device(seed: number): Promise<AppContext> {
   const platform = createNodePlatform({ seed, http: new NodeHttpPort(10_000), nowMs: Date.UTC(2026, 5, 1) });
   const app = compose({ ...defaultConfig('test'), backend: BACKEND as string, devTicket: `test-${STEAM_ID}` }, platform);
@@ -48,35 +53,36 @@ describe.skipIf(!BACKEND)('sync end-to-end against the real backend (RFR-29)', (
     expect(s.canonical.roster).toHaveLength(1);
     expect(s.canonical.activeSquadHeroIds).toHaveLength(1);
 
-    // A earns 40 gold and stage 1; the backend replays and agrees.
-    a.combat.addGold(40);
-    expect(a.stages.attemptStage('mossy-hollow')).toBe('Success');
+    // A fights stage 1 and earns kill gold; the backend replays and agrees.
+    clearStage1(a);
+    a.combat.addGold(100);
     await a.sync.syncNow();
     s = a.store.get();
     expect(s.eventLog.pending).toHaveLength(0);
-    expect([s.canonical.goldMantissa, s.canonical.goldExponent]).toEqual([4, 1]);
     expect(s.canonical.furthestStageCleared).toBe(1);
+    const synced = a.store.get().gold;
+    expect(synced).toBeGreaterThanOrEqual(100);
 
     // Device B logs into the same account and adopts the canonical state.
     const b = await device(2);
     await b.sync.connect();
-    expect(b.store.get().gold).toBe(40);
+    expect(b.store.get().gold).toBe(synced);
 
-    // B spends 30 (accepted: 40 → 10). A is now stale and still shows 40.
-    expect(b.combat.trySpendGold(30)).toBe(true);
+    // B spends nearly all (accepted). A is now stale and still shows the old balance.
+    expect(b.combat.trySpendGold(synced - 10)).toBe(true);
     await b.sync.syncNow();
-    expect(b.store.get().canonical.goldExponent).toBe(1);
+    expect(b.store.get().gold).toBe(10);
 
     // Both devices number events from the same server cursor, so A's next event
     // reuses B's sequence number and the backend accepts it as a stale no-op
-    // (PORT_MAP B7). A replays stage 1 first, so its spend gets a fresh sequence
+    // (PORT_MAP B7). A farms a little first, so its spend gets a fresh sequence
     // number and is actually validated — and rejected.
-    expect(a.stages.attemptStage('mossy-hollow')).toBe('Success');
-    expect(a.combat.trySpendGold(30)).toBe(true);
+    a.combat.step(10_000);
+    expect(a.combat.trySpendGold(synced - 10)).toBe(true);
     await a.sync.syncNow();
     const sa = a.store.get();
     expect(sa.notices.filter((n) => n.kind === 'correction').map((n) => n.message)).toEqual([
-      'Your gold was corrected by the server: Insufficient gold: have 10.00, need 30.00.',
+      expect.stringMatching(/^Your gold was corrected by the server: Insufficient gold: have 10.00, need /),
     ]);
     expect(sa.gold).toBe(10);
     expect(sa.eventLog.pending).toHaveLength(0);

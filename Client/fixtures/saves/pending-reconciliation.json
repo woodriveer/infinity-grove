@@ -4,10 +4,10 @@
   "lastReconciledAtMs": 1767225600000,
   "lastSeenAtMs": 1767225600000,
   "lastReconciledState": {
-    "goldMantissa": 2.5,
+    "goldMantissa": 3.1799999999999997,
     "goldExponent": 2,
     "furthestStageCleared": 1,
-    "lastAppliedSequence": 7,
+    "lastAppliedSequence": 8,
     "roster": [
       {
         "heroDefinitionId": "1f6e0000-0000-4000-8000-000000000001",
@@ -32,8 +32,8 @@
   },
   "unsyncedEvents": [
     {
-      "clientEventId": "89c73047-fa40-4197-9354-4a30a9166e14",
-      "sequenceNumber": 8,
+      "clientEventId": "d9850847-8953-4695-8f5a-75a5ca04f3d3",
+      "sequenceNumber": 9,
       "type": "GoldEarned",
       "occurredAtMs": 1767225600000,
       "payloadJson": "{\"goldMantissa\":3,\"goldExponent\":1}",
@@ -41,8 +41,8 @@
       "rejectionReason": null
     },
     {
-      "clientEventId": "d9850847-8953-4695-8f5a-75a5ca04f3d3",
-      "sequenceNumber": 9,
+      "clientEventId": "b315e9a3-f14f-4056-9914-04a26f214ba9",
+      "sequenceNumber": 10,
       "type": "GoldSpent",
       "occurredAtMs": 1767225600000,
       "payloadJson": "{\"goldMantissa\":5,\"goldExponent\":1}",
@@ -50,8 +50,8 @@
       "rejectionReason": null
     },
     {
-      "clientEventId": "b315e9a3-f14f-4056-9914-04a26f214ba9",
-      "sequenceNumber": 10,
+      "clientEventId": "126d85d6-e836-484d-8fc4-025b42721907",
+      "sequenceNumber": 11,
       "type": "HeroAcquired",
       "occurredAtMs": 1767225600000,
       "payloadJson": "{\"heroDefinitionId\":\"1f6e0000-0000-4000-8000-000000000006\"}",
@@ -59,14 +59,14 @@
       "rejectionReason": null
     }
   ],
-  "nextSequenceNumber": 11,
+  "nextSequenceNumber": 12,
   "local": {
     "equipmentBag": [],
     "equippedByHero": {},
     "presets": [],
     "krellEquipmentId": "wclaw01",
     "combat": {
-      "stageNumber": 1,
+      "stageNumber": 2,
       "autoAdvance": true
     }
   }

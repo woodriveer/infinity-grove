@@ -1,12 +1,12 @@
 import type { StageOutcome } from '../../domain/StageOutcome';
 import { HeroTypeDisplay } from '../HeroTypeDisplay';
-import type { ScreenModel, Tone, UiRow } from '../ui/model';
+import type { ScreenModel, Tone, UiNode, UiRow } from '../ui/model';
 import type { ScreenController, UiContext } from './types';
 
 /**
- * Stage select (P9, Unity StageSelectPresenter): modifier type, power floor vs squad
- * power, the predicted risk before entry (FR-46) and distinct Power Gate vs
- * Composition Mismatch results (FR-11), with the Unity wording.
+ * Stage select (P9, AD-002): jump to a cleared stage or the next uncleared one. Boss rows show the
+ * favored type, the power floor vs squad power and the predicted risk (FR-11, FR-46); the result of the
+ * last boss fight keeps the distinct Power Gate vs Composition Mismatch wording.
  */
 export class StageSelectController implements ScreenController {
   readonly id = 'stages' as const;
@@ -14,42 +14,44 @@ export class StageSelectController implements ScreenController {
   constructor(private readonly ui: UiContext) {}
 
   build(): ScreenModel {
-    const { stages } = this.ui.app;
-    const rows: UiRow[] = stages.stages().map((stage) => {
-      const preview = stages.getPreview(stage.stageId);
+    const { stages, combat } = this.ui.app;
+    const fighting = this.ui.app.store.get().stageCombat.stageNumber;
+    const entries = stages.selectableStages();
+    const rows: UiRow[] = entries.map(({ stage, cleared, preview }) => {
       const p = `stages.${stage.stageId}`;
-      return {
-        id: stage.stageId,
-        nodes: [
-          { id: `${p}.name`, role: 'text', label: `Stage ${stage.stageNumber}: ${stage.displayName}` },
-          { id: `${p}.type`, role: 'text', label: HeroTypeDisplay.label(stage.favoredType), heroType: stage.favoredType },
-          { id: `${p}.power`, role: 'text', label: `Power floor: ${stage.powerFloor} (yours: ${preview.squadPower})` },
+      const nodes: UiNode[] = [
+        { id: `${p}.name`, role: 'text', label: `Stage ${stage.stageNumber}: ${stage.displayName}${stage.boss ? ' (Boss)' : ''}` },
+        { id: `${p}.type`, role: 'text', label: HeroTypeDisplay.label(stage.favoredType), heroType: stage.favoredType },
+      ];
+      if (preview && stage.boss) {
+        nodes.push(
+          { id: `${p}.power`, role: 'text', label: `Power floor: ${stage.boss.powerFloor} (yours: ${preview.squadPower})` },
           { id: `${p}.risk`, role: 'text', label: riskLabel(preview.predictedOutcome), tone: tone(preview.predictedOutcome) },
-          {
-            id: `${p}.attempt`,
-            role: 'button',
-            label: 'Attempt',
-            value: riskLabel(preview.predictedOutcome),
-            enabled: true,
-            onActivate: () => {
-              stages.attemptStage(stage.stageId);
-              this.ui.refresh();
-            },
-          },
-        ],
-      };
+        );
+      }
+      nodes.push({
+        id: `${p}.go`,
+        role: 'button',
+        label: stage.stageNumber === fighting ? 'Fighting here' : cleared ? 'Farm' : 'Go',
+        enabled: true,
+        onActivate: () => {
+          combat.jumpToStage(stage.stageNumber);
+          this.ui.refresh();
+        },
+      });
+      return { id: stage.stageId, nodes };
     });
 
-    const last = this.ui.app.store.get().lastStageAttempt;
+    const last = this.ui.app.store.get().stageCombat.lastBossResult;
     const result: UiRow[] = [];
     if (last) {
-      const stage = this.ui.app.content.stage(last.stageId);
+      const stage = this.ui.app.content.stages.find((st) => st.stageNumber === last.stageNumber);
       if (last.outcome === 'Success') {
-        result.push({ id: 'r1', nodes: [{ id: 'stages.result', role: 'heading', label: `✓ CLEARED - Stage ${stage.stageNumber}`, tone: 'success' }] });
+        result.push({ id: 'r1', nodes: [{ id: 'stages.result', role: 'heading', label: `✓ CLEARED - Stage ${last.stageNumber}`, tone: 'success' }] });
       } else if (last.outcome === 'PowerGate') {
         result.push(
           { id: 'r1', nodes: [{ id: 'stages.result', role: 'heading', label: '⚠ POWER GATE', tone: 'powerGate' }] },
-          { id: 'r2', nodes: [{ id: 'stages.result.detail', role: 'text', label: 'Your account power/gear/star quality is too low for this stage. Go grind - swapping heroes will not help.' }] },
+          { id: 'r2', nodes: [{ id: 'stages.result.detail', role: 'text', label: 'Your squad power/gear/star quality is too low for this boss. Go grind - swapping heroes will not help.' }] },
         );
       } else {
         result.push(
@@ -60,7 +62,7 @@ export class StageSelectController implements ScreenController {
               {
                 id: 'stages.result.detail',
                 role: 'text',
-                label: `Your power is sufficient, but no hero in your Active Squad matches this stage's ${HeroTypeDisplay.abbreviation(stage.favoredType)} modifier. Swap your squad.`,
+                label: `Your power is sufficient, but no hero in your Active Squad matches this boss's ${stage ? HeroTypeDisplay.abbreviation(stage.favoredType) : ''} modifier. Swap your squad.`,
               },
             ],
           },
@@ -68,14 +70,14 @@ export class StageSelectController implements ScreenController {
       }
     }
 
-    const first = stages.stages()[0];
+    const first = entries[0];
     return {
       id: 'stages',
       title: 'Stages',
-      initialFocus: first ? `stages.${first.stageId}.attempt` : 'stages.close',
+      initialFocus: first ? `stages.${first.stage.stageId}.go` : 'stages.close',
       sections: [
         { id: 'list', title: `Furthest cleared: ${this.ui.app.store.get().furthestStageCleared}`, rows },
-        ...(result.length > 0 ? [{ id: 'result', title: 'Last attempt', rows: result }] : []),
+        ...(result.length > 0 ? [{ id: 'result', title: 'Last boss fight', rows: result }] : []),
         { id: 'close', rows: [{ id: 'close', nodes: [{ id: 'stages.close', role: 'button', label: 'Close', enabled: true, glyph: 'back', onActivate: () => this.ui.close() }] }] },
       ],
     };

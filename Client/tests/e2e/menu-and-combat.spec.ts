@@ -71,8 +71,8 @@ test('combat: ten kills clear the stage and the fight moves to stage 2 (P1)', as
 test('offline accrual: eight hours away shows the welcome-back notice, which leaves after 6 s (P10)', async ({ page }) => {
   await open(page, { save: 'offline-8h', scene: 'game' });
   const notices = (await describe(page)).filter((n) => n.id.startsWith('game.notice.'));
-  expect(notices.map((n) => n.label)).toEqual(['Welcome back! Your Active Squad earned 68,570.00 gold over 8h offline.']);
-  expect((await node(page, 'game.gold')).value).toBe('68,820');
+  expect(notices.map((n) => n.label)).toEqual(['Welcome back! Your Active Squad earned 57,600.00 gold over 8h offline.']);
+  expect((await node(page, 'game.gold')).value).toBe('57,918');
   await shot(page, 'offline-summary');
   await advance(page, 6000);
   expect((await describe(page)).some((n) => n.id.startsWith('game.notice.'))).toBe(false);

@@ -28,7 +28,7 @@ const edit = (path: string, change: (json: Record<string, unknown>) => void) => 
 
 const add = (path: string, json: unknown) => (entries: ContentEntry[]) => [...entries, { path, json }];
 const stage = (stageId: string, stageNumber: number) => ({
-  stageId, stageNumber, displayName: stageId, favoredType: 'Fire', powerFloor: 1, monsters: ['slime'],
+  stageId, stageNumber, displayName: stageId, favoredType: 'Fire', monsters: ['slime'],
 });
 /** Stage 5 (bramble-throne) is the first boss stage of the checked-in economy (bossEvery 5). */
 const bossStage = (boss: Record<string, unknown>) => edit('stages/bramble-throne.json', (j) => (j['boss'] = boss));

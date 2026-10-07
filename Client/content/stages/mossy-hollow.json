@@ -3,7 +3,6 @@
   "stageNumber": 1,
   "displayName": "Mossy Hollow",
   "favoredType": "Nature",
-  "powerFloor": 10,
   "monsters": [
     "slime"
   ]

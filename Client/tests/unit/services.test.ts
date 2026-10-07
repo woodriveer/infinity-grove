@@ -128,16 +128,37 @@ describe('equipment, presets and crafting (P6, P7, P8)', () => {
   });
 });
 
+/** Lets the squad fight (auto-advance) until it has cleared stage `n`. */
+function clearTo(app: AppContext, n: number): void {
+  for (const id of ['druid', 'ember-warden', 'dawn-cleric', 'tide-caller']) {
+    app.roster.addHeroCard(id);
+    app.roster.tryActivate(id);
+  }
+  for (let i = 0; i < 500 && app.store.get().furthestStageCleared < n; i++) app.combat.step(10_000);
+  expect(app.store.get().furthestStageCleared).toBe(n);
+}
+
 describe('stage select (P9)', () => {
-  it('predicts Power Gate vs Composition Mismatch and only Success advances', async () => {
+  it('lists cleared stages plus the next one; boss rows carry the floor prediction', async () => {
     const { app } = await newGame();
-    expect(app.stages.getPreview('mossy-hollow')).toMatchObject({ squadPower: 12, predictedOutcome: 'Success' });
-    expect(app.stages.getPreview('ember-ridge').predictedOutcome).toBe('PowerGate');
-    expect(app.stages.attemptStage('ember-ridge')).toBe('PowerGate');
-    expect(app.store.get().furthestStageCleared).toBe(0);
-    expect(app.stages.attemptStage('mossy-hollow')).toBe('Success');
-    expect(app.store.get().furthestStageCleared).toBe(1);
-    expect(types(app).at(-1)).toBe('StageCleared');
+    expect(app.stages.selectableStages().map((e) => [e.stage.stageNumber, e.cleared, e.preview === null])).toEqual([[1, false, true]]);
+    clearTo(app, 4);
+    const list = app.stages.selectableStages();
+    expect(list.map((e) => e.stage.stageNumber)).toEqual([1, 2, 3, 4, 5]);
+    expect(list.map((e) => e.cleared)).toEqual([true, true, true, true, false]);
+    const boss = list[4]?.preview;
+    expect(boss).toMatchObject({ squadPower: 56, predictedOutcome: 'PowerGate' });
+    expect(app.stages.getPreview('mossy-hollow')).toMatchObject({ predictedOutcome: 'Success' });
+  });
+
+  it('jumping needs a cleared stage or the next one and turns auto-advance off', async () => {
+    const { app } = await newGame();
+    clearTo(app, 2);
+    expect(app.combat.jumpToStage(4)).toBe(false);
+    expect(app.combat.jumpToStage(1)).toBe(true);
+    expect(app.store.get().stageCombat).toMatchObject({ stageNumber: 1, autoAdvance: false });
+    expect(app.combat.jumpToStage(3)).toBe(true);
+    expect(app.store.get().stageCombat.stageNumber).toBe(3);
   });
 });
 

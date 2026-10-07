@@ -4,20 +4,20 @@
   "steps": [],
   "expect": {
     "final": {
-      "gold": 68820,
+      "gold": 57918,
       "notices": [
         {
           "kind": "offline-accrual",
-          "message": "Welcome back! Your Active Squad earned 68,570.00 gold over 8h offline."
+          "message": "Welcome back! Your Active Squad earned 57,600.00 gold over 8h offline."
         }
       ]
     },
     "events": [
       {
-        "seq": 8,
+        "seq": 9,
         "type": "GoldEarned",
         "payload": {
-          "goldMantissa": 6.857,
+          "goldMantissa": 5.76,
           "goldExponent": 4
         }
       }

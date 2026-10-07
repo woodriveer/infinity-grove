@@ -22,7 +22,6 @@ export function emptyGameState(): GameState {
     krellEquipmentId: null,
     equipment: { bag: [], equippedByHero: {} },
     presets: [],
-    lastStageAttempt: null,
     eventLog: PlayerEventLog.empty(),
     sync: { authenticated: false, online: false, lastSyncAtMs: 0, inFlight: false },
     notices: [],

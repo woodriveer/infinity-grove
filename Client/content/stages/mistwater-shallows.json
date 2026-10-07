@@ -3,7 +3,6 @@
   "stageNumber": 8,
   "displayName": "Mistwater Shallows",
   "favoredType": "Water",
-  "powerFloor": 650,
   "monsters": [
     "slime"
   ]

@@ -21,7 +21,6 @@ const stage = (stageNumber: number, boss?: StageData['boss']): StageData => ({
   stageNumber,
   displayName: `Stage ${stageNumber}`,
   favoredType: 'Nature',
-  powerFloor: 0,
   monsters: ['slime'],
   ...(boss ? { boss } : {}),
 });

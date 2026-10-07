@@ -3,7 +3,6 @@
   "stageNumber": 2,
   "displayName": "Ember Ridge",
   "favoredType": "Fire",
-  "powerFloor": 30,
   "monsters": [
     "slime"
   ]

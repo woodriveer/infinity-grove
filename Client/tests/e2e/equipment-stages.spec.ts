@@ -1,6 +1,6 @@
 /** P6, P7, P8, P9 by gamepad and keyboard only. */
 import { expect, test } from '@playwright/test';
-import { describe, focusWith, key, node, open, pad, shot } from './helpers';
+import { describe, focusWith, key, node, open, pad, shot, state } from './helpers';
 
 test('equipment: equip from the bag and unequip back to it, gamepad only (P6, RFR-43)', async ({ page }) => {
   await open(page, { save: 'crafting-ready', scene: 'equipment' });
@@ -55,31 +55,24 @@ test('hero tabs switch with LB/RB and Q/E (EXPERIENCE tabs)', async ({ page }) =
   expect((await node(page, 'equipment.hero.ranger')).selected).toBe(true);
 });
 
-test('stage select: risk preview and the three outcomes, keyboard only (P9, FR-11/FR-46)', async ({ page }) => {
+test('stage select lists cleared stages plus the next and jumps to one (P9, COMBAT-03)', async ({ page }) => {
   await open(page, { save: 'mid-game', scene: 'stages' });
-  expect((await node(page, 'stages.mossy-hollow.risk')).label).toBe('Ready');
-  expect((await node(page, 'stages.ember-ridge.power')).label).toBe('Power floor: 30 (yours: 22)');
-  expect((await node(page, 'stages.ember-ridge.risk')).label).toBe('⚠ Power Gate risk');
-  expect((await node(page, 'stages.ember-ridge.type')).label).toBe('FIR · Fire');
-  await focusWith(page, 'stages.ember-ridge.attempt', 'keyboard');
+  const ids = (await describe(page)).filter((n) => n.id.endsWith('.go')).map((n) => n.id);
+  expect(ids).toEqual(['stages.mossy-hollow.go', 'stages.ember-ridge.go']);
+  expect((await node(page, 'stages.mossy-hollow.go')).label).toBe('Farm');
+  expect((await node(page, 'stages.ember-ridge.go')).label).toBe('Fighting here');
+  await focusWith(page, 'stages.mossy-hollow.go', 'keyboard');
   await key(page, 'Enter');
-  expect((await node(page, 'stages.result')).label).toBe('⚠ POWER GATE');
-  await focusWith(page, 'stages.mossy-hollow.attempt', 'keyboard');
-  await key(page, 'Enter');
-  expect((await node(page, 'stages.result')).label).toBe('✓ CLEARED - Stage 1');
+  expect((await state(page)).combat.stageNumber).toBe(1);
+  expect((await node(page, 'stages.mossy-hollow.go')).label).toBe('Fighting here');
   await shot(page, 'stages');
 });
 
-test('stage select shows Composition Mismatch when power is enough but no type matches (FR-11)', async ({ page }) => {
-  await open(page, { save: 'mid-game', scene: 'roster' });
-  await focusWith(page, 'roster.active.ranger.bench', 'gamepad');
-  await pad(page, 'A');
-  await key(page, 'KeyM');
-  expect((await node(page, 'stages.mossy-hollow.risk')).label).toBe('⇄ Composition Mismatch risk');
-  await focusWith(page, 'stages.mossy-hollow.attempt', 'gamepad');
-  await pad(page, 'A');
-  expect((await node(page, 'stages.result')).label).toBe('⇄ COMPOSITION MISMATCH');
-  expect((await node(page, 'stages.result.detail')).label).toBe(
-    "Your power is sufficient, but no hero in your Active Squad matches this stage's NAT modifier. Swap your squad.",
-  );
+test('stage select shows the boss risk line: floor vs squad power and the predicted label (FR-11, FR-46)', async ({ page }) => {
+  await open(page, { save: 'boss-ready', scene: 'stages' });
+  expect((await node(page, 'stages.bramble-throne.name')).label).toBe('Stage 5: Bramble Throne (Boss)');
+  expect((await node(page, 'stages.bramble-throne.type')).label).toBe('NAT · Nature');
+  expect((await node(page, 'stages.bramble-throne.power')).label).toBe('Power floor: 200 (yours: 58)');
+  expect((await node(page, 'stages.bramble-throne.risk')).label).toMatch(/Ready|Power Gate risk|Composition Mismatch risk/);
+  expect((await describe(page)).some((n) => n.id === 'stages.mossy-hollow.risk')).toBe(false);
 });

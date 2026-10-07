@@ -41,7 +41,6 @@ const stages: StageData[] = [1, 2, 3, 4, 5].map((n) => ({
   stageNumber: n,
   displayName: `S${n}`,
   favoredType: 'Nature',
-  powerFloor: 0,
   monsters: ['slime'],
   ...(n === 5 ? { boss: { monsterId: 'boss', powerFloor: 1000 } } : {}),
 }));

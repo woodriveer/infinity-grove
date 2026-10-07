@@ -56,8 +56,6 @@ export interface StageData {
   stageNumber: number;
   displayName: string;
   favoredType: HeroType;
-  /** Legacy Attempt power floor, read by StageService.attemptStage until it is retired (T20). */
-  powerFloor: number;
   /** Monster ids drawn in order (visual identity only; numbers come from CombatEconomy). */
   monsters: string[];
   /** Present iff stageNumber % CombatEconomy.bossEvery === 0. */

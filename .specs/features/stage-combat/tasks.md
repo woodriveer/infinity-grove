@@ -536,13 +536,15 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] Unit: list contents for new and advanced players; boss rows carry floor and predicted label
-- [ ] p09: jump to stage 2 turns auto-advance off and moves combat there
-- [ ] Full gate passes
+- [x] Unit: list contents for new and advanced players; boss rows carry floor and predicted label
+- [x] p09: jump to stage 2 turns auto-advance off and moves combat there
+- [x] Full gate passes
 
 **Tests**: unit
 **Gate**: full
 **Commit**: `refactor(stages)!: stage select lists stages to jump to`
+**Status**: Done (heartbeat 2026-10-07): `StageService.selectableStages()` (cleared + furthest + 1; boss rows carry the preview), `getPreview` uses `boss.powerFloor`; `attemptStage`, `lastStageAttempt` and the stage top-level `powerFloor` (types, schema, 10 content files) removed; `StageSelectController` rows have a `Go`/`Farm`/`Fighting here` button (`stages.<id>.go`, calls `combat.jumpToStage`) and the result block reads `stageCombat.lastBossResult`; sim step `attemptStage` became `jumpToStage`; p09 rewritten; new fixture `boss-ready` (stage 5 boss, power 58 vs floor 200); `mid-game` now clears stage 1 by fighting (gold 318, sits at stage 2), so p10 (57,918 / 57,600.00 offline) and p12 (seq 11) and the menu-and-combat e2e were re-pinned. Vitest 251, e2e green except the known ui-gate criterion 3. sync-e2e was adapted but NOT run (needs the Docker backend). Decided in heartbeat: Stage Select stays open after a jump (the HUD shows the stage); the old text for Power Gate wording now says squad power.
+
 
 ---
 
