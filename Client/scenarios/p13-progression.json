@@ -1,0 +1,11 @@
+{
+  "description": "P13: a new player with the starter hero and no input clears stages 1–3, reaches stage 4, and the unwinnable boss of stage 5 sends the squad back with auto-advance off",
+  "save": "new-player",
+  "steps": [{ "do": "advance", "ms": 600000 }],
+  "expect": {
+    "final": {
+      "furthestStageCleared": 4,
+      "combat": { "stageNumber": 4, "autoAdvance": false, "clicks": 0, "lastBossResult": { "stageNumber": 5, "outcome": "PowerGate" } }
+    }
+  }
+}

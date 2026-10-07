@@ -8,7 +8,7 @@
   ],
   "boss": {
     "monsterId": "elder-slime",
-    "powerFloor": 1200,
+    "powerFloor": 75,
     "timerSeconds": 45
   }
 }

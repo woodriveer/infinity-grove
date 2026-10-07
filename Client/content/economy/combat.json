@@ -12,12 +12,12 @@
     "hpGrowth": 1.15,
     "goldBase": 5,
     "goldGrowth": 1.12,
-    "dpsBase": 2,
+    "dpsBase": 0.8,
     "dpsGrowth": 1.12
   },
   "boss": {
-    "hpMultiplier": 10,
-    "dpsMultiplier": 3,
+    "hpMultiplier": 20,
+    "dpsMultiplier": 1.2,
     "goldMultiplier": 10
   }
 }

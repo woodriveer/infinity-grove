@@ -561,9 +561,9 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] Both scenarios pass with `npm run sim`; the FR-11 check passes for 100% of boss stages (placeholder content tuned if needed, without changing rules)
-- [ ] No boss fight exceeds 60 s of game time in any check
-- [ ] Build gate passes (end of phase)
+- [x] Both scenarios pass with `npm run sim`; the FR-11 check passes for 100% of boss stages (placeholder content tuned if needed, without changing rules)
+- [x] No boss fight exceeds 60 s of game time in any check
+- [x] Build gate passes (end of phase)
 
 **Tests**: unit
 **Gate**: build
@@ -584,8 +584,8 @@ T22 → T23 → T24
 - Skill: `phaser-sprites-and-images`, `phaser-tweens`
 
 **Done when**:
-- [ ] e2e: one field node per squad hero with HP and alive; attack counter grows with `__ig.advance`; portrait fallback flagged for heroes without sheets
-- [ ] Full gate passes
+- [x] e2e: one field node per squad hero with HP and alive; attack counter grows with `__ig.advance`; portrait fallback flagged for heroes without sheets
+- [x] Full gate passes
 
 **Tests**: e2e
 **Gate**: full
@@ -606,8 +606,8 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] e2e (`tests/e2e/combat-hud.spec.ts`): boss failure shows the label and `Fight boss`; auto toggle by gamepad; empty squad text; last-stage text
-- [ ] Full gate passes
+- [x] e2e (`tests/e2e/combat-hud.spec.ts`): boss failure shows the label and `Fight boss`; auto toggle by gamepad; empty squad text; last-stage text
+- [x] Full gate passes
 
 **Tests**: e2e
 **Gate**: full
@@ -628,8 +628,8 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] e2e: jump to stage 2 from Stage Select by gamepad and see `game.stage` change (spec Independent Test)
-- [ ] Build gate passes; Verifier runs after this task
+- [x] e2e: jump to stage 2 from Stage Select by gamepad and see `game.stage` change (spec Independent Test)
+- [x] Build gate passes; Verifier runs after this task
 
 **Tests**: e2e
 **Gate**: build

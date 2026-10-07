@@ -1,0 +1,19 @@
+{
+  "description": "P14b: power 58 clears the floor of 56 but no hero is Nature, so the boss falls on the leader, the timer runs out and the loss is a Composition Mismatch",
+  "save": "boss-ready",
+  "seed": 7,
+  "steps": [
+    { "do": "jumpToStage", "stageNumber": 4 },
+    { "do": "bench", "heroId": "ranger" },
+    { "do": "addHero", "heroId": "krell" },
+    { "do": "activate", "heroId": "krell" },
+    { "do": "fightBoss" },
+    { "do": "advance", "ms": 40000 }
+  ],
+  "expect": {
+    "final": {
+      "furthestStageCleared": 4,
+      "combat": { "stageNumber": 4, "autoAdvance": false, "lastBossResult": { "stageNumber": 5, "outcome": "CompositionMismatch" } }
+    }
+  }
+}

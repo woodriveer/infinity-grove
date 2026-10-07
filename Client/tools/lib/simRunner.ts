@@ -35,6 +35,7 @@ export type Step =
   | { do: 'applyPreset'; archetype: Archetype; heroId: string }
   | { do: 'reroll'; itemId: string; affix: AffixType }
   | { do: 'jumpToStage'; stageNumber: number }
+  | { do: 'fightBoss' }
   | { do: 'equipKrell'; equipmentId: string }
   | { do: 'unequipKrell' }
   | { do: 'addGold'; amount: number }
@@ -196,6 +197,9 @@ export async function runScenario(scenario: Scenario, opts: { seed?: number; sav
       case 'jumpToStage':
         result = app.combat.jumpToStage(step.stageNumber);
         break;
+      case 'fightBoss':
+        result = app.combat.fightBoss();
+        break;
       case 'equipKrell':
         app.equipment.equip(step.equipmentId);
         break;
@@ -280,6 +284,7 @@ export function summarize(app: AppContext) {
       monsterIndex: s.stageCombat.encounter?.monsterIndex ?? null,
       foe: s.stageCombat.encounter?.foe ? { monsterId: s.stageCombat.encounter.foe.monsterId, hp: s.stageCombat.encounter.foe.hp, maxHp: s.stageCombat.encounter.foe.maxHp } : null,
       pendingIncome: s.stageCombat.pendingIncome,
+      lastBossResult: s.stageCombat.lastBossResult,
     },
     krellEquipmentId: s.krellEquipmentId,
     equipment: {

@@ -146,8 +146,7 @@ describe('stage select (P9)', () => {
     const list = app.stages.selectableStages();
     expect(list.map((e) => e.stage.stageNumber)).toEqual([1, 2, 3, 4, 5]);
     expect(list.map((e) => e.cleared)).toEqual([true, true, true, true, false]);
-    const boss = list[4]?.preview;
-    expect(boss).toMatchObject({ squadPower: 56, predictedOutcome: 'PowerGate' });
+    expect(list[4]?.preview).toMatchObject({ squadPower: 56, predictedOutcome: 'Success' });
     expect(app.stages.getPreview('mossy-hollow')).toMatchObject({ predictedOutcome: 'Success' });
   });
 

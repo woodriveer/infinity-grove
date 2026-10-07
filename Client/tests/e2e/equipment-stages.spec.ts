@@ -72,7 +72,7 @@ test('stage select shows the boss risk line: floor vs squad power and the predic
   await open(page, { save: 'boss-ready', scene: 'stages' });
   expect((await node(page, 'stages.bramble-throne.name')).label).toBe('Stage 5: Bramble Throne (Boss)');
   expect((await node(page, 'stages.bramble-throne.type')).label).toBe('NAT · Nature');
-  expect((await node(page, 'stages.bramble-throne.power')).label).toBe('Power floor: 200 (yours: 58)');
+  expect((await node(page, 'stages.bramble-throne.power')).label).toBe('Power floor: 56 (yours: 58)');
   expect((await node(page, 'stages.bramble-throne.risk')).label).toMatch(/Ready|Power Gate risk|Composition Mismatch risk/);
   expect((await describe(page)).some((n) => n.id === 'stages.mossy-hollow.risk')).toBe(false);
 });

@@ -1,0 +1,18 @@
+{
+  "description": "P14c: a Nature squad of power 31 is below the floor of 56, runs out of time and the loss is a Power Gate",
+  "save": "boss-ready",
+  "seed": 7,
+  "steps": [
+    { "do": "jumpToStage", "stageNumber": 4 },
+    { "do": "bench", "heroId": "ember-warden" },
+    { "do": "bench", "heroId": "shade-stalker" },
+    { "do": "fightBoss" },
+    { "do": "advance", "ms": 40000 }
+  ],
+  "expect": {
+    "final": {
+      "furthestStageCleared": 4,
+      "combat": { "stageNumber": 4, "autoAdvance": false, "lastBossResult": { "stageNumber": 5, "outcome": "PowerGate" } }
+    }
+  }
+}

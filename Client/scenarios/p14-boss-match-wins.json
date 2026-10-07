@@ -1,0 +1,10 @@
+{
+  "description": "P14a: the boss-ready squad (power 58, floor 56) has the favored Nature type, so it beats the stage 5 boss and moves on",
+  "save": "boss-ready",
+  "seed": 7,
+  "steps": [{ "do": "fightBoss" }, { "do": "advance", "ms": 40000 }],
+  "expect": {
+    "final": { "furthestStageCleared": 5, "combat": { "stageNumber": 6, "lastBossResult": null } },
+    "events": [{ "type": "BossDefeated", "payload": { "stageNumber": 5 } }, { "type": "StageCleared", "payload": { "stageNumber": 5 } }, { "type": "GoldEarned" }]
+  }
+}
