@@ -68,9 +68,9 @@
   - Placeholder content grows to 10 stages (boss stages 5 and 10) in T6, since 4 stages contain no boss stage.
   - Cutover order: new services are additive (T13–T17); T18 switches the loop and rewrites p02/p03, services tests and the menu-and-combat e2e in one commit; T19/T20 retire offline gold and `attemptStage` with their scenarios.
 - **Completed**: Specify for all ten features; stage-combat Design + Tasks; refactor-unity-to-phaser4 T001–T007 + T008 (except the Unity archive)
-- **In-progress** (file:line): none. stage-combat T1 done (heartbeat 2026-10-07): `Backend/tests/InfinityGrove.Backend.Tests` (xUnit 2.5.3, net8.0, Domain reference only; Application gets referenced when T3 needs it).
-- **Next step**: stage-combat T2 (BossDefeated rule in PlayerProgress), then T3… in order, one task per heartbeat run. Developer may review the healthcheck decisions above and the Test Coverage Matrix in tasks.md.
+- **In-progress** (file:line): none. stage-combat T1 + T2 done (heartbeat 2026-10-07). T2: `PlayerProgress.ApplyBossDefeated` / boss-stage guard in `ApplyStageCleared(stageNumber, bossEvery, now)`; ingestion passes `PlayerProgress.DefaultBossEvery` and EF ignores `HighestBossDefeated` until T3 (decided in heartbeat).
+- **Next step**: stage-combat T3 (BossDefeated ingestion, `Progress:BossEvery` option, EF column + migration, remove the T2 `Ignore`), then T4… in order, one task per heartbeat run. Developer may review the healthcheck decisions above and the Test Coverage Matrix in tasks.md.
 - **Blockers**: none. Steam App ID deferred to pre-launch (SPIKE_G0.md G0b); Unity archive waits for G3 (playthroughs; G4 approved).
 - **Queued**: Design for hero-art-pipeline; align the game DESIGN.md and docs/README.md / docs/UI_PROMPTS.md with the anime style (AD-005); implement single-active-session (B7).
-- **Pending for the developer**: `git push` (main is ahead of origin) (AGENTS.md is now committed, 506f349).
+- **Pending for the developer**: `git push` (main is ahead of origin); hold it until T4 re-exports `shared/openapi` (the new `BossDefeated` enum value makes the committed openapi stale for CI until then).
 - **Branch**: main

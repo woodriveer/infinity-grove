@@ -28,6 +28,9 @@ public class PlayerProgressConfiguration : IEntityTypeConfiguration<PlayerProgre
             .HasColumnName("furthest_stage_cleared")
             .IsRequired();
 
+        // Not persisted until its column and migration land (stage-combat T3).
+        builder.Ignore(p => p.HighestBossDefeated);
+
         builder.Property(p => p.LastAppliedSequence)
             .HasColumnName("last_applied_sequence")
             .IsRequired();

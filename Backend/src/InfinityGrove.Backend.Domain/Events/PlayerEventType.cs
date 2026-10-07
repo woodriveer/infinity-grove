@@ -12,4 +12,5 @@ public enum PlayerEventType
     StageCleared = 2,
     HeroAcquired = 3,
     ActiveSquadChanged = 4,
+    BossDefeated = 5,
 }

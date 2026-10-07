@@ -8,6 +8,7 @@ public class PlayerProgressStageClearedTests
 {
     private static readonly DateTimeOffset Created = new(2026, 10, 7, 12, 0, 0, TimeSpan.Zero);
     private static readonly DateTimeOffset Later = Created.AddMinutes(5);
+    private const int BossEvery = PlayerProgress.DefaultBossEvery;
 
     private static PlayerProgress NewProgress() => PlayerProgress.CreateForAccount(Guid.NewGuid(), Created);
 
@@ -16,8 +17,8 @@ public class PlayerProgressStageClearedTests
     {
         var progress = NewProgress();
 
-        progress.ApplyStageCleared(1, Later);
-        progress.ApplyStageCleared(2, Later);
+        progress.ApplyStageCleared(1, BossEvery, Later);
+        progress.ApplyStageCleared(2, BossEvery, Later);
 
         Assert.Equal(2, progress.FurthestStageCleared);
         Assert.Equal(Later, progress.UpdatedAtUtc);
@@ -27,10 +28,10 @@ public class PlayerProgressStageClearedTests
     public void Replaying_a_cleared_stage_is_a_no_op()
     {
         var progress = NewProgress();
-        progress.ApplyStageCleared(1, Later);
-        progress.ApplyStageCleared(2, Later);
+        progress.ApplyStageCleared(1, BossEvery, Later);
+        progress.ApplyStageCleared(2, BossEvery, Later);
 
-        progress.ApplyStageCleared(1, Later);
+        progress.ApplyStageCleared(1, BossEvery, Later);
 
         Assert.Equal(2, progress.FurthestStageCleared);
     }
@@ -39,9 +40,9 @@ public class PlayerProgressStageClearedTests
     public void Skipping_ahead_is_rejected_and_leaves_progress_unchanged()
     {
         var progress = NewProgress();
-        progress.ApplyStageCleared(1, Later);
+        progress.ApplyStageCleared(1, BossEvery, Later);
 
-        var error = Assert.Throws<EventValidationException>(() => progress.ApplyStageCleared(3, Later));
+        var error = Assert.Throws<EventValidationException>(() => progress.ApplyStageCleared(3, BossEvery, Later));
 
         Assert.Equal("Cannot clear stage 3 before stage 2.", error.Message);
         Assert.Equal(1, progress.FurthestStageCleared);
@@ -54,7 +55,7 @@ public class PlayerProgressStageClearedTests
     {
         var progress = NewProgress();
 
-        var error = Assert.Throws<EventValidationException>(() => progress.ApplyStageCleared(stageNumber, Later));
+        var error = Assert.Throws<EventValidationException>(() => progress.ApplyStageCleared(stageNumber, BossEvery, Later));
 
         Assert.Equal("Stage number must be positive.", error.Message);
         Assert.Equal(0, progress.FurthestStageCleared);

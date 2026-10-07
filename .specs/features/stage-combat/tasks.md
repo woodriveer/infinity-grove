@@ -112,12 +112,13 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] xUnit: accept in order, replay no-op, reject skip ahead, reject non-boss stage, reject boss `StageCleared` before `BossDefeated`, accept it after
-- [ ] Backend gate passes; test count grows, none removed
+- [x] xUnit: accept in order, replay no-op, reject skip ahead, reject non-boss stage, reject boss `StageCleared` before `BossDefeated`, accept it after
+- [x] Backend gate passes; test count grows, none removed
 
 **Tests**: unit
 **Gate**: backend
 **Commit**: `feat(backend): BossDefeated rule and boss-stage clear guard`
+**Status**: Done (heartbeat 2026-10-07): 14 tests (9 new BossDefeated cases incl. a 2-case theory), 0 warnings. Decided in heartbeat: `ApplyStageCleared` takes `bossEvery` too; ingestion passes `PlayerProgress.DefaultBossEvery` (5) until T3 adds `Progress:BossEvery`; EF ignores `HighestBossDefeated` until the T3 column/migration; `shared/openapi` enum gains `BossDefeated` only at T4 re-export.
 
 ---
 

@@ -109,7 +109,7 @@ public class PlayerEventIngestionService(
             case PlayerEventType.StageCleared:
             {
                 var payload = Deserialize<StageClearedPayload>(incoming.Payload, "StageCleared");
-                progress.ApplyStageCleared(payload.StageNumber, nowUtc);
+                progress.ApplyStageCleared(payload.StageNumber, PlayerProgress.DefaultBossEvery, nowUtc);
                 break;
             }
             case PlayerEventType.HeroAcquired:

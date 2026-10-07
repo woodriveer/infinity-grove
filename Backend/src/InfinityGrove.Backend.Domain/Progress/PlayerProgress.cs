@@ -15,6 +15,9 @@ public class PlayerProgress
 {
     public const int ActiveSquadCapacity = 5;
 
+    /// <summary>AD-002 default: a timed boss every 5th stage (ingestion makes it configurable).</summary>
+    public const int DefaultBossEvery = 5;
+
     public Guid AccountId { get; private set; }
 
     /// <summary>AD-7: canonical gold is stored as this (mantissa, exponent) pair, not a native numeric column.</summary>
@@ -22,6 +25,9 @@ public class PlayerProgress
     public int GoldExponent { get; private set; }
 
     public int FurthestStageCleared { get; private set; }
+
+    /// <summary>AD-002: the highest boss stage whose timed boss the account has defeated (0 = none).</summary>
+    public int HighestBossDefeated { get; private set; }
 
     /// <summary>The highest client SequenceNumber processed so far, accepted or rejected — see AdvanceSequence.</summary>
     public long LastAppliedSequence { get; private set; }
@@ -87,9 +93,52 @@ public class PlayerProgress
     /// <summary>
     /// FR-11/FR-13: stages must be cleared in order (no skipping ahead of the
     /// account's own furthest progress), but replaying an already-cleared stage is
-    /// a valid no-op, not a rejection.
+    /// a valid no-op, not a rejection. AD-002: a boss stage (every
+    /// <paramref name="bossEvery"/>-th) is cleared only after its BossDefeated.
     /// </summary>
-    public void ApplyStageCleared(int stageNumber, DateTimeOffset nowUtc)
+    public void ApplyStageCleared(int stageNumber, int bossEvery, DateTimeOffset nowUtc)
+    {
+        EnsureStageReachable(stageNumber);
+
+        if (IsBossStage(stageNumber, bossEvery) && stageNumber > HighestBossDefeated)
+        {
+            throw new EventValidationException(
+                $"Cannot clear boss stage {stageNumber} before defeating its boss.");
+        }
+
+        if (stageNumber > FurthestStageCleared)
+        {
+            FurthestStageCleared = stageNumber;
+        }
+
+        UpdatedAtUtc = nowUtc;
+    }
+
+    /// <summary>
+    /// AD-002: the timed boss of a boss stage follows the same order rule as
+    /// StageCleared (at most one stage past furthest progress; replay is a no-op)
+    /// and is only valid on a boss stage.
+    /// </summary>
+    public void ApplyBossDefeated(int stageNumber, int bossEvery, DateTimeOffset nowUtc)
+    {
+        EnsureStageReachable(stageNumber);
+
+        if (!IsBossStage(stageNumber, bossEvery))
+        {
+            throw new EventValidationException($"Stage {stageNumber} is not a boss stage.");
+        }
+
+        if (stageNumber > HighestBossDefeated)
+        {
+            HighestBossDefeated = stageNumber;
+        }
+
+        UpdatedAtUtc = nowUtc;
+    }
+
+    public static bool IsBossStage(int stageNumber, int bossEvery) => stageNumber % bossEvery == 0;
+
+    private void EnsureStageReachable(int stageNumber)
     {
         if (stageNumber < 1)
         {
@@ -101,13 +150,6 @@ public class PlayerProgress
             throw new EventValidationException(
                 $"Cannot clear stage {stageNumber} before stage {FurthestStageCleared + 1}.");
         }
-
-        if (stageNumber > FurthestStageCleared)
-        {
-            FurthestStageCleared = stageNumber;
-        }
-
-        UpdatedAtUtc = nowUtc;
     }
 
     /// <summary>FR-2/FR-17: a drop/purchase either adds a new roster hero or increments its duplicate count.</summary>
