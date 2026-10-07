@@ -158,3 +158,9 @@
 - Commit: feat(hud): stage, boss timer and failure label
 - Decisions: see tasks.md T23 status (last-stage text covered by a unit test; boss-weak fixture).
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: stage-combat T24
+- Result: done. Gate (build): typecheck, lint, build green; equipment-stages e2e 6/6. Full verify not rerun (ui-gate criterion 3 is a known failure).
+- Commit: feat(stages): jump to a cleared stage from Stage Select
+- Decisions: screen was already complete from T20, so T24 only tightened the e2e to gamepad + `game.current` and set traceability Done. Feature Verifier left for the next run.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.

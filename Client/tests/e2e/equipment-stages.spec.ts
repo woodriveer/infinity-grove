@@ -61,11 +61,14 @@ test('stage select lists cleared stages plus the next and jumps to one (P9, COMB
   expect(ids).toEqual(['stages.mossy-hollow.go', 'stages.ember-ridge.go']);
   expect((await node(page, 'stages.mossy-hollow.go')).label).toBe('Farm');
   expect((await node(page, 'stages.ember-ridge.go')).label).toBe('Fighting here');
-  await focusWith(page, 'stages.mossy-hollow.go', 'keyboard');
-  await key(page, 'Enter');
+  await focusWith(page, 'stages.mossy-hollow.go', 'gamepad');
+  await pad(page, 'A');
   expect((await state(page)).combat.stageNumber).toBe(1);
   expect((await node(page, 'stages.mossy-hollow.go')).label).toBe('Fighting here');
   await shot(page, 'stages');
+  await focusWith(page, 'stages.close', 'gamepad');
+  await pad(page, 'A');
+  expect((await node(page, 'game.current')).value).toBe('1');
 });
 
 test('stage select shows the boss risk line: floor vs squad power and the predicted label (FR-11, FR-46)', async ({ page }) => {

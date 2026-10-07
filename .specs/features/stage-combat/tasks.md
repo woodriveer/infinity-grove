@@ -637,6 +637,8 @@ T22 → T23 → T24
 **Gate**: build
 **Commit**: `feat(stages): jump to a cleared stage from Stage Select`
 
+**Status**: Done (heartbeat 2026-10-07): the screen itself landed in T20; here the e2e jump now runs by gamepad (A on the row, then Close) and asserts `game.current` = 1, and the spec traceability is Done. Typecheck, lint and build green; equipment-stages e2e 6/6. The Verifier (feature-level) is still pending.
+
 ---
 
 ## Phase Execution Map
