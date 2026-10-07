@@ -1,6 +1,7 @@
 import type { z } from 'zod';
 import type {
   CombatEconomy,
+  EnchantBandsData,
   Equipment,
   EquipmentItemData,
   GameSettings,
@@ -31,6 +32,8 @@ export interface ContentCatalog {
   readonly animations: readonly AnimationData[];
   readonly effects: readonly EffectData[];
   readonly frames: readonly FrameData[];
+  /** content/art/enchant-bands.json, or null when absent (no enchant visuals). */
+  readonly enchantBands: EnchantBandsData | null;
   hero(heroId: string): HeroData;
   heroByServerId(serverHeroId: string): HeroData | null;
   monster(monsterId: string): MonsterData;
@@ -57,7 +60,7 @@ const COMBAT_PATH = 'economy/combat.json';
 export function loadContent(entries: readonly ContentEntry[], assetKeys: readonly string[]): ContentCatalog {
   const problems: string[] = [];
   const byKind: Record<ContentKind, unknown[]> = {
-    heroes: [], monsters: [], stages: [], items: [], equipment: [], animations: [], effects: [], frames: [],
+    heroes: [], monsters: [], stages: [], items: [], equipment: [], animations: [], effects: [], frames: [], art: [],
   };
   let settings: GameSettings | null = null;
   let combat: CombatEconomy | null = null;
@@ -111,6 +114,7 @@ export function loadContent(entries: readonly ContentEntry[], assetKeys: readonl
   const animations = byKind.animations as AnimationData[];
   const effects = byKind.effects as EffectData[];
   const frames = byKind.frames as FrameData[];
+  const artFiles = byKind.art as EnchantBandsData[];
 
   // Cross-references.
   const assetRef = (path: string, field: string, key: string) => {
@@ -172,6 +176,10 @@ export function loadContent(entries: readonly ContentEntry[], assetKeys: readonl
     }
   }
 
+  for (const a of artFiles) {
+    if (a.artId !== 'enchant-bands') problems.push(`art/${a.artId}.json: unknown art file (only enchant-bands is supported)`);
+  }
+
   if (!combatFound) problems.push(`${COMBAT_PATH}: missing`);
 
   if (problems.length > 0) throw new ContentError(problems);
@@ -200,6 +208,7 @@ export function loadContent(entries: readonly ContentEntry[], assetKeys: readonl
     animations,
     effects,
     frames,
+    enchantBands: artFiles.find((a) => a.artId === 'enchant-bands') ?? null,
     hero: (heroId) => must(heroMap, 'hero', heroId),
     heroByServerId: (serverHeroId) => serverMap.get(serverHeroId.toLowerCase()) ?? null,
     monster: (monsterId) => must(monsterMap, 'monster', monsterId),

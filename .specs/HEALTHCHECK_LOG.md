@@ -200,3 +200,9 @@
 - Commit: feat(content): types for hero art and item visuals
 - Decisions: extracted `HeroArt` and `ItemVisual` as named interfaces for T4's `satisfies` checks.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: hero-art-pipeline T4
+- Result: done. Strict zod schemas for hero `art`, item `visual` (slot-dependent rules via superRefine) and the `art` content kind (`enchantBandsSchema`, sorted/non-overlapping, `minLevel` >= 1); `ContentLoader` reads the kind, exposes `catalog.enchantBands` (null when absent) and rejects unknown art files. 7 new tests in `content.test.ts`. Typecheck, lint, validate:content green; `npm test` 293/294, the only failure is the known combatJump 12 h < 50 ms wall-clock test (53 ms, flaked twice).
+- Commit: feat(content): schemas for hero art, item visuals and enchant bands
+- Decisions: `weaponModel` is a kebab-case id; only `enchant-bands` is an accepted `art` file id.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e; loosen or de-flake the combatJump timing test.

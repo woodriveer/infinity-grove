@@ -189,3 +189,65 @@ describe('placeholder combat content (stage-combat COMBAT-02, COMBAT-03)', () =>
     expect(new Set(stats).size).toBe(c.heroes.length);
   });
 });
+
+describe('hero art content (hero-art-pipeline ART-06, ART-08, ART-09)', () => {
+  const bands = (list: unknown[]) => add('art/enchant-bands.json', { artId: 'enchant-bands', bands: list });
+  const band = (minLevel: number) => ({ minLevel, glow: true, aura: false });
+
+  it('accepts hero art, item visuals and sorted enchant bands', () => {
+    const ok = (entries: ContentEntry[]) =>
+      bands([band(1), band(7), { ...band(10), particles: 'sparkle' }])(
+        edit('heroes/druid.json', (j) => (j['art'] = { mode: 'layered', neutral: '#8a8f98' }))(
+          edit('items/bark-blade.json', (j) => (j['visual'] = { weaponModel: 'bark-blade' }))(
+            edit('items/leaf-mail.json', (j) => (j['visual'] = { color: '#3a7d44', colorDark: '#1f4a28' }))(entries),
+          ),
+        ),
+      );
+    expect(problems(ok)).toEqual([]);
+  });
+
+  it('rejects a bad hero art mode or neutral color', () => {
+    expect(problems(edit('heroes/druid.json', (j) => (j['art'] = { mode: 'spine' })))[0]).toMatch(/^heroes\/druid\.json: art\.mode: /);
+    expect(problems(edit('heroes/druid.json', (j) => (j['art'] = { mode: 'layered', neutral: 'gray' })))).toEqual([
+      'heroes/druid.json: art.neutral: must be a #rrggbb color',
+    ]);
+  });
+
+  it('rejects a bad hex color on an armor item', () => {
+    expect(problems(edit('items/leaf-mail.json', (j) => (j['visual'] = { color: '#12345' })))).toEqual([
+      'items/leaf-mail.json: visual.color: must be a #rrggbb color',
+    ]);
+  });
+
+  it('rejects weaponModel on armor and color on a weapon', () => {
+    expect(problems(edit('items/leaf-mail.json', (j) => (j['visual'] = { weaponModel: 'x' })))).toEqual([
+      'items/leaf-mail.json: visual.weaponModel: is only allowed on Weapon items (slot is Chest)',
+    ]);
+    expect(problems(edit('items/bark-blade.json', (j) => (j['visual'] = { color: '#112233' })))).toEqual([
+      'items/bark-blade.json: visual.color: is only allowed on Chest, Gloves and Boots items (slot is Weapon)',
+    ]);
+    expect(problems(edit('items/bark-blade.json', (j) => (j['visual'] = { colorDark: '#112233' })))).toEqual([
+      'items/bark-blade.json: visual.colorDark: is only allowed on Chest, Gloves and Boots items (slot is Weapon)',
+    ]);
+  });
+
+  it('rejects unsorted, overlapping and level-0 bands', () => {
+    expect(problems(bands([band(7), band(3)]))).toEqual([
+      "art/enchant-bands.json: bands.1.minLevel: must be greater than the previous band's minLevel 7 (bands are sorted and must not overlap)",
+    ]);
+    expect(problems(bands([band(7), band(7)]))[0]).toMatch(/^art\/enchant-bands\.json: bands\.1\.minLevel: /);
+    expect(problems(bands([band(0)]))[0]).toMatch(/^art\/enchant-bands\.json: bands\.0\.minLevel: /);
+  });
+
+  it('rejects an unknown art file', () => {
+    expect(problems(add('art/other.json', { artId: 'other', bands: [] }))).toEqual([
+      'art/other.json: unknown art file (only enchant-bands is supported)',
+    ]);
+  });
+
+  it('exposes the bands on the catalog', () => {
+    const c = loadContent(bands([band(1)])(base), ALL_ASSET_KEYS);
+    expect(c.enchantBands?.bands).toHaveLength(1);
+    expect(loadContent(base, ALL_ASSET_KEYS).enchantBands).toBeNull();
+  });
+});

@@ -3,6 +3,7 @@ import { ARCHETYPES } from '../../domain/Archetype';
 import type {
   CombatEconomy,
   Equipment,
+  EnchantBandsData,
   EquipmentItemData,
   GameSettings,
   HeroData,
@@ -21,6 +22,7 @@ import { HERO_TYPES } from '../../domain/HeroType';
 const id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'must be a kebab-case id');
 const guidOrEmpty = z.union([z.literal(''), z.string().uuid('must be a GUID or empty')]);
 const nonNegInt = z.number().int().nonnegative();
+const hexColor = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'must be a #rrggbb color');
 
 /** A boss fight lasts at most 60 s (AD-002, COMBAT-04 AC 2). */
 export const MAX_BOSS_TIMER_SECONDS = 60;
@@ -39,6 +41,7 @@ export const heroSchema = z
     baseDefense: nonNegInt,
     attackIntervalMs: z.number().int().positive(),
     abilityByStarTier: z.array(z.string()).length(12, 'must list 12 star tiers'),
+    art: z.object({ mode: z.enum(['layered', 'legacy']), neutral: hexColor.optional() }).strict().optional(),
   })
   .strict() satisfies z.ZodType<HeroData>;
 
@@ -101,6 +104,8 @@ export const combatEconomySchema = z
   })
   .strict() satisfies z.ZodType<CombatEconomy>;
 
+const ARMOR_SLOTS: readonly string[] = ['Chest', 'Gloves', 'Boots'];
+
 export const itemSchema = z
   .object({
     itemId: id,
@@ -108,8 +113,24 @@ export const itemSchema = z
     slot: z.enum(EQUIPMENT_SLOTS),
     archetype: z.enum(ARCHETYPES),
     icon: z.string(),
+    visual: z
+      .object({ weaponModel: id.optional(), color: hexColor.optional(), colorDark: hexColor.optional() })
+      .strict()
+      .optional(),
   })
-  .strict() satisfies z.ZodType<EquipmentItemData>;
+  .strict()
+  .superRefine((item, ctx) => {
+    const v = item.visual;
+    if (!v) return;
+    if (v.weaponModel !== undefined && item.slot !== 'Weapon') {
+      ctx.addIssue({ code: 'custom', path: ['visual', 'weaponModel'], message: `is only allowed on Weapon items (slot is ${item.slot})` });
+    }
+    for (const field of ['color', 'colorDark'] as const) {
+      if (v[field] !== undefined && !ARMOR_SLOTS.includes(item.slot)) {
+        ctx.addIssue({ code: 'custom', path: ['visual', field], message: `is only allowed on Chest, Gloves and Boots items (slot is ${item.slot})` });
+      }
+    }
+  }) satisfies z.ZodType<EquipmentItemData>;
 
 export const equipmentSchema = z
   .object({
@@ -165,6 +186,28 @@ export const effectSchema = z
   })
   .strict();
 
+/** content/art/enchant-bands.json (hero-art-pipeline ART-08): sorted, non-overlapping, minLevel >= 1. */
+export const enchantBandsSchema = z
+  .object({
+    artId: id,
+    bands: z.array(
+      z.object({ minLevel: z.number().int().min(1), glow: z.boolean(), aura: z.boolean(), particles: id.optional() }).strict(),
+    ),
+  })
+  .strict()
+  .superRefine((data, ctx) => {
+    data.bands.forEach((band, i) => {
+      const prev = data.bands[i - 1];
+      if (prev && band.minLevel <= prev.minLevel) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['bands', i, 'minLevel'],
+          message: `must be greater than the previous band's minLevel ${prev.minLevel} (bands are sorted and must not overlap)`,
+        });
+      }
+    });
+  }) satisfies z.ZodType<EnchantBandsData>;
+
 /** Nine-slice frame insets shared by DOM and Phaser views (DESIGN.md Shapes). */
 export const frameSchema = z
   .object({
@@ -189,6 +232,7 @@ export const CONTENT_KINDS = {
   animations: { schema: animationSchema, idField: 'characterId' },
   effects: { schema: effectSchema, idField: 'effectId' },
   frames: { schema: frameSchema, idField: 'frameId' },
+  art: { schema: enchantBandsSchema, idField: 'artId' },
 } as const;
 
 export type ContentKind = keyof typeof CONTENT_KINDS;
