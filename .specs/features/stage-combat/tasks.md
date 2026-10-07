@@ -89,12 +89,13 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] Project builds in the solution and `dotnet test Backend/InfinityGrove.Backend.sln` discovers and passes ≥ 4 tests
-- [ ] Backend gate passes
+- [x] Project builds in the solution and `dotnet test Backend/InfinityGrove.Backend.sln` discovers and passes ≥ 4 tests
+- [x] Backend gate passes
 
 **Tests**: unit
 **Gate**: backend
 **Commit**: `test(backend): add xUnit project with stage-clear order tests`
+**Status**: Done (heartbeat 2026-10-07): 5 tests (4 facts + a 2-case theory), Release build 0 warnings
 
 ---
 
