@@ -256,8 +256,8 @@ T14 → T15 → T16 → T17 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] Tests: all slots filled, each slot empty, item without `visual.color`, no weapon, weapon without model, enchant level absent and present
-- [ ] Quick gate passes
+- [x] Tests: all slots filled, each slot empty, item without `visual.color`, no weapon, weapon without model, enchant level absent and present
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick

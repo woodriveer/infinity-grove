@@ -231,3 +231,9 @@
 - Commit: feat(art): layer stacking order
 - Decisions: `layerOrder` returns shared readonly arrays (no per-call allocation); `LayerSlot` is defined here for T9+ to reuse.
 - Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: hero-art-pipeline T9
+- Result: done. `heroLook(equipped, items, art, neutral)` and `enchantLevelOf` in `Client/src/domain/art/HeroLook.ts`; 8 tests in `heroLook.test.ts`. Typecheck, lint green.
+- Commit: feat(art): derive hero look from equipped items
+- Decisions (decided in heartbeat): `items` is a `ReadonlyMap` by itemId; neutral order is `art.neutral`, then the argument, then `#808080`; `enchantLevelOf` reads an optional `enchantLevel` field structurally until the enchant feature adds it; the look takes enchant level from the weapon.
+- Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.
