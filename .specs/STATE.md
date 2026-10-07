@@ -50,14 +50,22 @@
 - **Date**: 2026-10-06
 - **Status**: active
 
+### AD-007
+- **Decision**: Field combat is one pure, segment-based function (`domain/combat/CombatRules.advance`): damage is continuous DPS per 100 ms step, HP after `k` steps is `hpAtSegmentStart − k × perStep`, and the function jumps event to event. The online loop, gap catch-up, offline accrual, sims and the gold/second rate all run through it; per-hero attack intervals only pace animations.
+- **Reason**: Developer chose the continuous model (review 2026-10-07); a single function makes catch-up equivalence exact (closes PORT_MAP B6) and gives the rate the backend bounds under AD-001.
+- **Trade-off**: Damage does not land on the frame of an attack animation; any new combat effect (potions, enchant effects, cave modifiers) must be expressed as a rate change that opens a new segment.
+- **Scope**: stage-combat, boss-potions, season-cave, economy-tuning, equipment-enchant.
+- **Date**: 2026-10-07
+- **Status**: active
+
 ## Handoff
 
-- **Feature**: specs written for starter-selection, stage-combat, boss-drops, equipment-enchant, rotating-shop, boss-potions, economy-tuning, season-cave, hero-art-pipeline, single-active-session (all pass validate_spec.py)
-- **Phase / Task**: Next: **Design for stage-combat** (`.specs/features/stage-combat/spec.md`), then Design for hero-art-pipeline
+- **Feature**: stage-combat
+- **Phase / Task**: Design written (`.specs/features/stage-combat/design.md`, Draft); spec assumptions all confirmed (review 2026-10-07: normal monsters hit back, per-hero HP + % defense, type bonus on every stage, HP restored per stage)
 - **Completed**: Specify for all ten features; refactor-unity-to-phaser4 T001–T007 + T008 (except the Unity archive)
 - **In-progress** (file:line): none
-- **Next step**: Ask the developer to review or accept the spec assumptions marked `n` (they asked to start the stage-combat Design after clearing context), then write `.specs/features/stage-combat/design.md` following references/design.md of the tlc-spec-driven skill.
+- **Next step**: Developer approves the stage-combat design, then Tasks (`tasks.md`, validate_tasks.py); after that, Design for hero-art-pipeline.
 - **Blockers**: none. Steam App ID deferred to pre-launch (SPIKE_G0.md G0b); Unity archive waits for G3 (playthroughs; G4 approved).
 - **Queued**: align the game DESIGN.md and docs/README.md / docs/UI_PROMPTS.md with the anime style (AD-005); implement single-active-session (B7).
-- **Uncommitted files**: none (commit 524d596 not pushed yet)
+- **Uncommitted files**: stage-combat spec.md, design.md, STATE.md (main is 2 commits ahead of origin)
 - **Branch**: main

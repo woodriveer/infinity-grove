@@ -35,18 +35,20 @@ continuous stage progression with fast, timed boss fights.
 | Auto-advance | On by default; after a boss failure the game farms the previous stage and stops advancing until the player retries the boss | No cost to failing beyond time (FR-12) | y |
 | Stage Select | Becomes "jump to stage": any cleared stage (and the next uncleared one) can be selected to farm (FR-13) | AD-002 | y |
 | Squad presence on screen | Each Active Squad hero stands on the field as a sprite, attacking continuously (idle/attack Aseprite tags) | Developer choice | y |
-| Heroes without a sprite sheet | Use the hero's portrait as a cut-out sprite with a tween lunge per attack | Art does not exist yet; must not block the feature | n |
-| Normal monsters fight back | No; only bosses deal damage | Keeps farming fast; developer described damage only for bosses | n |
-| Hero hit points | Each hero's HP derives from its power (formula in economy-tuning); all heroes return to full HP when a boss fight ends | FR-5 single power axis; AD-003 | n |
+| Heroes without a sprite sheet | Use the hero's portrait as a cut-out sprite with a tween lunge per attack | Art does not exist yet; must not block the feature | y |
+| Normal monsters fight back | Yes, with damage far below a boss's (curve in economy-tuning), split evenly across living heroes; no leader redirect (AD-004 is boss-only) | Developer, review 2026-10-07 | y |
+| Hero hit points and defense | Each hero has its own base HP and base defense in content (not derived from power); defense reduces damage taken by a percentage (`def / (def + K)`, K in economy content); more heroes means a smaller share of boss damage each | Developer, review 2026-10-07 | y |
+| Hero HP restore | Every hero returns to full HP at the start of each stage and when a boss fight ends; if every hero falls on a normal stage, that stage restarts at full HP | Failing a normal stage costs only time (FR-12) | y |
 | Boss damage distribution | Split evenly across living squad heroes; with no hero of the boss's favored type, all damage goes to the leader (slot 1) | AD-004 | y |
-| Knocked-out hero | Deals no damage for the rest of that boss fight | Natural consequence of HP | n |
+| Knocked-out hero | Deals no damage until its HP is restored; only living heroes attack and share damage | Developer, review 2026-10-07 | y |
+| Damage model | Continuous: each 100 ms step deals squad DPS × dt; per-hero attack intervals only pace the attack animations | Exact catch-up equivalence and a rate the backend can bound (AD-007) | y |
 | Failure conditions | Timer reaches 0, or the leader is knocked out | Mismatch kills the leader; weak squads run out of time | y |
-| Failure label | Always the FR-11 classifier (power below floor → Power Gate, checked first; otherwise no favored type → Composition Mismatch; otherwise Power Gate) | Keeps FR-11 guarantees independent of how the fight physically ended | n |
+| Failure label | Always the FR-11 classifier (power below floor → Power Gate, checked first; otherwise no favored type → Composition Mismatch; otherwise Power Gate), regardless of how the fight ended | Keeps FR-11 guarantees independent of how the fight physically ended | y |
 | Click damage | Each click deals a share of the Active Squad's total DPS (`clickDpsShare` in economy-tuning content, default 5%); there is no player avatar or click-specific gear | Developer: clicks are influenced by the team's total damage | y |
 | Krell | Krell is a regular hero in content (the only one with a full sprite sheet today), not a special character | Developer: Krell was only an example | y |
-| Type modifier on normal stages | Normal monsters have no type effect; types matter only on bosses | Keeps farming composition-free; mismatch is a boss concept | n |
+| Type bonus | Every stage has a favored type; heroes of that type deal `typeBonus` × their damage (economy content, default 1.5) against its monsters and its boss | Developer, review 2026-10-07: makes FR-11 Mismatch hold for any squad size | y |
 | Gold per kill | Each monster pays the stage's gold value (curve in economy-tuning); offline accrual uses the current stage's gold/second at the squad's DPS, capped at 12 h | One rate online and offline | y (cap) |
-| Backend validation of progress | Boss victories are `BossDefeated` events; the backend accepts a stage only in order (existing StageCleared rule) and bounds gold income per AD-001 (economy-tuning) | AD-001 | n |
+| Backend validation of progress | Boss victories are `BossDefeated` events; the backend accepts a stage only in order (existing StageCleared rule) and bounds gold income per AD-001 (economy-tuning) | AD-001 | y |
 | Retired Unity behavior | `StageService.attemptStage` and the instant classifier screen are removed; PORT_MAP records the change | Design freeze S6 is lifted by an explicit game-PRD change (AD-002) | y |
 
 **Open questions:** none - all resolved or logged above.
@@ -63,12 +65,14 @@ continuous stage progression with fast, timed boss fights.
 
 **Acceptance Criteria**:
 
-1. WHILE a monster is alive the system SHALL apply each living Active Squad hero's damage at that hero's attack rate.
+1. WHILE a monster is alive the system SHALL apply, every 100 ms step, the sum of each living Active Squad hero's DPS × 0.1 s, multiplied by `typeBonus` for heroes of the stage's favored type.
 2. The system SHALL apply no damage from benched heroes (FR-4).
 3. WHEN the player clicks the combat area, presses Space, or presses gamepad A on the Combat View THEN the system SHALL apply damage equal to `clickDpsShare` × the Active Squad's current total DPS to the current monster.
 4. WHEN a monster's HP reaches 0 THEN the system SHALL award that stage's gold per kill and spawn the next monster within 500 ms of game time.
-5. The system SHALL show every Active Squad hero on the field and play an attack animation for each of its attacks.
+5. The system SHALL show every Active Squad hero on the field and play its attack animation once per its content attack interval while it is alive and a monster is present.
 6. WHERE a hero has no sprite sheet the system SHALL render its portrait as a sprite and tween it forward on each attack.
+7. WHILE a normal monster is alive the system SHALL deal its damage to the squad, split evenly across living heroes and reduced by each hero's defense.
+8. IF every Active Squad hero is knocked out on a normal stage THEN the system SHALL restart that stage with every hero at full HP.
 
 **Independent Test**: sim: squad of 2 heroes, no clicks, advance 60 s → kills and gold match `DPS × 60 / monster HP`; e2e: `describe()` lists one field node per squad hero.
 
@@ -102,12 +106,12 @@ continuous stage progression with fast, timed boss fights.
 
 1. WHEN a boss stage starts THEN the system SHALL start a countdown equal to that stage's boss timer.
 2. The system SHALL reject at content validation any boss timer above 60 s, naming the stage file and field.
-3. WHILE a boss fight runs the system SHALL deal the boss's damage to the squad, split evenly across living heroes.
+3. WHILE a boss fight runs the system SHALL deal the boss's damage to the squad, split evenly across living heroes and reduced by each hero's defense.
 4. WHILE a boss fight runs and no Active Squad hero has the boss's favored type the system SHALL deal all boss damage to the leader (slot 1).
-5. WHEN a hero's HP reaches 0 THEN the system SHALL stop that hero's attacks until the boss fight ends.
+5. WHEN a hero's HP reaches 0 THEN the system SHALL stop that hero's damage until its HP is restored, and exclude it from the damage split.
 6. WHEN the boss's HP reaches 0 before the timer ends and before the leader falls THEN the system SHALL clear the stage and append one `BossDefeated` event with the stage number.
 7. IF the timer reaches 0 or the leader's HP reaches 0 THEN the system SHALL end the fight as a failure.
-8. WHEN a boss fight ends THEN the system SHALL restore every hero to full HP.
+8. WHEN a boss fight ends or a new stage starts THEN the system SHALL restore every hero to full HP.
 
 **Independent Test**: sim with a fixed seed: a matching squad at the boss's power floor wins; the same power with no favored type loses with the leader knocked out; a squad below the floor loses on the timer.
 
@@ -126,7 +130,7 @@ continuous stage progression with fast, timed boss fights.
 3. IF a boss fight fails, power is at or above the floor and a hero has the favored type THEN the system SHALL show "⚠ POWER GATE".
 4. WHEN a boss fight fails THEN the system SHALL return combat to the previous stage and turn auto-advance off.
 5. WHEN the player chooses "Fight boss" after a failure THEN the system SHALL restart that boss fight at full HP and full timer.
-6. The economy-tuning content SHALL make a matching squad at exactly the power floor win, and a non-matching squad at exactly the floor lose, for every boss stage, verified by a sim check.
+6. The economy-tuning content SHALL make a matching squad at exactly the power floor win, and a non-matching squad at exactly the floor lose, for every boss stage and every squad size from 1 to 5, verified by a sim check.
 
 **Independent Test**: unit tests on the label rules; sim check over all boss stages for AC 6.
 
@@ -161,7 +165,7 @@ continuous stage progression with fast, timed boss fights.
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| COMBAT-01 | P1: Squad fights (AC 1–4) | - | Pending |
+| COMBAT-01 | P1: Squad fights (AC 1–4, 7–8) | - | Pending |
 | COMBAT-02 | P1: Squad fights (AC 5–6, field sprites) | - | Pending |
 | COMBAT-03 | P1: Continuous progression | - | Pending |
 | COMBAT-04 | P1: Timed boss fights (AC 1–2, 6–8) | - | Pending |
