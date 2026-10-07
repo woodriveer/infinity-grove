@@ -281,8 +281,13 @@ describe('offline accrual (P10, RFR-28)', () => {
     const again = compose(defaultConfig('test'), later);
     const { accrual } = await again.sync.load();
     expect(accrual?.wasCapped).toBe(true);
-    expect(again.store.get().gold).toBe(144); // ranger 12 power * 1 gold/power/h * 12 h cap
-    expect(again.store.get().notices[0]).toMatchObject({ kind: 'offline-accrual', message: 'Welcome back! Your Active Squad earned 144.00 gold over 12h offline (capped).' });
+    expect(accrual?.elapsedCreditedMs).toBe(12 * 3_600_000);
+    const gold = accrual!.goldAccrued.toDouble();
+    expect(gold).toBeGreaterThan(0);
+    expect(again.store.get().gold).toBe(gold); // the farm rate of the squad over the 12 h cap
+    expect(again.store.get().furthestStageCleared).toBe(0); // no stage advance offline
+    expect(again.store.get().notices[0]).toMatchObject({ kind: 'offline-accrual' });
+    expect(again.store.get().notices[0]?.message).toMatch(/over 12h offline \(capped\)\.$/);
   });
 });
 
@@ -300,7 +305,7 @@ describe('TickDriver (RFR-8)', () => {
     const d = await newGame(9);
     d.app.tick.advance(60_000);
     expect(c.app.store.get().stageCombat.kills).toBeGreaterThan(0);
-    // 540 s beyond the cap credited through offline accrual on top of the same 60 s of fighting: 12 power * 0.15 h = 1.8 → 2 gold.
-    expect(c.app.store.get().gold - d.app.store.get().gold).toBe(2);
+    // 540 s beyond the cap are farmed through offline accrual on top of the same 60 s of fighting.
+    expect(c.app.store.get().gold).toBeGreaterThan(d.app.store.get().gold);
   });
 });

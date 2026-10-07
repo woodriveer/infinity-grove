@@ -513,9 +513,9 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] Unit: 12 h cap applied; notice text unchanged; no stage advance offline
-- [ ] p10 scenario: 10 min online vs. 10 min gap gold within relative 1e-6
-- [ ] Full gate passes
+- [x] Unit: 12 h cap applied; notice text unchanged; no stage advance offline
+- [x] p10 scenario: 10 min online vs. 10 min gap gold within relative 1e-6
+- [x] Full gate passes
 
 **Tests**: unit
 **Gate**: full

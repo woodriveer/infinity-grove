@@ -1,13 +1,11 @@
 import { formatBig } from '../../domain/bignum/format';
-import { OfflineAccrualCalculator } from '../../domain/OfflineAccrualCalculator';
-import type { OfflineAccrualResult } from '../../domain/OfflineAccrualResult';
+import { BigDouble } from '../../domain/bignum/BigDouble';
+import { OfflineAccrualResult } from '../../domain/OfflineAccrualResult';
 import { toPlayerMessage } from '../../domain/ReconciliationCorrection';
-import { RosterRules } from '../../domain/RosterRules';
 import { SaveGameData } from '../../domain/SaveGameData';
 import type { BackendApi } from '../backend/BackendApi';
 import type { StageCombatService } from '../combat/StageCombatService';
 import type { ServiceDeps } from '../core';
-import { bigToInt } from '../core';
 import { PlayerEventLog } from '../events/PlayerEventLog';
 import type { SaveStore, SteamIdentity } from '../ports';
 import type { RosterService } from '../roster/RosterService';
@@ -66,31 +64,25 @@ export class SaveSyncService {
   }
 
   /**
-   * FR-41: gold for time away, from Active Squad power, capped. A real earn: it emits
-   * GoldEarned like any other. Also the catch-up path for gaps beyond TickDriver's cap.
+   * FR-41: gold for time away, farmed by the Active Squad through `fastForward` (COMBAT-07), capped (FR-42).
+   * The stage never advances offline. Also the catch-up path for gaps beyond TickDriver's cap.
    */
   applyOfflineAccrual(lastSeenMs: number, nowMs: number): OfflineAccrualResult | null {
-    const settings = this.deps.content.settings;
-    const squad = this.roster.activeSquad();
-    const power = RosterRules.squadPower(squad, (id) => this.deps.content.hero(id));
-    const accrual = OfflineAccrualCalculator.calculate(
-      lastSeenMs,
-      nowMs,
-      power,
-      settings.idleGoldPerSquadPowerPerHour,
-      Math.max(settings.offlineAccrualCapHours, 0) * 3_600_000,
-    );
-    if (accrual.goldAccrued.sign() <= 0) return null;
-    const goldToAdd = bigToInt(accrual.goldAccrued);
-    if (goldToAdd <= 0) return null;
-    this.combat.addGold(goldToAdd);
-    const hours = accrual.elapsedCreditedMs / 3_600_000;
+    const capMs = Math.max(this.deps.content.settings.offlineAccrualCapHours, 0) * 3_600_000;
+    const elapsedActualMs = nowMs - lastSeenMs;
+    if (!(elapsedActualMs > 0) || !(capMs > 0)) return null;
+    const elapsedCreditedMs = Math.min(elapsedActualMs, capMs);
+    const farmed = this.combat.fastForward(elapsedCreditedMs);
+    if (farmed.gold <= 0) return null;
+    const wasCapped = elapsedActualMs > capMs;
+    const accrual = OfflineAccrualResult.create(BigDouble.fromDouble(farmed.gold), elapsedActualMs, elapsedCreditedMs);
+    const hours = elapsedCreditedMs / 3_600_000;
     this.pushNotice({
       kind: 'offline-accrual',
       goldAccrued: formatBig(accrual.goldAccrued),
       hoursCredited: hours,
-      wasCapped: accrual.wasCapped,
-      message: `Welcome back! Your Active Squad earned ${accrual.goldAccrued.toString()} gold over ${formatHours(hours)}h offline${accrual.wasCapped ? ' (capped)' : ''}.`,
+      wasCapped,
+      message: `Welcome back! Your Active Squad earned ${accrual.goldAccrued.toString()} gold over ${formatHours(hours)}h offline${wasCapped ? ' (capped)' : ''}.`,
     });
     return accrual;
   }

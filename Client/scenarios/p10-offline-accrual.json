@@ -1,14 +1,14 @@
 {
-  "description": "P10: eight hours away credit Active Squad power x rate x hours on launch, with a welcome-back notice",
+  "description": "P10: eight hours away credit the squad farm rate (fast-forward) on launch, with a welcome-back notice",
   "save": "offline-8h",
   "steps": [],
   "expect": {
     "final": {
-      "gold": 426,
+      "gold": 68820,
       "notices": [
         {
           "kind": "offline-accrual",
-          "message": "Welcome back! Your Active Squad earned 176.00 gold over 8h offline."
+          "message": "Welcome back! Your Active Squad earned 68,570.00 gold over 8h offline."
         }
       ]
     },
@@ -17,8 +17,8 @@
         "seq": 8,
         "type": "GoldEarned",
         "payload": {
-          "goldMantissa": 1.76,
-          "goldExponent": 2
+          "goldMantissa": 6.857,
+          "goldExponent": 4
         }
       }
     ]

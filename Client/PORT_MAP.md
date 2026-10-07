@@ -155,6 +155,9 @@ C# `out`/`Try*` shapes become `T | null` returns.
   simulation over a gap yields 0 gold while the accrual path yields squad-power gold.
   The `catch-up-equivalence` vector family is therefore not generated; this goes to
   the game PRD.
+  *Closed by stage-combat (AD-007):* offline and gap gold now come from `StageCombatService.fastForward`,
+  the same `CombatRules.advance` as online play. The Unity gold term (`power × rate × hours`) of the
+  `offline-accrual` vectors is retired; the cap and hours cases still hold for `OfflineAccrualCalculator`.
 - **B7. Two devices on one account can silently lose events (backend).** Sequence
   numbers are per-device counters seeded from the account's `lastAppliedSequence`, so
   two devices that synced the same state both use N+1. The backend treats the second

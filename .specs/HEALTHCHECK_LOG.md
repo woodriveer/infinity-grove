@@ -129,3 +129,8 @@
 - Commit: feat(combat)!: squad-driven stage combat replaces the click loop
 - Decisions: see tasks.md T18 status (decided in heartbeat).
 - Pending for the developer: git push; ui-gate criterion 3.
+
+## 2026-10-07 heartbeat: stage-combat T19
+- Result: done. Gate: all green except pre-existing ui-gate criterion 3 (focus p95 ~147 ms); build and scan:secrets pass.
+- Decisions: `OfflineAccrualCalculator` stays only for the vector cap/hours cases; offline gold is `fastForward`. 8 h offline at placeholder tuning pays 68,570 gold, flagged for T21 tuning review.
+- Pending for the developer: push; ui-gate criterion 3.
