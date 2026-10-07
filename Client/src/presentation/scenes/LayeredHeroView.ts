@@ -55,6 +55,8 @@ export class LayeredHeroView {
   private behind = false;
   private tagName: string | null = null;
   private tintByLayer = new Map<LayerSlot, number>();
+  private darkByLayer = new Map<LayerSlot, number>();
+  private rampByLayer = new Map<LayerSlot, Phaser.Filters.ColorMatrix>();
   private lastFrame = -1;
   private glow: Phaser.GameObjects.Image | null = null;
   private aura: Phaser.GameObjects.Sprite | null = null;
@@ -120,6 +122,11 @@ export class LayeredHeroView {
     return this.tintByLayer.get(ARMOR_LAYERS[slot]);
   }
 
+  /** Dark end of the two-color ramp of an armor layer, when one is applied. */
+  darkOf(slot: ArmorSlot): number | undefined {
+    return this.darkByLayer.get(ARMOR_LAYERS[slot]);
+  }
+
   hasTag(tag: string): boolean {
     return this.sheet.tags.has(tag);
   }
@@ -150,11 +157,42 @@ export class LayeredHeroView {
       const layer = this.layers.get(ARMOR_LAYERS[slot]);
       if (!layer) continue;
       const color = hexToNumber(look.tint[slot]);
-      layer.sprite.setTint(color);
+      const dark = look.tintDark[slot];
       this.tintByLayer.set(layer.slot, color);
+      if (dark) {
+        // Two-color ramp (ART-10): gray 0 -> dark, gray 1 -> light. Needs WebGL filters; otherwise the light color tints alone.
+        layer.sprite.clearTint();
+        this.setRamp(layer, hexToNumber(dark), color);
+      } else {
+        layer.sprite.setTint(color);
+        this.setRamp(layer, null, color);
+      }
     }
     this.setWeapon(look.weaponModel);
     this.followBody();
+  }
+
+  private setRamp(layer: Layer, dark: number | null, light: number): void {
+    if (dark === null) this.darkByLayer.delete(layer.slot);
+    else this.darkByLayer.set(layer.slot, dark);
+    let filter = this.rampByLayer.get(layer.slot);
+    if (dark === null) {
+      if (filter) filter.active = false;
+      return;
+    }
+    if (!filter) {
+      layer.sprite.enableFilters();
+      filter = layer.sprite.filters?.internal.addColorMatrix();
+      if (!filter) {
+        layer.sprite.setTint(light);
+        return;
+      }
+      this.rampByLayer.set(layer.slot, filter);
+    }
+    filter.active = true;
+    const ch = (c: number, shift: number): number => ((c >> shift) & 0xff) / 255;
+    const row = (shift: number): number[] => [ch(light, shift) - ch(dark, shift), 0, 0, 0, ch(dark, shift)];
+    filter.colorMatrix.set([...row(16), ...row(8), ...row(0), 0, 0, 0, 1, 0]);
   }
 
   /** Enchant effects shown right now; empty when effects are off or no band applies (ART-08). */

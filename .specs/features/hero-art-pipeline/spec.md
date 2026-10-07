@@ -177,17 +177,17 @@ looks.
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| ART-01 | P1: Export a hero (AC 1–3) | - | Pending |
-| ART-02 | P1: Export a hero (AC 4–6) | - | Pending |
-| ART-03 | P1: Enforce the guide's rules (hero rules, AC 1–6, 9) | - | Pending |
-| ART-04 | P1: Enforce the guide's rules (weapon/item rules, AC 7–8) | - | Pending |
-| ART-05 | P1: Compose the hero (layers, order, behind, AC 1–3) | - | Pending |
-| ART-06 | P1: Compose the hero (tint, weapon, updates, AC 4–8) | - | Pending |
-| ART-07 | P1: Compose the hero (dev hook, AC 9) | - | Pending |
-| ART-08 | P2: Enchant effects and attack speed | - | Pending |
-| ART-09 | P2: Migration and fallbacks | - | Pending |
-| ART-10 | P3: Two-color armor | - | Pending |
-| ART-11 | Edge cases | - | Pending |
+| ART-01 | P1: Export a hero (AC 1–3) | T1-T18 | Done |
+| ART-02 | P1: Export a hero (AC 4–6) | T1-T18 | Done |
+| ART-03 | P1: Enforce the guide's rules (hero rules, AC 1–6, 9) | T1-T18 | Done |
+| ART-04 | P1: Enforce the guide's rules (weapon/item rules, AC 7–8) | T1-T18 | Done |
+| ART-05 | P1: Compose the hero (layers, order, behind, AC 1–3) | T1-T18 | Done |
+| ART-06 | P1: Compose the hero (tint, weapon, updates, AC 4–8) | T1-T18 | Done |
+| ART-07 | P1: Compose the hero (dev hook, AC 9) | T1-T18 | Done |
+| ART-08 | P2: Enchant effects and attack speed | T1-T18 | Done |
+| ART-09 | P2: Migration and fallbacks | T1-T18 | Done |
+| ART-10 | P3: Two-color armor | T1-T18 | Done |
+| ART-11 | Edge cases | T1-T18 | Done |
 
 **Coverage:** 11 total, 0 mapped to tasks, 11 unmapped ⚠️
 

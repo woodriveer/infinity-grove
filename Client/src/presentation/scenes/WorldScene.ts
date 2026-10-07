@@ -131,6 +131,7 @@ export class WorldScene extends Phaser.Scene {
     tag: string | null;
     weaponModel: string | null;
     tint: Record<string, string>;
+    tintDark: Record<string, string>;
     enchantBand: number | null;
     effects: string[];
     hits: number;
@@ -149,6 +150,7 @@ export class WorldScene extends Phaser.Scene {
         tag: layered?.tag ?? null,
         weaponModel: layered?.weaponModel ?? null,
         tint: layered?.tint ?? {},
+        tintDark: layered?.tintDark ?? {},
         enchantBand: look ? (enchantBand(look.enchantLevel, bands)?.minLevel ?? null) : null,
         effects: layered?.effects ?? [],
         hits: layered?.hits ?? 0,

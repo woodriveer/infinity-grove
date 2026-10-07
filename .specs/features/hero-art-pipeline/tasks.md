@@ -453,8 +453,8 @@ T14 → T15 → T16 → T17 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] e2e asserts `__ig.world()` reports both colors for a fixture item; screenshot taken for review (not asserted)
-- [ ] `npm run verify` green apart from the known ui-gate criterion 3; Verifier runs next
+- [x] e2e asserts `__ig.world()` reports both colors for a fixture item; screenshot taken for review (not asserted)
+- [x] `npm run verify` green apart from the known ui-gate criterion 3; Verifier runs next
 
 **Tests**: e2e
 **Gate**: build

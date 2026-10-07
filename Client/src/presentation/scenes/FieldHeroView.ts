@@ -110,15 +110,18 @@ export class FieldHeroView {
   }
 
   /** Layered state for tests: playing tag, weapon model and armor tints as `#rrggbb`. */
-  layeredState(): { tag: string | null; weaponModel: string | null; tint: Partial<Record<ArmorSlot, string>>; effects: string[]; hits: number; attackSpeed: number } | null {
+  layeredState(): { tag: string | null; weaponModel: string | null; tint: Partial<Record<ArmorSlot, string>>; tintDark: Partial<Record<ArmorSlot, string>>; effects: string[]; hits: number; attackSpeed: number } | null {
     const v = this.layered;
     if (!v) return null;
     const tint: Partial<Record<ArmorSlot, string>> = {};
+    const tintDark: Partial<Record<ArmorSlot, string>> = {};
     for (const slot of ['Chest', 'Gloves', 'Boots'] as const) {
       const n = v.tintOf(slot);
       if (n !== undefined) tint[slot] = `#${n.toString(16).padStart(6, '0')}`;
+      const d = v.darkOf(slot);
+      if (d !== undefined) tintDark[slot] = `#${d.toString(16).padStart(6, '0')}`;
     }
-    return { tag: v.currentTag, weaponModel: v.weaponModel?.replace('items/weapons/', '') ?? null, tint, effects: v.activeEffects, hits: this.hits, attackSpeed: this.speed };
+    return { tag: v.currentTag, weaponModel: v.weaponModel?.replace('items/weapons/', '') ?? null, tint, tintDark, effects: v.activeEffects, hits: this.hits, attackSpeed: this.speed };
   }
 
   /** Applies what the hero wears (layered path only). */

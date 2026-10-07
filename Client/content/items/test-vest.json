@@ -5,6 +5,7 @@
   "archetype": "Strength",
   "icon": "",
   "visual": {
-    "color": "#c04040"
+    "color": "#c04040",
+    "colorDark": "#400808"
   }
 }

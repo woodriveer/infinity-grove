@@ -8,6 +8,8 @@ export interface HeroLook {
   /** `items/weapons/<id>` key suffix, or null when no weapon model is shown. */
   weaponModel: string | null;
   tint: Record<ArmorSlot, HexColor>;
+  /** Dark end of the two-color ramp per armor slot; null = plain multiply tint (ART-10). */
+  tintDark: Record<ArmorSlot, HexColor | null>;
   enchantLevel: number;
 }
 
@@ -34,11 +36,17 @@ export function heroLook(
     return inst ? items.get(inst.itemId) : undefined;
   };
   const tint = {} as Record<ArmorSlot, HexColor>;
-  for (const slot of ARMOR_SLOTS) tint[slot] = itemOf(slot)?.visual?.color ?? fallback;
+  const tintDark = {} as Record<ArmorSlot, HexColor | null>;
+  for (const slot of ARMOR_SLOTS) {
+    const visual = itemOf(slot)?.visual;
+    tint[slot] = visual?.color ?? fallback;
+    tintDark[slot] = visual?.color ? (visual.colorDark ?? null) : null;
+  }
   const weapon = equipped.Weapon;
   return {
     weaponModel: itemOf('Weapon')?.visual?.weaponModel ?? null,
     tint,
+    tintDark,
     enchantLevel: weapon ? enchantLevelOf(weapon) : 0,
   };
 }

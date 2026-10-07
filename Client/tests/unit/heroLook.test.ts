@@ -31,6 +31,7 @@ describe('heroLook', () => {
     expect(look).toEqual({
       weaponModel: 'iron-sword',
       tint: { Chest: '#112233', Gloves: '#445566', Boots: '#778899' },
+      tintDark: { Chest: null, Gloves: null, Boots: null },
       enchantLevel: 0,
     });
   });

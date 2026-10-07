@@ -26,3 +26,10 @@ test('equipping and unequipping weapon and armor changes model and tint on the n
   await advance(page, 200);
   expect(await testHero(page)).toMatchObject({ weaponModel: 'test-blade', tint: { Chest: '#c04040' } });
 });
+
+test('two-color armor reports both ramp colors for an item with colorDark (ART-10)', async ({ page }) => {
+  await open(page, { save: 'layered-squad', scene: 'game' });
+  await advance(page, 200);
+  expect(await testHero(page)).toMatchObject({ tint: { Chest: '#c04040' }, tintDark: { Chest: '#400808' } });
+  expect((await testHero(page)).tintDark).not.toHaveProperty('Gloves');
+});

@@ -282,3 +282,8 @@
 - Result: done (see STATE.md entry). Gate: typecheck, lint, validate:content, gen:check, npm test green; e2e fails only on known ui-gate criterion 3.
 - Commit: feat(world): enchant effects, attack speed and hit event
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-07 hero-art-pipeline T18
+- Result: done (see STATE.md entry). Gate: typecheck, lint, validate:content, gen:check, build green; known failures only (combatJump timing, ui-gate criterion 3).
+- Commit: feat(world): two-color armor tint
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
