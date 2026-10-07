@@ -164,3 +164,9 @@
 - Commit: feat(stages): jump to a cleared stage from Stage Select
 - Decisions: screen was already complete from T20, so T24 only tightened the e2e to gamepad + `game.current` and set traceability Done. Feature Verifier left for the next run.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: stage-combat Verifier
+- Result: PASS. Independent Verifier: 31/31 ACs traced, 1 spec-precision gap (offline BossDefeated queue), sensor 8/8 killed, vitest 286/287 (combatJump timing flake), backend 19/19, e2e only pre-existing ui-gate criterion 3 failing.
+- Commit: docs(stage-combat): verifier report
+- Decisions: gaps non-blocking; combatJump wall-clock test to move to bench/soak later.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.

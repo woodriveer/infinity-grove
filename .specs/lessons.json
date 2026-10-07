@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "promote_threshold": 2,
+  "window_days": 45,
+  "quarantine_threshold": 2,
+  "next_id": 3,
+  "lessons": [
+    {
+      "id": "L-001",
+      "key": "gate_fail::do not gate on wall clock performance budgets in the unit suite assert behavior and track timing in a bench or soak run",
+      "text": "Do not gate on wall-clock performance budgets in the unit suite; assert behavior and track timing in a bench or soak run",
+      "signal": "gate_fail",
+      "scope": "tests",
+      "status": "candidate",
+      "features": [
+        "stage-combat"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "Client/tests/unit/combatJump.test.ts:129 (tests)"
+      ],
+      "created": "2026-10-07T17:39:42Z",
+      "last_seen": "2026-10-07T17:39:42Z"
+    },
+    {
+      "id": "L-002",
+      "key": "spec_precision_gap::edge cases that depend on a not yet built reward path need a stated observable outcome or an explicit deferral to the feature that builds it",
+      "text": "Edge cases that depend on a not-yet-built reward path need a stated observable outcome or an explicit deferral to the feature that builds it",
+      "signal": "spec_precision_gap",
+      "scope": "specs",
+      "status": "candidate",
+      "features": [
+        "stage-combat"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "spec.md Edge Cases: BossDefeated offline queue (specs)"
+      ],
+      "created": "2026-10-07T17:39:43Z",
+      "last_seen": "2026-10-07T17:39:43Z"
+    }
+  ]
+}
