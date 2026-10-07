@@ -56,3 +56,10 @@
 - **Commits**: `feat(domain): stage curves for combat`.
 - **Decisions (decided in heartbeat)**: `StageSpec`/`BossSpec` shape (design named the fields but not the type); boss gold included (`goldMultiplier` exists in content); boss presence follows `stage.boss`, whose `bossEvery` rule validate:content already enforces.
 - **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.
+
+## 2026-10-07 — stage-combat T8: combat types, startStage, damage factors and click
+
+- **Result**: done. `Client/src/domain/combat/CombatRules.ts`: `Encounter`, `FieldHero`, `Foe`, `CombatParams`, `SquadMember`, `CombatOutcome`; `startStage` (full HP, spawn counter in 100 ms steps, boss timer), `squadDpsVsFoe` (living heroes, `typeBonus` on the stage's favored type), `damageTakenFactor` (`1 − def/(def+K)`), `click` (`clickDpsShare × squadDpsVsFoe`, opens a segment, kill emits `kill` with stage or boss gold). 15 unit tests in `Client/tests/unit/combatRules.test.ts`. Quick gate green: typecheck, lint, Vitest 187 passed (was 172).
+- **Commits**: `feat(domain): combat encounter model and click`.
+- **Decisions (decided in heartbeat)**: `CombatParams` = economy scalars + `squad` (Active Squad only, slot order) + `stages` (all `StageSpec`s, for auto-advance); hero DPS = `power × dpsPerPower` fixed at stage start; a boss stage spawns only the boss; a click without a fighting foe does nothing; stage clear and boss victory on a kill are left to T9.
+- **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.

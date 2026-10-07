@@ -251,12 +251,13 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] Unit tests: benched/knocked-out heroes add no DPS; type bonus only on favored-type heroes; click = 5% of squad DPS; click kill emits `kill` with gold; `def/(def+K)` values
-- [ ] Quick gate passes
+- [x] Unit tests: benched/knocked-out heroes add no DPS; type bonus only on favored-type heroes; click = 5% of squad DPS; click kill emits `kill` with gold; `def/(def+K)` values
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(domain): combat encounter model and click`
+**Status**: Done (heartbeat 2026-10-07): 15 tests in `Client/tests/unit/combatRules.test.ts`; quick gate 187 tests green. Decided in heartbeat: `CombatParams` (not shaped in design) = economy scalars `monstersPerStage`, `spawnDelayMs`, `typeBonus`, `clickDpsShare`, `dpsPerPower`, `defenseK` + `squad: SquadMember[]` (Active Squad only, slot order, `{ heroId, heroType, power, maxHp, defense, attackIntervalMs }`) + `stages: StageSpec[]` (index n−1, so auto-advance can read the next stage); `FieldHero.dps = power × dpsPerPower` set in `startStage`; a boss stage spawns only the boss, its timer `round(timerSeconds × 10)` steps set at stage start; a click on a non-fighting encounter is a no-op; a click kill moves to `spawning` with `monsterIndex + 1` (stage clear and boss victory on kill come in T9).
 
 ---
 
