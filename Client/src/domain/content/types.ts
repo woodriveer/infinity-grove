@@ -8,6 +8,42 @@ import type { HeroType } from '../HeroType';
  * schemas that `satisfy` these types; domain never imports zod (AD-8).
  */
 
+/** `#rrggbb` (validated by the content schema). */
+export type HexColor = string;
+
+/** Hero art mode (hero-art-pipeline ART-09): absent = portrait fallback. */
+export interface HeroArt {
+  /** `layered` = exported Aseprite layers composed at runtime; `legacy` = the fixed Unity-era sheets. */
+  mode: 'layered' | 'legacy';
+  /** Tint of an empty armor slot. */
+  neutral?: HexColor;
+}
+
+/** How an item looks on a hero (hero-art-pipeline ART-06). */
+export interface ItemVisual {
+  /** Weapon slot only: `items/weapons/<id>` Aseprite key suffix. */
+  weaponModel?: string;
+  /** Chest/Gloves/Boots only. */
+  color?: HexColor;
+  /** Chest/Gloves/Boots only: the dark end of the two-color ramp (ART-10). */
+  colorDark?: HexColor;
+}
+
+/** One enchant visual band, from `minLevel` up to the next band (ART-08). */
+export interface EnchantBand {
+  minLevel: number;
+  glow: boolean;
+  aura: boolean;
+  /** Effect id of the particle effect. */
+  particles?: string;
+}
+
+/** content/art/enchant-bands.json: sorted, non-overlapping, `minLevel` >= 1. */
+export interface EnchantBandsData {
+  artId: string;
+  bands: EnchantBand[];
+}
+
 /** Data/HeroData.cs: a collectible hero card (PRD FR-2/FR-6). */
 export interface HeroData {
   heroId: string;
@@ -26,6 +62,7 @@ export interface HeroData {
   attackIntervalMs: number;
   /** Ability text per star tier, index 0 = 1★ .. index 11 = 12★. */
   abilityByStarTier: string[];
+  art?: HeroArt;
 }
 
 /** Data/MonsterData.cs */
@@ -85,6 +122,7 @@ export interface EquipmentItemData {
   archetype: Archetype;
   /** Asset key of the icon (empty = none). */
   icon: string;
+  visual?: ItemVisual;
 }
 
 /** Data/Equipment.cs: Krell's weapon (drives the animation variant and bonus damage). */
