@@ -22,6 +22,7 @@ public static class BackendFamilies
         yield return FusionCostCurve();
         yield return EventPayloads();
         yield return EventValidation();
+        yield return StageRules();
     }
 
     // ---------- big numbers (BreakInfinity.cs) ----------
@@ -198,6 +199,29 @@ public static class BackendFamilies
         return new VectorFamily("fusion-cost-curve", "backend", "CardFusionCostCurve (backend star tiers are 0-based)", cases);
     }
 
+    // ---------- stages ----------
+
+    /// <summary>AD-002 boss stages: keeps the backend's BossEvery default and rule equal to the client's.</summary>
+    private static VectorFamily StageRules()
+    {
+        var cases = new List<JsonNode>
+        {
+            new JsonObject { ["op"] = "defaultBossEvery", ["result"] = new ProgressOptions().BossEvery },
+        };
+        foreach (var bossEvery in new[] { 1, 3, 5, 10 })
+        {
+            for (var stage = 1; stage <= 20; stage++)
+            {
+                cases.Add(new JsonObject
+                {
+                    ["op"] = "isBossStage", ["stageNumber"] = stage, ["bossEvery"] = bossEvery,
+                    ["result"] = PlayerProgress.IsBossStage(stage, bossEvery),
+                });
+            }
+        }
+        return new VectorFamily("stage-rules", "backend", "PlayerProgress.IsBossStage, ProgressOptions.BossEvery default", cases);
+    }
+
     // ---------- events ----------
 
     /// <summary>ASP.NET Core's JSON defaults: what the backend's model binding uses for payload JSON.</summary>
@@ -220,6 +244,7 @@ public static class BackendFamilies
             Add("GoldSpent", new GoldSpentPayload(v.Mantissa, v.Exponent));
         }
         foreach (var s in new[] { 1, 2, 17, 250, 100000 }) Add("StageCleared", new StageClearedPayload(s));
+        foreach (var s in new[] { 5, 10, 250, 100000 }) Add("BossDefeated", new BossDefeatedPayload(s));
         foreach (var n in new[] { 1, 42, 0xABCDEF }) Add("HeroAcquired", new HeroAcquiredPayload(G(n)));
         Add("ActiveSquadChanged", new ActiveSquadChangedPayload(Array.Empty<Guid>()));
         Add("ActiveSquadChanged", new ActiveSquadChangedPayload(new[] { G(1) }));
@@ -245,6 +270,21 @@ public static class BackendFamilies
             ("stages-in-order", new() { new() {
                 new("StageCleared", 1, Stage(1)), new("StageCleared", 2, Stage(3)), new("StageCleared", 3, Stage(2)),
                 new("StageCleared", 4, Stage(1)), new("StageCleared", 5, Stage(0)), new("StageCleared", 6, Stage(3)) } }),
+            ("boss-stages", new() { new() {
+                new("StageCleared", 1, Stage(1)), new("StageCleared", 2, Stage(2)), new("StageCleared", 3, Stage(3)),
+                new("StageCleared", 4, Stage(4)), new("StageCleared", 5, Stage(5)), new("BossDefeated", 6, Stage(4)),
+                new("BossDefeated", 7, Stage(10)), new("BossDefeated", 8, Stage(0)), new("BossDefeated", 9, Stage(5)),
+                new("StageCleared", 10, Stage(5)), new("BossDefeated", 11, Stage(5)), new("StageCleared", 12, Stage(6)),
+                new("BossDefeated", 13, Stage(10)), new("StageCleared", 14, Stage(5)) } }),
+            ("boss-across-batches", new()
+            {
+                new() { new("StageCleared", 1, Stage(1)), new("StageCleared", 2, Stage(2)), new("StageCleared", 3, Stage(3)),
+                    new("StageCleared", 4, Stage(4)), new("BossDefeated", 5, Stage(5)) },
+                new() { new("StageCleared", 6, Stage(5)), new("StageCleared", 7, Stage(6)) },
+            }),
+            ("malformed-boss-payloads", new() { new() {
+                new("BossDefeated", 1, new JsonObject()), new("BossDefeated", 2, new JsonObject { ["stageNumber"] = "x" }),
+                new("BossDefeated", 3, new JsonObject { ["StageNumber"] = 1.5 }) } }),
             ("roster-and-squad", new() { new() {
                 new("HeroAcquired", 1, Hero(1)), new("HeroAcquired", 2, Hero(1)), new("HeroAcquired", 3, Hero(2)),
                 new("ActiveSquadChanged", 4, Squad(1, 2)), new("ActiveSquadChanged", 5, Squad(1, 3)),

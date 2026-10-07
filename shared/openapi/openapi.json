@@ -771,7 +771,8 @@
           "GoldSpent",
           "StageCleared",
           "HeroAcquired",
-          "ActiveSquadChanged"
+          "ActiveSquadChanged",
+          "BossDefeated"
         ],
         "type": "string"
       },

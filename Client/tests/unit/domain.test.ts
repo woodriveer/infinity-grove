@@ -124,4 +124,29 @@ describe('PlayerProgressReplay', () => {
     expect(() => PlayerProgressReplay.applyEvent(PlayerProgressReplay.newLedger().state, 'GoldSpent', { goldMantissa: 5, goldExponent: 1 }))
       .toThrow('Insufficient gold: have 0, need 50.00.');
   });
+
+  // The canonical snapshot has no HighestBossDefeated; a ledger seeded from it must
+  // still accept replays of cleared boss stages and reject the next one without its boss.
+  const stage = (n: number, seq: number, type = 'StageCleared') => ({ clientEventId: `e${seq}`, sequenceNumber: seq, type, payload: { stageNumber: n } });
+  const atFurthest = (furthestStageCleared: number) =>
+    PlayerProgressReplay.newLedger({ ...PlayerProgressReplay.newLedger().state, furthestStageCleared });
+
+  it('seeded from a snapshot past a boss stage, accepts replaying that boss stage', () => {
+    const r = PlayerProgressReplay.ingestBatch(atFurthest(7), [stage(5, 1)]);
+    expect(r.results[0]).toEqual({ clientEventId: 'e1', status: 'Accepted', rejectionReason: null });
+    expect(r.ledger.highestBossDefeated).toBe(5);
+  });
+
+  it('seeded from a snapshot before a boss stage, rejects clearing it until its boss is defeated', () => {
+    const r = PlayerProgressReplay.ingestBatch(atFurthest(9), [stage(10, 1), stage(10, 2, 'BossDefeated'), stage(10, 3)]);
+    expect(r.results.map((x) => x.rejectionReason)).toEqual(['Cannot clear boss stage 10 before defeating its boss.', null, null]);
+    expect(r.ledger.state.furthestStageCleared).toBe(10);
+    expect(r.ledger.highestBossDefeated).toBe(10);
+  });
+
+  it('applies the ledger cadence, not the default one', () => {
+    const ledger = PlayerProgressReplay.newLedger({ ...PlayerProgressReplay.newLedger().state, furthestStageCleared: 2 }, 3);
+    const r = PlayerProgressReplay.ingestBatch(ledger, [stage(3, 1)]);
+    expect(r.results[0]?.rejectionReason).toBe('Cannot clear boss stage 3 before defeating its boss.');
+  });
 });

@@ -16,6 +16,7 @@ export const payloadSchemas = {
   StageCleared: z.object({ stageNumber: z.number().int() }).strict(),
   HeroAcquired: z.object({ heroDefinitionId: guid }).strict(),
   ActiveSquadChanged: z.object({ heroDefinitionIds: z.array(guid) }).strict(),
+  BossDefeated: z.object({ stageNumber: z.number().int() }).strict(),
 } as const satisfies Record<PlayerEventType, z.ZodType>;
 
 export type PayloadOf<T extends PlayerEventType> = z.infer<(typeof payloadSchemas)[T]>;
@@ -27,6 +28,7 @@ const MEMBER_ORDER: Record<PlayerEventType, readonly string[]> = {
   StageCleared: ['stageNumber'],
   HeroAcquired: ['heroDefinitionId'],
   ActiveSquadChanged: ['heroDefinitionIds'],
+  BossDefeated: ['stageNumber'],
 };
 
 /** Validates and serializes a payload exactly as the backend would. */

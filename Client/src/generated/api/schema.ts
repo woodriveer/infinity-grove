@@ -520,7 +520,7 @@ export interface components {
             currency?: string | null;
         };
         /** @enum {string} */
-        PlayerEventType: "GoldEarned" | "GoldSpent" | "StageCleared" | "HeroAcquired" | "ActiveSquadChanged";
+        PlayerEventType: "GoldEarned" | "GoldSpent" | "StageCleared" | "HeroAcquired" | "ActiveSquadChanged" | "BossDefeated";
         PlayerStateDto: {
             /** Format: double */
             goldMantissa?: number;
