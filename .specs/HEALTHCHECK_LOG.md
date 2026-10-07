@@ -152,3 +152,9 @@
 - Commit: feat(world): squad heroes fight on the field
 - Decisions: see tasks.md T22 status (punch tag as attack, type-colored block fallback, field nodes in GameScreenController, krellAnimation null without Krell in squad).
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: stage-combat T23
+- Result: done. Gate: typecheck, lint, validate:content, gen:check, npm test (287; combatJump 12 h timing flake under load, passes alone), build, scan:secrets green; e2e green except pre-existing ui-gate criterion 3.
+- Commit: feat(hud): stage, boss timer and failure label
+- Decisions: see tasks.md T23 status (last-stage text covered by a unit test; boss-weak fixture).
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.

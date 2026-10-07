@@ -2,6 +2,7 @@ import type { CombatOutcome, CombatParams, CombatResult, Encounter } from '../..
 import { advance, click, stageAt, startStage } from '../../domain/combat/CombatRules';
 import { BigDouble } from '../../domain/bignum/BigDouble';
 import { BossFailureLabel } from '../../domain/combat/BossFailureLabel';
+import { farmRate } from '../../domain/combat/FarmRate';
 import type { ServiceDeps } from '../core';
 import { withEvent, withGold } from '../core';
 import type { GameState, StageCombatSnapshot } from '../state/types';
@@ -111,6 +112,15 @@ export class StageCombatService {
     if (amount <= 0) return;
     const s = this.deps.store.get();
     this.deps.store.commit(withGold(this.deps, s, s.gold + amount));
+  }
+
+  /** Gold per second the squad earns farming the current stage (the stage before it when that is a boss): the HUD rate. */
+  goldPerSecond(): number {
+    const s = this.deps.store.get();
+    const params = this.params(s);
+    const n = s.stageCombat.encounter?.stageNumber ?? s.stageCombat.stageNumber;
+    const stage = stageAt(n, params);
+    return farmRate(stage.boss && n > 1 ? stageAt(n - 1, params) : stage, params).goldPerSecond;
   }
 
   setAutoAdvance(on: boolean): void {

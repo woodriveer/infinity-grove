@@ -99,3 +99,11 @@ await build(
   },
   { reconcile: true },
 );
+// The starter ranger alone, furthest stage 4: the stage 5 boss is next and far above its power (boss failure HUD).
+await build(
+  'boss-weak',
+  (app) => {
+    for (let i = 0; i < 100_000 && app.store.get().furthestStageCleared < 4; i++) app.combat.step(100);
+  },
+  { reconcile: true },
+);
