@@ -19,10 +19,10 @@ import { SaveCodec } from '../../src/services/save/SaveCodec';
 import { ReplayBackend, TEST_TICKET } from './replayBackend';
 
 export type Step =
-  | { do: 'begin' }
   | { do: 'advance'; ms: number; frameMs?: number }
-  | { do: 'attack'; times?: number }
-  | { do: 'attackUntilKill'; kills?: number }
+  | { do: 'click'; times?: number }
+  | { do: 'clickUntilKill'; kills?: number }
+  | { do: 'setAutoAdvance'; on: boolean }
   | { do: 'addHero'; heroId: string; copies?: number }
   | { do: 'activate'; heroId: string }
   | { do: 'bench'; heroId: string }
@@ -120,9 +120,6 @@ export async function runScenario(scenario: Scenario, opts: { seed?: number; sav
     const { app, platform } = session;
     let result: unknown = null;
     switch (step.do) {
-      case 'begin':
-        app.combat.begin();
-        break;
       case 'advance': {
         const frame = step.frameMs ?? 100;
         let left = step.ms;
@@ -136,26 +133,29 @@ export async function runScenario(scenario: Scenario, opts: { seed?: number; sav
         await flushAsync();
         break;
       }
-      case 'attack':
+      case 'click':
         for (let n = 0; n < (step.times ?? 1); n++) {
-          app.combat.playerAttack(app.playerCombat.calculateAttackDamage());
+          app.combat.click();
           collect();
         }
         break;
-      case 'attackUntilKill': {
-        const target = app.store.get().combat.kills + (step.kills ?? 1);
+      case 'clickUntilKill': {
+        const target = app.store.get().stageCombat.kills + (step.kills ?? 1);
         let guard = 0;
-        while (app.store.get().combat.kills < target && guard++ < 100_000) {
-          if (app.store.get().combat.state === 'Fighting') app.combat.playerAttack(app.playerCombat.calculateAttackDamage());
+        while (app.store.get().stageCombat.kills < target && guard++ < 100_000) {
+          if (app.store.get().stageCombat.encounter?.phase === 'fighting') app.combat.click();
           else {
             platform.clock.advance(100);
             app.tick.advance(100);
           }
           collect();
         }
-        result = { kills: app.store.get().combat.kills };
+        result = { kills: app.store.get().stageCombat.kills };
         break;
       }
+      case 'setAutoAdvance':
+        app.combat.setAutoAdvance(step.on);
+        break;
       case 'addHero':
         for (let n = 0; n < (step.copies ?? 1); n++) app.roster.addHeroCard(step.heroId);
         break;
@@ -238,6 +238,10 @@ export async function runScenario(scenario: Scenario, opts: { seed?: number; sav
     if (result !== null) results.push({ step: i, do: step.do, result });
   }
 
+  // A run ends like a sync would: the income gathered so far is reported as one GoldEarned.
+  session.app.combat.flushIncome();
+  collect();
+
   return {
     scenario: opts.name ?? scenario.description,
     seed,
@@ -268,12 +272,16 @@ export function summarize(app: AppContext) {
     heroes: s.heroes.map((h) => ({ heroId: h.heroId, starTier: h.starTier, duplicatesOwned: h.duplicatesOwned, active: h.isInActiveSquad })),
     activeSquad: s.activeSquad,
     combat: {
-      state: s.combat.state,
-      kills: s.combat.kills,
-      monster: s.combat.monster ? { name: s.combat.monster.name, currentHp: s.combat.monster.currentHp, maxHp: s.combat.monster.maxHp } : null,
+      stageNumber: s.stageCombat.stageNumber,
+      autoAdvance: s.stageCombat.autoAdvance,
+      kills: s.stageCombat.kills,
+      clicks: s.stageCombat.clicks,
+      phase: s.stageCombat.encounter?.phase ?? null,
+      monsterIndex: s.stageCombat.encounter?.monsterIndex ?? null,
+      foe: s.stageCombat.encounter?.foe ? { monsterId: s.stageCombat.encounter.foe.monsterId, hp: s.stageCombat.encounter.foe.hp, maxHp: s.stageCombat.encounter.foe.maxHp } : null,
+      pendingIncome: s.stageCombat.pendingIncome,
     },
     krellEquipmentId: s.krellEquipmentId,
-    attackDamage: app.playerCombat.calculateAttackDamage(),
     equipment: {
       bag: s.equipment.bag.map((i) => i.itemId),
       equipped: Object.fromEntries(

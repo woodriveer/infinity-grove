@@ -23,40 +23,49 @@ test('settings: music volume changes and persists (RFR-47)', async ({ page }) =>
   expect(await screen(page)).toBe('menu');
 });
 
-test('combat: walk, encounter, gamepad-only attacks kill the slime and award gold (P2, P3, RFR-43)', async ({ page }) => {
+test('combat: the squad searches, fights on its own and gamepad clicks add damage (P2, P3, RFR-43)', async ({ page }) => {
   await open(page, { save: 'new-player', scene: 'game' });
-  expect(await node(page, 'game.combat')).toMatchObject({ label: 'Krell is searching for a monster', enabled: false });
+  expect(await node(page, 'game.combat')).toMatchObject({ label: 'Your squad is searching for a monster', enabled: false });
   expect((await ig(page, (g) => g.world())).krellAnimation).toBe('walk');
-  await advance(page, 2000);
+  await advance(page, 300);
   const target = await node(page, 'game.combat');
   expect(target).toMatchObject({ label: 'Attack Slime', value: '50/50 HP', enabled: true, focused: true });
+  expect(await node(page, 'game.progress')).toMatchObject({ value: '1/10' });
   expect((await ig(page, (g) => g.world())).krellAnimation).toBe('idle');
   await shot(page, 'combat');
   await pad(page, 'A');
-  // WCLAW01: level 1 × 5 + 10 bonus = 15 per hit (P3).
-  expect((await node(page, 'game.combat')).value).toBe('35/50 HP');
+  // A click is 5% of the squad DPS: ranger 12 power x 1.5 (favored Nature) = 18 dps -> 0.9 damage.
+  let s = await state(page);
+  expect(s.combat.clicks).toBe(1);
+  expect(s.combat.foe?.hp).toBeCloseTo(49.1, 6);
   expect((await ig(page, (g) => g.world())).krellAnimation).toBe('punch');
-  for (let i = 0; i < 3; i++) await pad(page, 'A');
-  const s = await state(page);
+  await advance(page, 2800); // 49.1 HP left at 18 dps
+  s = await state(page);
   expect(s.combat.kills).toBe(1);
-  expect(s.gold).toBeGreaterThanOrEqual(3);
-  expect(s.gold).toBeLessThanOrEqual(8);
-  expect((await node(page, 'game.gold')).value).toBe(String(s.gold));
-  expect(s['pendingEvents']).toContain('GoldEarned');
+  expect(s.gold).toBe(5);
+  expect((await node(page, 'game.gold')).value).toBe('5');
+  expect(await node(page, 'game.progress')).toMatchObject({ value: '2/10' });
 });
 
-test('combat: keyboard Space attacks while the Combat View is focused (RFR-43)', async ({ page }) => {
+test('combat: keyboard Space clicks while the Combat View is focused (RFR-43)', async ({ page }) => {
   await open(page, { save: 'new-player', scene: 'game' });
-  await advance(page, 2000);
+  await advance(page, 300);
   await key(page, 'Space');
-  expect((await node(page, 'game.combat')).value).toBe('35/50 HP');
+  expect((await state(page)).combat.clicks).toBe(1);
 });
 
-test('combat: a mouse click on the world attacks (P2)', async ({ page }) => {
+test('combat: a mouse click on the world clicks the foe (P2)', async ({ page }) => {
   await open(page, { save: 'new-player', scene: 'game' });
-  await advance(page, 2000);
+  await advance(page, 300);
   await page.locator('[data-node-id="game.combat"]').click();
-  expect((await node(page, 'game.combat')).value).toBe('35/50 HP');
+  expect((await state(page)).combat.clicks).toBe(1);
+});
+
+test('combat: ten kills clear the stage and the fight moves to stage 2 (P1)', async ({ page }) => {
+  await open(page, { save: 'new-player', scene: 'game' });
+  await advance(page, 40_000);
+  expect(await node(page, 'game.stage')).toMatchObject({ value: '1' });
+  expect(await node(page, 'game.current')).toMatchObject({ value: '2' });
 });
 
 test('offline accrual: eight hours away shows the welcome-back notice, which leaves after 6 s (P10)', async ({ page }) => {

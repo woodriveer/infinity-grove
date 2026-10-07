@@ -1,0 +1,17 @@
+{
+  "description": "P3: more squad power kills faster; a second hero lifts the kill rate from 9 to 15 kills per 30 s",
+  "save": "new-player",
+  "steps": [
+    { "do": "setAutoAdvance", "on": false },
+    { "do": "advance", "ms": 30000 },
+    { "do": "addHero", "heroId": "krell" },
+    { "do": "activate", "heroId": "krell" },
+    { "do": "advance", "ms": 30000 }
+  ],
+  "expect": {
+    "final": {
+      "gold": 120,
+      "combat": { "stageNumber": 1, "kills": 24 }
+    }
+  }
+}

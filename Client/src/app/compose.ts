@@ -3,8 +3,7 @@ import { ALL_ASSET_KEYS } from '../generated/assets.gen';
 import type { BackendApi } from '../services/backend/BackendApi';
 import { BackendApiClient } from '../services/backend/BackendApiClient';
 import { NoBackend } from '../services/backend/NoBackend';
-import { CombatService } from '../services/combat/CombatService';
-import { PlayerCombatService } from '../services/combat/PlayerCombatService';
+import { StageCombatService } from '../services/combat/StageCombatService';
 import { loadContent } from '../services/content/ContentLoader';
 import { rngIdGenerator, type ServiceDeps } from '../services/core';
 import { BackendAffixRollSource } from '../services/crafting/BackendAffixRollSource';
@@ -51,9 +50,8 @@ export function compose(config: AppConfig, platform: PlatformPorts, overrides: C
     (config.backend === 'none' ? new NoBackend() : new BackendApiClient(config.backend, platform.http, platform.logger));
   const identity = config.identity === 'dev' ? new DevSteamIdentity(config.devTicket) : platform.steamIdentity;
 
-  const combat = new CombatService(deps);
+  const combat = new StageCombatService(deps);
   const equipment = new EquipmentService(deps);
-  const playerCombat = new PlayerCombatService(deps, equipment);
   const roster = new RosterService(deps);
   const fusion = new FusionService(deps);
   const inventory = new EquipmentInventoryService(deps);
@@ -74,7 +72,6 @@ export function compose(config: AppConfig, platform: PlatformPorts, overrides: C
     platform,
     tick,
     combat,
-    playerCombat,
     equipment,
     roster,
     fusion,

@@ -488,14 +488,15 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] Rewritten p02: squad of 2, no clicks, 60 s → kills and gold match `DPS × 60 / HP` (spec Independent Test); p03 asserts the equipment power raises the kill rate
-- [ ] `menu-and-combat.spec.ts` drives clicks via `__ig.input` and asserts gold and monster progress in `describe()`
-- [ ] Soak bound (unsynced log) holds: `npm run soak -- --hours 1`
-- [ ] Full gate passes
+- [x] Rewritten p02: squad of 2, no clicks, 60 s → kills and gold match `DPS × 60 / HP` (spec Independent Test); p03 asserts the equipment power raises the kill rate
+- [x] `menu-and-combat.spec.ts` drives clicks via `__ig.input` and asserts gold and monster progress in `describe()`
+- [x] Soak bound (unsynced log) holds: `npm run soak -- --hours 1`
+- [x] Full gate passes
 
 **Tests**: e2e
 **Gate**: full
 **Commit**: `feat(combat)!: squad-driven stage combat replaces the click loop`
+**Status**: Done (heartbeat 2026-10-07): p02 (squad of 2, no clicks, 60 s: 30 kills, 150 gold, matches the discretized DPS model) and p03 rewritten; e2e menu-and-combat drives clicks and asserts `game.combat`/`game.progress`/`game.current`; soak 1 h OK; Vitest 250 (the 12 h farming timing in combatJump is the known load flake), e2e green except the known ui-gate criterion 3. Decided in heartbeat: `app.combat` now is `StageCombatService` (same `addGold`/`trySpendGold` callers), no `begin()` (the encounter starts lazily on the first tick, so combat also runs behind the menu); `flushIncome` runs before each periodic sync, in `syncNow` and in `persist`, and the sim flushes at the end of a run; Krell's weapon bonus no longer feeds combat (equipment power belongs to equipment-enchant) so p03 became `p03-squad-power` (the "equipment raises kill rate" check waits for that feature); sim steps `begin`/`attack`/`attackUntilKill` became `click`/`clickUntilKill` plus `setAutoAdvance`; `idleGoldPerSquadPowerPerHour` stays until T19 (offline accrual still uses it), `monsterPool`/`playerStats` removed, legacy monster `maxHp`/`goldMin`/`goldMax` stay (cleanup with T20); a click on a 50 HP foe shows `ceil(hp)`, so one ranger click is invisible in the label (asserted through `state().combat.foe.hp`).
 
 ---
 

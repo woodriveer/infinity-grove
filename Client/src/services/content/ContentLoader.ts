@@ -170,9 +170,6 @@ export function loadContent(entries: readonly ContentEntry[], assetKeys: readonl
     if (!equipment.some((e) => e.equipmentId === settings!.startingEquipmentId)) {
       problems.push(`${SETTINGS_PATH}: startingEquipmentId '${settings.startingEquipmentId}' has no equipment/${settings.startingEquipmentId}.json`);
     }
-    settings.monsterPool.forEach((m, i) => {
-      if (!monsters.some((x) => x.monsterId === m)) problems.push(`${SETTINGS_PATH}: monsterPool[${i}] '${m}' has no monsters/${m}.json`);
-    });
   }
 
   if (!combatFound) problems.push(`${COMBAT_PATH}: missing`);

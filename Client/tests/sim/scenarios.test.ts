@@ -56,7 +56,7 @@ describe('sim scenarios', () => {
   });
 
   it('a new player can fight: at least one kill and a gold reward (RFR-14 AC)', async () => {
-    const out = await runScenario({ description: 'new-player combat', save: 'new-player', steps: [{ do: 'begin' }, { do: 'attackUntilKill' }] });
+    const out = await runScenario({ description: 'new-player combat', save: 'new-player', steps: [{ do: 'clickUntilKill' }] });
     expect(out.final.combat.kills).toBeGreaterThanOrEqual(1);
     expect(out.final.gold).toBeGreaterThan(0);
     expect(out.events.some((e) => e.type === 'GoldEarned' && BigDouble.of((e.payload as { goldMantissa: number }).goldMantissa, 0).sign() > 0)).toBe(true);

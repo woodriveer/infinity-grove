@@ -1,5 +1,4 @@
-import type { CombatService } from './combat/CombatService';
-import type { PlayerCombatService } from './combat/PlayerCombatService';
+import type { StageCombatService } from './combat/StageCombatService';
 import type { ContentCatalog } from './content/ContentLoader';
 import type { CraftingService } from './crafting/CraftingService';
 import type { EquipmentInventoryService } from './equipment/EquipmentInventoryService';
@@ -22,8 +21,7 @@ export interface AppServices {
   readonly content: ContentCatalog;
   readonly store: ReadonlyStore;
   readonly tick: TickDriver;
-  readonly combat: CombatService;
-  readonly playerCombat: PlayerCombatService;
+  readonly combat: StageCombatService;
   readonly equipment: EquipmentService;
   readonly roster: RosterService;
   readonly fusion: FusionService;

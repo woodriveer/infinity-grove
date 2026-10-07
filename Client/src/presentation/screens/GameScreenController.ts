@@ -14,14 +14,15 @@ export class GameScreenController implements ScreenController {
 
   build(): ScreenModel {
     const s = this.ui.app.store.get();
-    const monster = s.combat.monster;
-    const fighting = s.combat.state === 'Fighting' && monster !== null;
-    const combat: UiNode = fighting
+    const enc = s.stageCombat.encounter;
+    const foe = enc?.phase === 'fighting' ? enc.foe : null;
+    const noSquad = s.activeSquad.length === 0;
+    const combat: UiNode = foe
       ? {
           id: 'game.combat',
           role: 'button',
-          label: `Attack ${monster.name}`,
-          value: `${monster.currentHp}/${monster.maxHp} HP`,
+          label: `Attack ${this.ui.app.content.monster(foe.monsterId).monsterName}`,
+          value: `${Math.ceil(foe.hp)}/${Math.ceil(foe.maxHp)} HP`,
           enabled: true,
           primary: true,
           glyph: 'confirm',
@@ -30,11 +31,13 @@ export class GameScreenController implements ScreenController {
       : {
           id: 'game.combat',
           role: 'button',
-          label: 'Krell is searching for a monster',
-          value: 'walking',
+          label: noSquad ? 'Add a hero to your Active Squad to fight' : 'Your squad is searching for a monster',
+          value: noSquad ? 'no squad' : 'searching',
           enabled: false,
           onActivate: () => this.ui.attack(),
         };
+    const monstersPerStage = this.ui.app.content.combat.monstersPerStage;
+    const progress = enc ? `${Math.min(enc.monsterIndex + 1, monstersPerStage)}/${monstersPerStage}` : `0/${monstersPerStage}`;
 
     const syncLabel = s.sync.authenticated ? (s.sync.online ? 'Synced' : 'Offline — will sync later') : 'Offline — progress saved locally';
     return {
@@ -50,6 +53,8 @@ export class GameScreenController implements ScreenController {
               nodes: [
                 { id: 'game.gold', role: 'value', label: 'Gold', value: formatWhole(s.gold), tone: 'gold' },
                 { id: 'game.stage', role: 'value', label: 'Furthest stage', value: String(s.furthestStageCleared) },
+                { id: 'game.current', role: 'value', label: 'Fighting stage', value: String(s.stageCombat.stageNumber) },
+                { id: 'game.progress', role: 'value', label: 'Monster', value: progress },
                 { id: 'game.sync', role: 'text', label: syncLabel, tone: 'muted' },
               ],
             },

@@ -67,7 +67,7 @@ C# `out`/`Try*` shapes become `T | null` returns.
 |---|---|---|---|
 | Service/BackendApiClient.cs | src/services/backend/BackendApiClient.ts (+ BackendApi.ts, NoBackend.ts) | done | generated openapi-fetch client over HttpPort; payloads spliced in raw |
 | Service/BackendSyncDtos.cs | src/generated/api/schema.ts + src/services/events/payloads.ts | done | DTOs generated (RFR-25); payloads zod + byte-exact serializer (AD-11) |
-| Service/CombatService.cs | src/services/combat/CombatService.ts | done | walk timer driven by TickDriver; Random.Range → seeded Rng |
+| Service/CombatService.cs | (retired) | retired | replaced by `StageCombatService` (stage-combat T18, AD-002/AD-007); see A5 |
 | Service/CraftingService.cs | src/services/crafting/CraftingService.ts (+ AffixRollSource.ts, BackendAffixRollSource.ts) | done | local roll dropped (AD-22); requests return unavailable until the endpoint ships |
 | Service/DevSteamIdentityProvider.cs | src/services/identity/DevSteamIdentity.ts | done | optional test ticket for the fake-Steam stub |
 | Service/EncryptedSaveFileStore.cs | src/services/save/SaveCodec.ts + migrations.ts; platform FsSaveStore / IndexedDbSaveStore; WebCryptoCipher | done | AES-256-GCM, PBKDF2 app key; atomic temp + fsync + rename |
@@ -79,7 +79,7 @@ C# `out`/`Try*` shapes become `T | null` returns.
 | Service/I*.cs (interfaces) | src/services/ports.ts and each service class | done | C# interfaces became ports (I/O) or the classes themselves |
 | Service/LoadoutPresetService.cs | src/services/equipment/LoadoutPresetService.ts | done |  |
 | Service/LocalOnlyCloudStore.cs | src/services/sync/LocalOnlyCloudStore.ts | done |  |
-| Service/PlayerCombatService.cs | src/services/combat/PlayerCombatService.ts | done |  |
+| Service/PlayerCombatService.cs | (retired) | retired | click damage is now 5% of squad DPS (`StageCombatService.click`); the Krell-weapon bonus no longer applies, see A5 |
 | Service/PlayerEventLog.cs | src/services/events/PlayerEventLog.ts | done | pending list lives in GameState.eventLog |
 | Service/RosterService.cs | src/services/roster/RosterService.ts | done | + swap() for tap-to-swap (one ActiveSquadChanged) |
 | Service/SaveSyncService.cs | src/services/sync/SaveSyncService.ts (+ SteamCloudSync.ts, state/projection.ts, tick/TickDriver.ts) | done | events emitted by commands instead of diffing (same events); B4 projection |
@@ -123,6 +123,13 @@ C# `out`/`Try*` shapes become `T | null` returns.
   `getAuthTicketForWebApi` and a microtransaction callback; 0.4.0 has both. It still
   lacks a `GameOverlayActivated` callback (AD-16 input suspension), so the fork stays
   the plan if the G0 spike needs it.
+- **A5. The Unity click-and-walk combat loop is retired (stage-combat T18, AD-002, AD-007).**
+  `CombatService`, `PlayerCombatService`, `CombatSnapshot` and the settings `monsterPool` /
+  `playerStats` are gone. The squad fights continuously through `StageCombatService`
+  (`CombatRules.advance`); a click deals `clickDpsShare` of the squad DPS. Krell's weapon
+  `bonusDamage` no longer feeds combat (Krell is a regular squad hero; equipment power returns
+  with equipment-enchant, AD-003). `GameSettings.idleGoldPerSquadPowerPerHour` stays until T19.
+  Scenarios p02/p03 were rewritten for the new loop (p03 is now `p03-squad-power`).
 
 ## Behavior notes (ported as-is, S6; route to the game PRD)
 

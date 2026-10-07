@@ -5,12 +5,5 @@
   "offlineAccrualCapHours": 12,
   "saveFileName": "infinitygrove.save",
   "starterHeroId": "ranger",
-  "startingEquipmentId": "wclaw01",
-  "monsterPool": [
-    "slime"
-  ],
-  "playerStats": {
-    "level": 1,
-    "damagePerLevel": 5
-  }
+  "startingEquipmentId": "wclaw01"
 }

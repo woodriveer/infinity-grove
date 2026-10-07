@@ -35,7 +35,6 @@ const platform = createNodePlatform({ seed });
 const app = compose({ ...defaultConfig('test'), backend: 'replay://in-process', devTicket: TEST_TICKET }, platform, { backend });
 app.sync.loadFrom(null);
 await app.sync.connect();
-app.combat.begin();
 
 const syncIntervalMs = app.content.settings.syncIntervalSeconds * 1000;
 const totalMs = hours * 3_600_000;
@@ -55,7 +54,7 @@ for (let t = 0; t < totalMs; t += FRAME_MS) {
   sinceClick += FRAME_MS;
   if (sinceClick >= CLICK_EVERY_MS) {
     sinceClick = 0;
-    if (app.store.get().combat.state === 'Fighting') app.combat.playerAttack(app.playerCombat.calculateAttackDamage());
+    app.combat.click();
   }
   const next = app.store.get().eventLog.nextSequenceNumber;
   windowEvents += next - lastSeq;
@@ -84,7 +83,7 @@ const report = {
   simulatedHours: hours,
   seed,
   wallSeconds: Math.round((performance.now() - started) / 100) / 10,
-  kills: s.combat.kills,
+  kills: s.stageCombat.kills,
   gold: s.gold,
   eventsProduced: produced,
   syncBatches: backend.batches,

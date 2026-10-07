@@ -5,7 +5,7 @@ import { toPlayerMessage } from '../../domain/ReconciliationCorrection';
 import { RosterRules } from '../../domain/RosterRules';
 import { SaveGameData } from '../../domain/SaveGameData';
 import type { BackendApi } from '../backend/BackendApi';
-import type { CombatService } from '../combat/CombatService';
+import type { StageCombatService } from '../combat/StageCombatService';
 import type { ServiceDeps } from '../core';
 import { bigToInt } from '../core';
 import { PlayerEventLog } from '../events/PlayerEventLog';
@@ -33,7 +33,7 @@ export class SaveSyncService {
     private readonly cloud: SteamCloudSync,
     private readonly identity: SteamIdentity | null,
     private readonly backend: BackendApi,
-    private readonly combat: CombatService,
+    private readonly combat: StageCombatService,
     private readonly roster: RosterService,
   ) {}
 
@@ -51,7 +51,7 @@ export class SaveSyncService {
       return { newGame: true, accrual: null };
     }
     const s = stateFromSave(save, this.deps.content);
-    this.deps.store.commit({ ...s, combat: this.deps.store.get().combat, notices: this.deps.store.get().notices });
+    this.deps.store.commit({ ...s, notices: this.deps.store.get().notices });
     const accrual = this.applyOfflineAccrual(save.lastSeenAtMs, this.deps.clock.nowMs());
     return { newGame: false, accrual };
   }
@@ -60,7 +60,7 @@ export class SaveSyncService {
   private startNewGame(): void {
     const settings = this.deps.content.settings;
     const fresh = stateFromSave(SaveGameData.createNew(this.deps.clock.nowMs(), settings.startingEquipmentId), this.deps.content);
-    this.deps.store.commit({ ...fresh, combat: this.deps.store.get().combat });
+    this.deps.store.commit(fresh);
     this.roster.addHeroCard(settings.starterHeroId);
     this.roster.tryActivate(settings.starterHeroId);
   }
@@ -107,6 +107,7 @@ export class SaveSyncService {
 
   /** Periodic/suspend sync (SyncNowAsync). Skips while one is in flight. */
   async syncNow(): Promise<void> {
+    this.combat.flushIncome();
     const s = this.deps.store.get();
     if (s.sync.inFlight) return;
     this.setSync({ inFlight: true });
@@ -120,6 +121,7 @@ export class SaveSyncService {
 
   /** Writes the local save (atomic, AD-12). */
   async persist(): Promise<void> {
+    this.combat.flushIncome();
     const save = saveFromState(this.deps.store.get(), this.deps.clock.nowMs());
     const bytes = await this.codec.encode(save);
     this.lastEncoded = bytes;

@@ -1,10 +1,8 @@
 import type { Encounter } from '../../domain/combat/CombatRules';
-import type { CombatState } from '../../domain/CombatState';
 import type { EquipmentInstance } from '../../domain/EquipmentInstance';
 import type { EquipmentSlot } from '../../domain/EquipmentSlot';
 import type { HeroEntity } from '../../domain/HeroEntity';
 import type { LoadoutPreset } from '../../domain/LoadoutPreset';
-import type { MonsterEntity } from '../../domain/MonsterEntity';
 import type { PlayerEventRecord } from '../../domain/PlayerEventRecord';
 import type { PlayerStateSnapshot } from '../../domain/PlayerStateSnapshot';
 import type { StageOutcome } from '../../domain/StageOutcome';
@@ -27,8 +25,6 @@ export interface GameState {
   /** Active Squad hero ids in slot order (cap 5). */
   readonly activeSquad: readonly string[];
 
-  readonly combat: CombatSnapshot;
-  /** Replaces combat at the T18 cutover. */
   readonly stageCombat: StageCombatSnapshot;
   /** Krell's weapon (Unity EquipmentService.Current). */
   readonly krellEquipmentId: string | null;
@@ -55,17 +51,6 @@ export interface StageCombatSnapshot {
   /** Gold earned since the last GoldEarned flush. */
   readonly pendingIncome: number;
   readonly lastBossResult: { readonly stageNumber: number; readonly outcome: 'Success' | 'PowerGate' | 'CompositionMismatch' } | null;
-}
-
-export interface CombatSnapshot {
-  readonly state: CombatState;
-  readonly started: boolean;
-  readonly walkElapsedMs: number;
-  readonly monster: MonsterEntity | null;
-  readonly kills: number;
-  /** Increments on every player attack, so views can play the punch even when damage is clamped. */
-  readonly attackCount: number;
-  readonly lastDamage: number;
 }
 
 export interface EquipmentState {

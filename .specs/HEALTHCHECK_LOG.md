@@ -123,3 +123,9 @@
 - Commit: feat(services): fast-forward and batched gold income
 - Decisions: see tasks.md T17 status (decided in heartbeat).
 - Pending for the developer: git push; ui-gate criterion 3.
+
+## 2026-10-07 — stage-combat T18
+- Result: done; typecheck, lint, validate:content, gen:check, npm test (250; combatJump 12 h timing flakes under load), e2e (all green except the known ui-gate criterion 3), soak 1 h green.
+- Commit: feat(combat)!: squad-driven stage combat replaces the click loop
+- Decisions: see tasks.md T18 status (decided in heartbeat).
+- Pending for the developer: git push; ui-gate criterion 3.

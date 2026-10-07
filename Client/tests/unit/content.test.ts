@@ -37,8 +37,8 @@ describe('content validation', () => {
   it('accepts the checked-in content', () => expect(problems((e) => e)).toEqual([]));
 
   it('rejects a dangling reference', () => {
-    expect(problems(edit('settings/game.json', (j) => (j['monsterPool'] = ['slime', 'ghost'])))).toEqual([
-      "settings/game.json: monsterPool[1] 'ghost' has no monsters/ghost.json",
+    expect(problems(edit('stages/moonlit-fen.json', (j) => (j['monsters'] = ['slime', 'ghost'])))).toEqual([
+      "stages/moonlit-fen.json: monsters[1] 'ghost' has no monsters/ghost.json",
     ]);
     expect(problems(edit('heroes/druid.json', (j) => (j['portrait'] = 'characters/portraits/missing')))).toEqual([
       "heroes/druid.json: portrait 'characters/portraits/missing' is not an asset key (run npm run gen:assets?)",
@@ -70,7 +70,6 @@ describe('content validation', () => {
       "stages/mossy-hollow.json: monsters[0] 'slime' has no monsters/slime.json",
       "stages/shadow-canopy.json: monsters[0] 'slime' has no monsters/slime.json",
       "stages/sunlit-glade.json: monsters[0] 'slime' has no monsters/slime.json",
-      "settings/game.json: monsterPool[0] 'slime' has no monsters/slime.json",
     ]);
     expect(problems(edit('heroes/ranger.json', (j) => (j['heroType'] = 'Ice')))).toEqual([
       expect.stringMatching(/^heroes\/ranger\.json: heroType: /),

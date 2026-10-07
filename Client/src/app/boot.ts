@@ -77,9 +77,8 @@ export async function boot(): Promise<void> {
     onEnterGame: () => {
       world.setMode('game');
       music.stop();
-      app.combat.begin();
     },
-    onAttack: () => app.combat.playerAttack(app.playerCombat.calculateAttackDamage()),
+    onAttack: () => app.combat.click(),
     settings: {
       musicVolume: () => settings.musicVolume,
       setMusicVolume: (v) => {

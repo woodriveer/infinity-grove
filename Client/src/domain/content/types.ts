@@ -98,12 +98,6 @@ export interface Equipment {
   bonusDamage: number;
 }
 
-/** Data/PlayerStats.cs */
-export interface PlayerStats {
-  level: number;
-  damagePerLevel: number;
-}
-
 /** Data/BackendSyncSettings.cs, plus the new-game defaults that lived in GameLifetimeScope. */
 export interface GameSettings {
   syncIntervalSeconds: number;
@@ -114,6 +108,4 @@ export interface GameSettings {
   /** RFR-14: the fixed starter hero of a new game (content data, not code). */
   starterHeroId: string;
   startingEquipmentId: string;
-  monsterPool: string[];
-  playerStats: PlayerStats;
 }

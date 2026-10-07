@@ -130,8 +130,6 @@ export const settingsSchema = z
     saveFileName: z.string().min(1),
     starterHeroId: id,
     startingEquipmentId: id,
-    monsterPool: z.array(id).min(1),
-    playerStats: z.object({ level: z.number().int(), damagePerLevel: z.number().int() }).strict(),
   })
   .strict() satisfies z.ZodType<GameSettings>;
 

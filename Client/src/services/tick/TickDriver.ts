@@ -1,4 +1,4 @@
-import type { CombatService } from '../combat/CombatService';
+import type { StageCombatService } from '../combat/StageCombatService';
 import type { ServiceDeps } from '../core';
 import type { SaveSyncService } from '../sync/SaveSyncService';
 
@@ -17,7 +17,7 @@ export class TickDriver {
 
   constructor(
     private readonly deps: ServiceDeps,
-    private readonly combat: CombatService,
+    private readonly combat: StageCombatService,
     private readonly sync: SaveSyncService,
     private readonly syncIntervalMs: number,
   ) {}
@@ -43,6 +43,7 @@ export class TickDriver {
     this.syncElapsedMs += dtMs;
     if (this.syncElapsedMs >= this.syncIntervalMs) {
       this.syncElapsedMs -= this.syncIntervalMs;
+      this.combat.flushIncome();
       void this.sync.syncNow().catch((e: Error) => this.deps.logger.warn(`Periodic sync failed: ${e.message}`));
     }
   }

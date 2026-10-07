@@ -2,7 +2,6 @@ import { PlayerProgressReplay } from '../../domain/PlayerProgressReplay';
 import type { PlayerEventRecord } from '../../domain/PlayerEventRecord';
 import { PlayerStateSnapshot } from '../../domain/PlayerStateSnapshot';
 import { SaveGameData } from '../../domain/SaveGameData';
-import { CombatService } from '../combat/CombatService';
 import type { ContentCatalog } from '../content/ContentLoader';
 import { bigToInt } from '../core';
 import { PlayerEventLog } from '../events/PlayerEventLog';
@@ -19,7 +18,6 @@ export function emptyGameState(): GameState {
     furthestStageCleared: 0,
     heroes: [],
     activeSquad: [],
-    combat: CombatService.initial(),
     stageCombat: { stageNumber: 1, autoAdvance: true, encounter: null, kills: 0, clicks: 0, pendingIncome: 0, lastBossResult: null },
     krellEquipmentId: null,
     equipment: { bag: [], equippedByHero: {} },

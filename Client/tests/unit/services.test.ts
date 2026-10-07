@@ -38,37 +38,45 @@ describe('new game (RFR-14)', () => {
 });
 
 describe('combat loop (P2, P3)', () => {
-  it('walks 2 s, spawns a monster, clicks kill it, gold is awarded and the walk restarts', async () => {
+  it('the squad fights on its own: a spawn delay, then kills award gold and report it on flush', async () => {
     const { app } = await newGame();
-    app.combat.begin();
-    app.tick.advance(1900);
-    expect(app.store.get().combat.state).toBe('Walking');
-    app.tick.advance(100);
-    const fighting = app.store.get().combat;
-    expect(fighting.state).toBe('Fighting');
-    expect(fighting.monster?.name).toBe('Slime');
-    const damage = app.playerCombat.calculateAttackDamage();
-    expect(damage).toBe(15); // level 1 * 5 per level + WCLAW01's 10 (P3)
-    while (app.store.get().combat.state === 'Fighting') app.combat.playerAttack(damage);
+    app.tick.advance(300);
+    expect(app.store.get().stageCombat.encounter).toMatchObject({ phase: 'fighting', monsterIndex: 0 });
+    app.tick.advance(1700); // ranger 12 power x 1.5 (favored Nature) = 18 dps: 50 HP in 2.8 s
+    expect(app.store.get().stageCombat.kills).toBe(0);
+    app.tick.advance(1100);
     const s = app.store.get();
-    expect(s.combat.kills).toBe(1);
-    expect(s.gold).toBe(fighting.monster?.goldReward);
-    expect(s.gold).toBeGreaterThanOrEqual(3);
-    expect(s.gold).toBeLessThanOrEqual(8);
+    expect(s.stageCombat.kills).toBe(1);
+    expect(s.gold).toBe(5);
+    expect(types(app)).not.toContain('GoldEarned');
+    app.combat.flushIncome();
     expect(types(app).at(-1)).toBe('GoldEarned');
+    expect(app.store.get().stageCombat.pendingIncome).toBe(0);
   });
 
-  it('a click while walking does nothing', async () => {
+  it('a click adds 5% of the squad DPS at once and counts', async () => {
     const { app } = await newGame();
-    app.combat.begin();
-    app.combat.playerAttack(15);
+    app.tick.advance(300);
+    const before = app.store.get().stageCombat.encounter?.foe?.hp ?? 0;
+    app.combat.click();
+    const after = app.store.get().stageCombat;
+    expect(before - (after.encounter?.foe?.hp ?? 0)).toBeCloseTo(0.9, 6); // 5% of 18 dps
+    expect(after.clicks).toBe(1);
+  });
+
+  it('a click while the next monster spawns does nothing', async () => {
+    const { app } = await newGame();
+    app.combat.click();
     expect(app.store.get().gold).toBe(0);
+    expect(app.store.get().stageCombat.encounter?.foe).toBeNull();
   });
 
-  it('equipment bonus follows Krell weapon changes', async () => {
+  it('an empty Active Squad spawns nothing', async () => {
     const { app } = await newGame();
-    app.equipment.unequip();
-    expect(app.playerCombat.calculateAttackDamage()).toBe(5);
+    app.roster.benchHero('ranger');
+    app.tick.advance(5000);
+    expect(app.store.get().stageCombat.encounter?.phase).toBe('idle');
+    expect(app.store.get().gold).toBe(0);
   });
 });
 
@@ -282,18 +290,17 @@ describe('TickDriver (RFR-8)', () => {
   it('a long gap delays combat but never loses it; beyond the 60 s cap time goes through accrual', async () => {
     const a = await newGame(9);
     const b = await newGame(9);
-    a.app.combat.begin();
-    b.app.combat.begin();
     for (let i = 0; i < 50; i++) a.app.tick.advance(100);
     b.app.tick.advance(5000);
-    expect(b.app.store.get().combat).toEqual(a.app.store.get().combat);
+    expect(b.app.store.get().stageCombat).toEqual(a.app.store.get().stageCombat);
 
     const c = await newGame(9);
-    c.app.combat.begin();
     c.platform.clock.advance(10 * 60_000);
     c.app.tick.advance(10 * 60_000);
-    expect(c.app.store.get().combat.state).toBe('Fighting');
-    // 540 s beyond the cap credited through offline accrual: 12 power * 0.15 h = 1.8 → 2 gold.
-    expect(c.app.store.get().gold).toBe(2);
+    const d = await newGame(9);
+    d.app.tick.advance(60_000);
+    expect(c.app.store.get().stageCombat.kills).toBeGreaterThan(0);
+    // 540 s beyond the cap credited through offline accrual on top of the same 60 s of fighting: 12 power * 0.15 h = 1.8 → 2 gold.
+    expect(c.app.store.get().gold - d.app.store.get().gold).toBe(2);
   });
 });

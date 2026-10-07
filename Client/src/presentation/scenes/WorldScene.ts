@@ -5,6 +5,12 @@ import type { AnimationData, EffectData } from '../../services/content/schema';
 import type { GameState } from '../../services/state/types';
 import { colorHex, phaserColor } from '../theme/tokens';
 
+/** A live foe is on the field (the encounter is in its fighting phase). */
+function isFighting(s: GameState): boolean {
+  const enc = s.stageCombat.encounter;
+  return enc !== null && enc.phase === 'fighting' && enc.foe !== null;
+}
+
 export const SAFE_W = 1920;
 export const SAFE_H = 1080;
 
@@ -175,15 +181,15 @@ export class WorldScene extends Phaser.Scene {
       for (const [name, sprite] of this.krell) sprite.setVisible(name === variant);
     }
 
-    const fighting = s.combat.state === 'Fighting' && s.combat.monster !== null;
+    const fighting = isFighting(s);
     this.monster.setVisible(fighting);
 
-    if (s.combat.attackCount !== this.lastAttackCount) {
-      this.lastAttackCount = s.combat.attackCount;
+    if (s.stageCombat.clicks !== this.lastAttackCount) {
+      this.lastAttackCount = s.stageCombat.clicks;
       const sprite = this.krell.get(this.krellVariant);
       if (sprite) sprite.play({ key: 'punch', repeat: 0 });
       if (fighting) this.hitFlash();
-    } else if (!this.lastState || this.lastState.combat.state !== s.combat.state) {
+    } else if (!this.lastState || isFighting(this.lastState) !== fighting) {
       this.playKrellState(s);
     }
     this.lastState = s;
@@ -194,7 +200,7 @@ export class WorldScene extends Phaser.Scene {
     const sprite = this.krell.get(this.krellVariant);
     if (!sprite || !s) return;
     if (sprite.anims.isPlaying && sprite.anims.currentAnim?.key === 'punch') return;
-    sprite.play({ key: s.combat.state === 'Walking' ? 'walk' : 'idle', repeat: -1 }, true);
+    sprite.play({ key: isFighting(s) ? 'idle' : 'walk', repeat: -1 }, true);
   }
 
   private hitFlash(): void {
