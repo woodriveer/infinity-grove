@@ -70,3 +70,11 @@
 - **Commits**: `feat(domain): segment-based combat advance`.
 - **Decisions (decided in heartbeat)**: `Encounter.autoAdvance` (a boss failure turns it off inside `advance`); `StageSpec.monsterIds`; the boss timer runs only while the boss is on the field; the AD-004 favored-type check covers the whole Active Squad; rules emit `stageCleared` per normal clear and `kill` + `bossDefeated` per boss kill; the T8 boss-click test now also expects `bossDefeated`.
 - **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.
+
+## 2026-10-07 — stage-combat T10: event jumping and farming mode
+
+- **Result**: done. `advance` now jumps from event to event and takes `mode: 'live' | 'farming'`. 5 unit tests in `Client/tests/unit/combatJump.test.ts`. Quick gate green: typecheck, lint, Vitest 213 passed (was 208).
+- **Commits**: `feat(domain): event-jumping combat and farming mode`.
+- **Stale lock**: found `stage-combat-T10.lock` (started 12:19Z, 2.5 h old). Uncommitted work discarded: a +116/−13 diff of `CombatRules.ts`, `Client/tests/unit/combatJump.test.ts` (211 lines) and `Client/tests/unit/_tmp/bench.test.ts` (10-line benchmark); the patch was kept only in the session scratchpad. T10 was redone from the committed T9.
+- **Decisions (decided in heartbeat)**: farming on stage 1 boss (none exists) leaves the encounter unchanged; farming still emits `kill` and `squadWiped`; 12 h timing test is best of 7 (cold JIT 50–100 ms).
+- **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.
