@@ -49,3 +49,10 @@
 - **Commits**: `feat(content): placeholder combat economy, stages 1-10 and Krell`.
 - **Decisions (decided in heartbeat)**: Krell is Dark, power 12, HP 130, def 6, 900 ms, `serverHeroId` …0007, no portrait yet; the hero ↔ animation link is the `animations/<heroId>.json` entry (design.md:178), so no new `HeroData` field; placeholder per-hero stats, stage names/types and boss floors (200, 1200) are listed in tasks.md T6 and get tuned in T21; `combat.json` kept as in T5.
 - **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.
+
+## 2026-10-07 — stage-combat T7: StageCurves
+
+- **Result**: done. `Client/src/domain/combat/StageCurves.ts`: `stageSpec(stage, eco)` returns monster HP, gold per kill and monster DPS (`base × growth^(n−1)`, doubles) plus, on boss stages, boss HP/DPS/gold (stage monster × boss multipliers) and timer (stage value, else `defaultBossTimerSeconds`). 4 unit tests in `Client/tests/unit/stageCurves.test.ts`. Quick gate green: typecheck, lint, Vitest 172 passed (was 168).
+- **Commits**: `feat(domain): stage curves for combat`.
+- **Decisions (decided in heartbeat)**: `StageSpec`/`BossSpec` shape (design named the fields but not the type); boss gold included (`goldMultiplier` exists in content); boss presence follows `stage.boss`, whose `bossEvery` rule validate:content already enforces.
+- **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.

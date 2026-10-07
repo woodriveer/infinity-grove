@@ -228,12 +228,13 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] Unit tests: stage 1 values equal the bases; growth per stage; boss multipliers; default vs explicit timer
-- [ ] Quick gate passes
+- [x] Unit tests: stage 1 values equal the bases; growth per stage; boss multipliers; default vs explicit timer
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(domain): stage curves for combat`
+**Status**: Done (heartbeat 2026-10-07): 4 tests in `Client/tests/unit/stageCurves.test.ts`; quick gate 172 tests green. Decided in heartbeat: `StageSpec` (not shaped in design) = `{ stageNumber, favoredType, monsterHp, goldPerKill, monsterDps, boss?: { monsterId, powerFloor, hp, dps, gold, timerSeconds } }`; stage n = `base × growth^(n−1)`; boss = that stage's monster × `boss.*Multiplier` (boss gold included since `goldMultiplier` exists); boss presence follows `stage.boss` (validate:content enforces the `bossEvery` rule).
 
 ---
 
