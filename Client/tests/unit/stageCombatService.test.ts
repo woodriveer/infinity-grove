@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import type { CombatEconomy, HeroData, StageData } from '../../src/domain/content/types';
 import type { HeroType } from '../../src/domain/HeroType';
+import { RosterService } from '../../src/services/roster/RosterService';
 import { StageCombatService } from '../../src/services/combat/StageCombatService';
 import type { ServiceDeps } from '../../src/services/core';
 import { GameStore } from '../../src/services/state/GameStore';
@@ -45,7 +46,7 @@ const stages: StageData[] = [1, 2, 3, 4, 5].map((n) => ({
   ...(n === 5 ? { boss: { monsterId: 'boss', powerFloor: 1000 } } : {}),
 }));
 
-function setup(squad: string[], furthest: number, stageNumber: number): { svc: StageCombatService; store: GameStore; events: () => string[] } {
+function setup(squad: string[], furthest: number, stageNumber: number): { svc: StageCombatService; roster: RosterService; store: GameStore; events: () => string[] } {
   const base = emptyGameState();
   const store = new GameStore({
     ...base,
@@ -65,6 +66,7 @@ function setup(squad: string[], furthest: number, stageNumber: number): { svc: S
   } as unknown as ServiceDeps;
   return {
     svc: new StageCombatService(deps),
+    roster: new RosterService(deps),
     store,
     events: () => store.get().eventLog.pending.map((e) => `${e.type}:${e.payloadJson}`),
   };
@@ -156,5 +158,56 @@ describe('StageCombatService', () => {
     const sc = store.get().stageCombat;
     expect(sc.clicks).toBe(1);
     expect(sc.encounter?.foe?.hp ?? 0).toBeLessThan(hpBefore);
+  });
+
+  it('jumps to a cleared stage and to furthest + 1, never beyond, and turns auto-advance off', () => {
+    const { svc, store } = setup(['strong'], 2, 1);
+    expect(svc.jumpToStage(2)).toBe(true);
+    expect(store.get().stageCombat.stageNumber).toBe(2);
+    expect(store.get().stageCombat.autoAdvance).toBe(false);
+    expect(svc.jumpToStage(3)).toBe(true);
+    expect(svc.jumpToStage(4)).toBe(false);
+    expect(svc.jumpToStage(0)).toBe(false);
+    expect(store.get().stageCombat.stageNumber).toBe(3);
+    expect(store.get().stageCombat.encounter?.autoAdvance).toBe(false);
+  });
+
+  it('fight boss restarts the boss with a full timer and full HP', () => {
+    const { svc, store } = setup(['strong'], 4, 4);
+    expect(svc.fightBoss()).toBe(true);
+    const full = store.get().stageCombat.encounter?.bossStepsLeft;
+    expect(full).toBe(300);
+    svc.step(5000);
+    expect(store.get().stageCombat.encounter?.bossStepsLeft).toBeLessThan(full ?? 0);
+    expect(svc.fightBoss()).toBe(true);
+    expect(store.get().stageCombat.encounter?.bossStepsLeft).toBe(300);
+    expect(store.get().stageCombat.encounter?.heroes[0]?.hp).toBe(1000);
+  });
+
+  it('fight boss is refused when the next stage is not a boss stage', () => {
+    const { svc } = setup(['strong'], 1, 1);
+    expect(svc.fightBoss()).toBe(false);
+  });
+
+  it('setAutoAdvance flips the flag on the state and the encounter', () => {
+    const { svc, store } = setup(['strong'], 0, 1);
+    svc.step(100);
+    svc.setAutoAdvance(false);
+    expect(store.get().stageCombat.autoAdvance).toBe(false);
+    expect(store.get().stageCombat.encounter?.autoAdvance).toBe(false);
+  });
+
+  it('squad changes are refused during a boss fight and allowed after', () => {
+    const { svc, roster, store } = setup(['strong'], 4, 5);
+    svc.step(100);
+    expect(roster.squadLocked()).toBe(true);
+    expect(roster.tryActivate('other')).toBe(false);
+    expect(roster.swap('strong', 'other')).toBe(false);
+    roster.benchHero('strong');
+    expect(store.get().activeSquad).toEqual(['strong']);
+    svc.jumpToStage(4);
+    expect(roster.squadLocked()).toBe(false);
+    expect(roster.tryActivate('other')).toBe(true);
+    expect(store.get().activeSquad).toEqual(['strong', 'other']);
   });
 });

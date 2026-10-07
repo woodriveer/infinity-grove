@@ -440,12 +440,14 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] Unit tests: jump to cleared/next allowed, beyond refused; fight boss restarts timer; squad change refused mid-boss and allowed after
-- [ ] Quick gate passes
+- [x] Unit tests: jump to cleared/next allowed, beyond refused; fight boss restarts timer; squad change refused mid-boss and allowed after
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(services): stage jump, boss retry and squad lock`
+
+**Status**: Done (heartbeat 2026-10-07): 5 new tests in `Client/tests/unit/stageCombatService.test.ts`; lint, typecheck, `npm test` green. Decided in heartbeat: `fightBoss` starts stage `furthest + 1` and is refused (false) unless that is a boss stage, auto-advance on; `jumpToStage` returns false beyond `furthest + 1`; the squad lock is `RosterService.squadLocked()` (an encounter with a boss timer) and refused commands log `SQUAD_LOCKED_MESSAGE` and return false/no-op, the screen shows the message in T23.
 
 ---
 

@@ -36,6 +36,33 @@ export class StageCombatService {
     this.deps.store.commit({ ...next, stageCombat: { ...next.stageCombat, clicks: s.stageCombat.clicks + 1 } });
   }
 
+  /** Jumps to a cleared stage or the one after the furthest; auto-advance goes off (COMBAT-03 AC 2, 3). */
+  jumpToStage(stageNumber: number): boolean {
+    const s = this.deps.store.get();
+    const params = this.params(s);
+    if (!Number.isInteger(stageNumber) || stageNumber < 1 || stageNumber > s.furthestStageCleared + 1 || stageNumber > params.stages.length) return false;
+    this.withEncounter(s, startStage(stageAt(stageNumber, params), params, false));
+    return true;
+  }
+
+  /** Starts the boss stage that follows the furthest clear with a full timer and full HP (COMBAT-06 AC 5). */
+  fightBoss(): boolean {
+    const s = this.deps.store.get();
+    const n = s.furthestStageCleared + 1;
+    const params = this.params(s);
+    if (n > params.stages.length) return false;
+    const stage = stageAt(n, params);
+    if (!stage.boss) return false;
+    this.withEncounter(s, startStage(stage, params, true));
+    return true;
+  }
+
+  setAutoAdvance(on: boolean): void {
+    const s = this.deps.store.get();
+    const enc = s.stageCombat.encounter;
+    this.deps.store.commit({ ...s, stageCombat: { ...s.stageCombat, autoAdvance: on, encounter: enc ? { ...enc, autoAdvance: on } : enc } });
+  }
+
   /** The state with an encounter that matches the squad: started when missing, restarted when the squad changed, boss failed when the leader is gone. */
   private prepared(): GameState {
     const s = this.deps.store.get();

@@ -10,11 +10,25 @@ import type { GameState } from '../state/types';
  * HeroAcquired; changing the squad set emits ActiveSquadChanged (both only for
  * heroes mapped to a backend GUID, as in Unity).
  */
+export const SQUAD_LOCKED_MESSAGE = 'Squad changes are locked during a boss fight.';
+
 export class RosterService {
   constructor(private readonly deps: ServiceDeps) {}
 
   /** FR-3 cap, for presentation (which may not import domain values, F5). */
   readonly capacity = RosterRules.ActiveSquadCapacity;
+
+  /** COMBAT-06 AC 5: the squad is fixed while a boss fight is under way. */
+  squadLocked(): boolean {
+    const enc = this.deps.store.get().stageCombat.encounter;
+    return enc !== null && enc.bossStepsLeft !== null;
+  }
+
+  private refuseWhenLocked(): boolean {
+    if (!this.squadLocked()) return false;
+    this.deps.logger.warn(SQUAD_LOCKED_MESSAGE);
+    return true;
+  }
 
   allHeroes(): readonly HeroEntity[] {
     return this.deps.store.get().heroes;
@@ -54,6 +68,7 @@ export class RosterService {
   }
 
   tryActivate(heroId: string): boolean {
+    if (this.refuseWhenLocked()) return false;
     const s = this.deps.store.get();
     const hero = s.heroes.find((h) => h.heroId === heroId);
     if (!hero || hero.isInActiveSquad) return false;
@@ -64,6 +79,7 @@ export class RosterService {
   }
 
   benchHero(heroId: string): void {
+    if (this.refuseWhenLocked()) return;
     const s = this.deps.store.get();
     const hero = s.heroes.find((h) => h.heroId === heroId);
     if (!hero || !hero.isInActiveSquad) return;
@@ -73,6 +89,7 @@ export class RosterService {
 
   /** Tap-to-swap (EXPERIENCE): a benched hero takes an active hero's slot, in one change. */
   swap(activeHeroId: string, benchedHeroId: string): boolean {
+    if (this.refuseWhenLocked()) return false;
     const s = this.deps.store.get();
     const index = s.activeSquad.indexOf(activeHeroId);
     const benched = s.heroes.find((h) => h.heroId === benchedHeroId);

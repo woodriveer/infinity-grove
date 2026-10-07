@@ -111,3 +111,9 @@
 - Commits: `feat(services): stage combat step, click and outcomes`.
 - Decisions (decided in heartbeat): see tasks.md T15 (whole-gold rounding, BossDefeated only above furthest, restart on squad change, leader loss fails the boss stage).
 - Pending for developer: push.
+
+## 2026-10-07 — stage-combat T16
+- Result: done. `jumpToStage`, `fightBoss`, `setAutoAdvance` on `StageCombatService`; `RosterService.squadLocked()` refuses activate/bench/swap during a boss fight. 5 new tests (14 in the file). Typecheck, lint and `npm test` (244) green.
+- Commits: `feat(services): stage jump, boss retry and squad lock`.
+- Decisions (decided in heartbeat): see tasks.md T16 (`fightBoss` targets furthest + 1 and needs a boss stage; lock = encounter with a boss timer).
+- Pending for developer: push.
