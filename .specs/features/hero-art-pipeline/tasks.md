@@ -322,8 +322,8 @@ T14 → T15 → T16 → T17 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] Tests: each lookup order case, not-found message lists three locations and `ASEPRITE_PATH`, command arguments exact (stub executable records them)
-- [ ] Quick gate passes
+- [x] Tests: each lookup order case, not-found message lists three locations and `ASEPRITE_PATH`, command arguments exact (stub executable records them)
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick

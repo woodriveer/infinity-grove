@@ -249,3 +249,9 @@
 - Commit: feat(art): enchant band and attack playback speed rules
 - Decisions (decided in heartbeat): `enchantBand` picks the highest `minLevel` <= level regardless of array order; `attackSpeed` returns 1 for a non-positive interval or duration.
 - Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: hero-art-pipeline T12
+- Result: done. `findAseprite`, `exportArgs`, `exportLayer` in `Client/tools/lib/aseprite.ts`; 8 tests in `aseprite.test.ts`. Typecheck, lint green.
+- Commit: feat(tools): locate and run the Aseprite CLI
+- Decisions (decided in heartbeat): `exportLayer` takes an optional injected `run` function (default spawns the exe) so tests record arguments without a stub executable; `AsepriteNotFound` is an Error carrying `tried`; Steam path is `C:/Program Files (x86)/Steam/steamapps/common/Aseprite/Aseprite.exe`.
+- Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.
