@@ -78,3 +78,10 @@
 - **Stale lock**: found `stage-combat-T10.lock` (started 12:19Z, 2.5 h old). Uncommitted work discarded: a +116/−13 diff of `CombatRules.ts`, `Client/tests/unit/combatJump.test.ts` (211 lines) and `Client/tests/unit/_tmp/bench.test.ts` (10-line benchmark); the patch was kept only in the session scratchpad. T10 was redone from the committed T9.
 - **Decisions (decided in heartbeat)**: farming on stage 1 boss (none exists) leaves the encounter unchanged; farming still emits `kill` and `squadWiped`; 12 h timing test is best of 7 (cold JIT 50–100 ms).
 - **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.
+
+## 2026-10-07 — stage-combat T11: FarmRate
+
+- **Result**: done. `Client/src/domain/combat/FarmRate.ts`: `farmRate(stage, p)` runs one farming cycle through `advance` and returns `goldPerCycle`, `cycleMs`, `goldPerSecond`. 5 unit tests in `Client/tests/unit/farmRate.test.ts`. Quick gate green: typecheck, lint, Vitest 218 passed (was 213).
+- **Commits**: `feat(domain): farm rate from the combat function`.
+- **Decisions (decided in heartbeat)**: a cycle ends at the 10th kill or a squad wipe (gold of the kills so far over the time to that point); empty squad or no progress within 1 h of combat → zeros; a boss stage reports the previous stage's rate, matching farming mode.
+- **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.

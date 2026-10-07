@@ -322,13 +322,15 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] Unit tests: rate equals gold of 10 kills over (kill time + spawn delays); empty squad → 0; weak squad that wipes still yields the farmed gold rate of the cycle
-- [ ] Quick gate passes
+- [x] Unit tests: rate equals gold of 10 kills over (kill time + spawn delays); empty squad → 0; weak squad that wipes still yields the farmed gold rate of the cycle
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(domain): farm rate from the combat function`
 
+
+**Status**: Done (heartbeat 2026-10-07): `farmRate(stage, p)` steps `advance(..., 1, p, 'farming')` from the stage start until the 10th kill or a `squadWiped`, summing `kill` gold; empty squad and a cycle with no progress after 1 h of combat give zeros; a boss stage reports the stage before it (as farming does). 5 unit tests in `Client/tests/unit/farmRate.test.ts`.
 ---
 
 ### T12: BossFailureLabel
