@@ -237,3 +237,9 @@
 - Commit: feat(art): derive hero look from equipped items
 - Decisions (decided in heartbeat): `items` is a `ReadonlyMap` by itemId; neutral order is `art.neutral`, then the argument, then `#808080`; `enchantLevelOf` reads an optional `enchantLevel` field structurally until the enchant feature adds it; the look takes enchant level from the weapon.
 - Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: hero-art-pipeline T10
+- Result: done. `weaponPose` in `Client/src/domain/art/WeaponPose.ts` (position at hero grip, rotation = hero angle minus weapon angle, degenerate vector counts as angle 0); 7 tests in `weaponPose.test.ts`. Typecheck and lint green.
+- Commit: feat(art): weapon pose from grip and tip sockets
+- Decisions (decided in heartbeat): a degenerate vector on either side contributes angle 0 (so a degenerate hero vector yields the negated weapon angle); a local `Point` type keeps the domain free of Phaser.
+- Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.

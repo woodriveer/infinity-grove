@@ -278,8 +278,8 @@ T14 → T15 → T16 → T17 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] Tests: aligned axes (0), quarter turns, negative angles, degenerate hero and weapon vectors
-- [ ] Quick gate passes
+- [x] Tests: aligned axes (0), quarter turns, negative angles, degenerate hero and weapon vectors
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick
