@@ -300,8 +300,8 @@ T14 → T15 → T16 → T17 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] Band boundaries +6 (none), +7, +9, +10, +14, +15 and above; speed never below 1, equal values give 1, interval 0 handled without Infinity
-- [ ] Phase 2 build gate passes
+- [x] Band boundaries +6 (none), +7, +9, +10, +14, +15 and above; speed never below 1, equal values give 1, interval 0 handled without Infinity
+- [x] Phase 2 build gate passes
 
 **Tests**: unit
 **Gate**: build

@@ -243,3 +243,9 @@
 - Commit: feat(art): weapon pose from grip and tip sockets
 - Decisions (decided in heartbeat): a degenerate vector on either side contributes angle 0 (so a degenerate hero vector yields the negated weapon angle); a local `Point` type keeps the domain free of Phaser.
 - Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: hero-art-pipeline T11
+- Result: done. `enchantBand` and `attackSpeed` in `Client/src/domain/art/Playback.ts`; 7 tests in `playback.test.ts`. Typecheck, lint, build green.
+- Commit: feat(art): enchant band and attack playback speed rules
+- Decisions (decided in heartbeat): `enchantBand` picks the highest `minLevel` <= level regardless of array order; `attackSpeed` returns 1 for a non-positive interval or duration.
+- Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.
