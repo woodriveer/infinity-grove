@@ -85,3 +85,10 @@
 - **Commits**: `feat(domain): farm rate from the combat function`.
 - **Decisions (decided in heartbeat)**: a cycle ends at the 10th kill or a squad wipe (gold of the kills so far over the time to that point); empty squad or no progress within 1 h of combat → zeros; a boss stage reports the previous stage's rate, matching farming mode.
 - **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.
+
+## 2026-10-07 — stage-combat T12: BossFailureLabel
+
+- **Result**: done. `Client/src/domain/combat/BossFailureLabel.ts`: `label(...)` maps the classifier result, `Success` → `PowerGate`. 3 unit tests in `Client/tests/unit/bossFailureLabel.test.ts`. Phase 2 build gate green: typecheck, lint, Vitest, build.
+- **Commits**: `feat(domain): FR-11 label for boss failures`.
+- **Decisions (decided in heartbeat)**: none beyond the task.
+- **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.

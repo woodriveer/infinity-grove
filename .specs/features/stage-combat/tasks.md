@@ -346,12 +346,14 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] Unit tests: below floor with and without favored type → PowerGate; at floor without → CompositionMismatch; at floor with → PowerGate
-- [ ] Build gate passes (end of phase)
+- [x] Unit tests: below floor with and without favored type → PowerGate; at floor without → CompositionMismatch; at floor with → PowerGate
+- [x] Build gate passes (end of phase)
 
 **Tests**: unit
 **Gate**: build
 **Commit**: `feat(domain): FR-11 label for boss failures`
+
+**Status**: Done (heartbeat 2026-10-07): `BossFailureLabel.label` wraps `StageOutcomeClassifier.classify`, `Success` → `PowerGate`. 3 unit tests in `Client/tests/unit/bossFailureLabel.test.ts`. Phase 2 build gate green (typecheck, lint, Vitest, build).
 
 ---
 
