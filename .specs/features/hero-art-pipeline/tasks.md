@@ -235,7 +235,7 @@ T14 → T15 → T16 → T17 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] Both orders asserted exactly; quick gate passes
+- [x] Both orders asserted exactly; quick gate passes
 
 **Tests**: unit
 **Gate**: quick

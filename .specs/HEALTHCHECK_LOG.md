@@ -225,3 +225,9 @@
 - Commit: feat(content): validate layered hero art in validate:content
 - Decisions (decided in heartbeat): the check lives in `tools/lib` (I/O stays out of services); missing sheets for keys absent from the manifest are skipped so `validateHeroArt` reports them.
 - Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: hero-art-pipeline T8
+- Result: done. `LAYER_ORDER`, `layerOrder(weaponBehind)` and `LayerSlot` in `Client/src/domain/art/LayerOrder.ts`; 3 tests in `layerOrder.test.ts`. Typecheck, lint, 321 tests green.
+- Commit: feat(art): layer stacking order
+- Decisions: `layerOrder` returns shared readonly arrays (no per-call allocation); `LayerSlot` is defined here for T9+ to reuse.
+- Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.
