@@ -392,12 +392,14 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] Unit tests: v1 fixture migrates with the capped stage; v2 round-trips; encounter is not persisted
-- [ ] Full gate passes (p11 save-reload scenario still green)
+- [x] Unit tests: v1 fixture migrates with the capped stage; v2 round-trips; encounter is not persisted
+- [x] Full gate passes (p11 save-reload scenario still green)
 
 **Tests**: unit
 **Gate**: full
 **Commit**: `feat(save): v2 with persisted combat stage and auto-advance`
+
+**Status**: Done (heartbeat 2026-10-07): 3 tests in `Client/tests/unit/saveV2.test.ts` (v1 fixture kept in `fixtures/legacy/save-v1-mid-game.json`); fixtures regenerated. Full gate: everything green except the known ui-gate criterion 3 e2e (pre-existing) and the machine-load-sensitive 12 h farming timing in combatJump (passes alone; failed 2 of 3 full runs here, 70 ms vs 50 ms). Decided in heartbeat: `GameState.stageCombat` is added with `encounter: Encounter | null` (null until T15 starts the stage) and its own `stageNumber`; the migration stores furthest + 1 and the cap to content and furthest + 1 happens in `stateFromSave` (the migration is pure and has no content).
 
 ---
 

@@ -99,3 +99,9 @@
 - **Commits**: `feat(services): combat params from content and squad`.
 - **Decisions (decided in heartbeat)**: a static function taking the content catalog and state (not a class with deps); `stageNumber` is only validated against content because `CombatParams.stages` already holds every stage; unknown stage throws.
 - **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.
+
+## 2026-10-07 — stage-combat T14
+- Result: done. Save v2 (`local.combat`), v1→v2 migration, `GameState.stageCombat`, fixtures regenerated, 3 new tests.
+- Gate: green except pre-existing ui-gate criterion 3 and a load-sensitive timing test (combatJump 12 h farming, passes alone).
+- Decisions: see tasks.md T14 (stageCombat.encounter nullable; cap in stateFromSave).
+- Pending for developer: push.

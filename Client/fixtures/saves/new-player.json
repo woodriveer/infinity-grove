@@ -1,5 +1,5 @@
 {
-  "formatVersion": 1,
+  "formatVersion": 2,
   "steamId64": "",
   "lastReconciledAtMs": 0,
   "lastSeenAtMs": 1767225600000,
@@ -36,6 +36,10 @@
     "equipmentBag": [],
     "equippedByHero": {},
     "presets": [],
-    "krellEquipmentId": "wclaw01"
+    "krellEquipmentId": "wclaw01",
+    "combat": {
+      "stageNumber": 1,
+      "autoAdvance": true
+    }
   }
 }

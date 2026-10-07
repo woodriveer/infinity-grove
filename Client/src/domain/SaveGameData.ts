@@ -35,10 +35,12 @@ export interface LocalProgress {
   readonly equippedByHero: Readonly<Record<string, Readonly<Partial<Record<EquipmentSlot, EquipmentInstance>>>>>;
   readonly presets: readonly LoadoutPreset[];
   readonly krellEquipmentId: string | null;
+  /** The stage being fought and whether a clear advances (stage-combat COMBAT-03). The encounter itself is not saved. */
+  readonly combat: { readonly stageNumber: number; readonly autoAdvance: boolean };
 }
 
 export const SaveGameData = {
-  CurrentFormatVersion: 1,
+  CurrentFormatVersion: 2,
 
   createNew(nowMs: number, krellEquipmentId: string | null): SaveGameData {
     return {
@@ -54,6 +56,7 @@ export const SaveGameData = {
         equippedByHero: {},
         presets: [],
         krellEquipmentId,
+        combat: { stageNumber: 1, autoAdvance: true },
       },
     };
   },

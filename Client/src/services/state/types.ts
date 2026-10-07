@@ -1,3 +1,4 @@
+import type { Encounter } from '../../domain/combat/CombatRules';
 import type { CombatState } from '../../domain/CombatState';
 import type { EquipmentInstance } from '../../domain/EquipmentInstance';
 import type { EquipmentSlot } from '../../domain/EquipmentSlot';
@@ -27,6 +28,8 @@ export interface GameState {
   readonly activeSquad: readonly string[];
 
   readonly combat: CombatSnapshot;
+  /** Replaces combat at the T18 cutover. */
+  readonly stageCombat: StageCombatSnapshot;
   /** Krell's weapon (Unity EquipmentService.Current). */
   readonly krellEquipmentId: string | null;
   readonly equipment: EquipmentState;
@@ -37,6 +40,21 @@ export interface GameState {
   readonly sync: SyncStatus;
   /** Player-facing notices not yet dismissed (offline summary, sync corrections). */
   readonly notices: readonly Notice[];
+}
+
+/** Continuous stage combat (stage-combat design). Only stageNumber and autoAdvance are persisted. */
+export interface StageCombatSnapshot {
+  /** The stage being fought, always <= furthestStageCleared + 1. */
+  readonly stageNumber: number;
+  readonly autoAdvance: boolean;
+  /** Null until StageCombatService starts the stage (an encounter needs the squad and params). */
+  readonly encounter: Encounter | null;
+  readonly kills: number;
+  /** Increments on every click so views can play the hit. */
+  readonly clicks: number;
+  /** Gold earned since the last GoldEarned flush. */
+  readonly pendingIncome: number;
+  readonly lastBossResult: { readonly stageNumber: number; readonly outcome: 'Success' | 'PowerGate' | 'CompositionMismatch' } | null;
 }
 
 export interface CombatSnapshot {

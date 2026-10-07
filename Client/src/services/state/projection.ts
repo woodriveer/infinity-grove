@@ -1,7 +1,7 @@
 import { PlayerProgressReplay } from '../../domain/PlayerProgressReplay';
 import type { PlayerEventRecord } from '../../domain/PlayerEventRecord';
 import { PlayerStateSnapshot } from '../../domain/PlayerStateSnapshot';
-import type { SaveGameData } from '../../domain/SaveGameData';
+import { SaveGameData } from '../../domain/SaveGameData';
 import { CombatService } from '../combat/CombatService';
 import type { ContentCatalog } from '../content/ContentLoader';
 import { bigToInt } from '../core';
@@ -20,6 +20,7 @@ export function emptyGameState(): GameState {
     heroes: [],
     activeSquad: [],
     combat: CombatService.initial(),
+    stageCombat: { stageNumber: 1, autoAdvance: true, encounter: null, kills: 0, clicks: 0, pendingIncome: 0, lastBossResult: null },
     krellEquipmentId: null,
     equipment: { bag: [], equippedByHero: {} },
     presets: [],
@@ -74,13 +75,15 @@ export function stateFromSave(save: SaveGameData, content: ContentCatalog): Game
     presets: save.local.presets,
     eventLog: log,
   };
-  return applySnapshotToLive(s, project(save.lastReconciledState, save.unsyncedEvents), content);
+  const live = applySnapshotToLive(s, project(save.lastReconciledState, save.unsyncedEvents), content);
+  const stageNumber = Math.max(1, Math.min(save.local.combat.stageNumber, live.furthestStageCleared + 1, content.stages.length));
+  return { ...live, stageCombat: { ...live.stageCombat, stageNumber, autoAdvance: save.local.combat.autoAdvance } };
 }
 
 /** The save envelope for the current state (AD-12). */
 export function saveFromState(s: GameState, nowMs: number): SaveGameData {
   return {
-    formatVersion: 1,
+    formatVersion: SaveGameData.CurrentFormatVersion,
     steamId64: s.steamId64,
     lastReconciledAtMs: s.lastReconciledAtMs,
     lastSeenAtMs: nowMs,
@@ -92,6 +95,7 @@ export function saveFromState(s: GameState, nowMs: number): SaveGameData {
       equippedByHero: s.equipment.equippedByHero,
       presets: s.presets,
       krellEquipmentId: s.krellEquipmentId,
+      combat: { stageNumber: s.stageCombat.stageNumber, autoAdvance: s.stageCombat.autoAdvance },
     },
   };
 }

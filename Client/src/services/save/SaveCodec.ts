@@ -68,6 +68,7 @@ export const saveSchema = z
             .strict(),
         ),
         krellEquipmentId: z.string().nullable(),
+        combat: z.object({ stageNumber: z.number().int().positive(), autoAdvance: z.boolean() }).strict(),
       })
       .strict(),
   })
