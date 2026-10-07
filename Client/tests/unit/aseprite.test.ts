@@ -5,6 +5,7 @@ import {
   exportArgs,
   exportLayer,
   findAseprite,
+  listLayers,
 } from '../../tools/lib/aseprite';
 
 const onPath = (p: string): boolean => p === 'C:/tools/aseprite.exe' || p === '/opt/bin/aseprite';
@@ -66,5 +67,23 @@ describe('exportLayer', () => {
     await expect(
       exportLayer('ase', 'k.aseprite', 'hair', '/tmp/h', async () => ({ code: 2, stderr: 'boom\n' })),
     ).rejects.toThrow('Aseprite failed on layer "hair" of k.aseprite (exit 2): boom');
+  });
+});
+
+describe('listLayers and whole-file export', () => {
+  it('parses one layer per line and drops blanks', async () => {
+    const layers = await listLayers('ase', 'h.aseprite', async (_exe, args) => {
+      expect(args).toEqual(['--batch', 'h.aseprite', '--list-layers']);
+      return { code: 0, stderr: '', stdout: 'body\r\n\r\narmor_chest\n' };
+    });
+    expect(layers).toEqual(['body', 'armor_chest']);
+  });
+
+  it('reports a failing list call', async () => {
+    await expect(listLayers('ase', 'h.aseprite', async () => ({ code: 2, stderr: 'bad' }))).rejects.toThrow(/exit 2.*bad/);
+  });
+
+  it('omits --layer when exporting every layer', () => {
+    expect(exportArgs('w.aseprite', null, '/t/w')).not.toContain('--layer');
   });
 });

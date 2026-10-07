@@ -344,8 +344,8 @@ T14 → T15 → T16 → T17 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] Against the stub Aseprite: outputs match goldens; second export is byte-identical; missing Aseprite exits non-zero with the message; a failing call leaves `assets/` unchanged; unknown layer warns; missing hero content names the file
-- [ ] Phase 3 build gate passes
+- [x] Against the stub Aseprite: outputs match goldens; second export is byte-identical; missing Aseprite exits non-zero with the message; a failing call leaves `assets/` unchanged; unknown layer warns; missing hero content names the file
+- [x] Phase 3 build gate passes
 
 **Tests**: unit
 **Gate**: build

@@ -255,3 +255,9 @@
 - Commit: feat(tools): locate and run the Aseprite CLI
 - Decisions (decided in heartbeat): `exportLayer` takes an optional injected `run` function (default spawns the exe) so tests record arguments without a stub executable; `AsepriteNotFound` is an Error carrying `tried`; Steam path is `C:/Program Files (x86)/Steam/steamapps/common/Aseprite/Aseprite.exe`.
 - Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: hero-art-pipeline T13
+- Result: done. `npm run art:export` (`tools/art-export.ts` CLI, policy in `tools/lib/artExport.ts`: `exportArt`, `normalizeSheetJson`); `listLayers` and `layer: null` (whole-file export for weapons) added to `tools/lib/aseprite.ts`; code-generated `tools/lib/testHero.ts` with goldens in `Client/tests/fixtures/art-export/`; 17 tests in `artExport.test.ts` + `aseprite.test.ts`. Typecheck, lint, validate:content, gen:check, unit tests, build green (combatJump 50 ms timing test flaked once under load, passed alone).
+- Commit: feat(tools): art:export for layered hero sheets
+- Decisions (decided in heartbeat): the stub Aseprite is an injected `RunProcess` (no stub executable); `gen:assets` exports `TEST_ASSET_KEYS` (keys with a `test-` path segment) and the release-build exclusion itself is wired in T15 together with the test-hero asset and content; portrait is copied from `portrait.png` only (a `portrait.aseprite` is not exported, warns when `portrait.png` is missing); `gen:assets` runs via a child process in the CLI only.
+- Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.

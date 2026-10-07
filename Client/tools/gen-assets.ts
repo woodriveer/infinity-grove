@@ -68,6 +68,13 @@ export type AudioKey = keyof typeof Assets.audio;
 export type FontKey = keyof typeof Assets.font;
 export type AssetKey = ImageKey | AsepriteKey | AudioKey;
 
+/** Code-generated test art (any path segment starting with \`test-\`); the release build leaves these out. */
+export const TEST_ASSET_KEYS: readonly string[] = ${block(
+  [...Object.keys(image), ...Object.keys(aseprite), ...Object.keys(audio), ...Object.keys(font)]
+    .filter((k) => k.split('/').some((segment) => segment.startsWith('test-')))
+    .sort(),
+)};
+
 export const ALL_ASSET_KEYS: readonly string[] = ${block([
   ...Object.keys(image),
   ...Object.keys(aseprite),

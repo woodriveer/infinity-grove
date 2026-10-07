@@ -24,6 +24,7 @@
     "gen:api": "openapi-typescript ../shared/openapi/openapi.json -o src/generated/api/schema.ts",
     "gen:check": "tsx tools/gen-check.ts",
     "art:slice": "tsx tools/art-slice.ts",
+    "art:export": "tsx tools/art-export.ts",
     "sim": "tsx tools/sim.ts",
     "soak": "node --expose-gc --import tsx tools/soak.ts",
     "scan:secrets": "tsx tools/scan-secrets.ts",

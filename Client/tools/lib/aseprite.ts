@@ -42,12 +42,11 @@ export function findAseprite(
 }
 
 /** Packed, trimmed sheet; no `--merge-duplicates` so frame count and order match across layers. */
-export function exportArgs(file: string, layer: string, outBase: string): string[] {
+export function exportArgs(file: string, layer: string | null, outBase: string): string[] {
   return [
     '--batch',
     file,
-    '--layer',
-    layer,
+    ...(layer === null ? [] : ['--layer', layer]),
     '--sheet-type',
     'packed',
     '--trim',
@@ -62,26 +61,39 @@ export function exportArgs(file: string, layer: string, outBase: string): string
   ];
 }
 
-export type RunProcess = (exe: string, args: readonly string[]) => Promise<{ code: number; stderr: string }>;
+export type RunProcess = (exe: string, args: readonly string[]) => Promise<{ code: number; stderr: string; stdout?: string }>;
 
 const defaultRun: RunProcess = (exe, args) =>
   new Promise((resolve, reject) => {
-    const child = spawn(exe, [...args], { stdio: ['ignore', 'ignore', 'pipe'] });
+    const child = spawn(exe, [...args], { stdio: ['ignore', 'pipe', 'pipe'] });
+    let stdout = '';
     let stderr = '';
+    child.stdout.on('data', (chunk: Buffer) => (stdout += chunk.toString()));
     child.stderr.on('data', (chunk: Buffer) => (stderr += chunk.toString()));
     child.on('error', reject);
-    child.on('close', (code) => resolve({ code: code ?? 1, stderr }));
+    child.on('close', (code) => resolve({ code: code ?? 1, stderr, stdout }));
   });
 
+/** Layer names of the file, one per line of `--list-layers` output (groups appear by their path). */
+export async function listLayers(exe: string, file: string, run: RunProcess = defaultRun): Promise<string[]> {
+  const { code, stderr, stdout } = await run(exe, ['--batch', file, '--list-layers']);
+  if (code !== 0) throw new Error(`Aseprite failed listing layers of ${file} (exit ${code}): ${stderr.trim()}`);
+  return (stdout ?? '')
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter((l) => l.length > 0);
+}
+
+/** `layer` null exports every visible layer merged (weapon models have a single implicit layer). */
 export async function exportLayer(
   exe: string,
   file: string,
-  layer: string,
+  layer: string | null,
   outBase: string,
   run: RunProcess = defaultRun,
 ): Promise<void> {
   const { code, stderr } = await run(exe, exportArgs(file, layer, outBase));
   if (code !== 0) {
-    throw new Error(`Aseprite failed on layer "${layer}" of ${file} (exit ${code}): ${stderr.trim()}`);
+    throw new Error(`Aseprite failed on ${layer === null ? 'all layers' : `layer "${layer}"`} of ${file} (exit ${code}): ${stderr.trim()}`);
   }
 }
