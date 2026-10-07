@@ -43,7 +43,7 @@ function sheetOf(scene: Phaser.Scene, key: string): SheetInfo | null {
  */
 export class LayeredHeroView {
   readonly root: Phaser.GameObjects.Container;
-  /** Emitted once each time the body shows the first frame of tag `hit`. */
+  /** `hit`: once each time the body shows the first frame of tag `hit`; `complete`: a non-looping tag finished. */
   readonly events = new Phaser.Events.EventEmitter();
   private readonly layers = new Map<LayerSlot, Layer>();
   private weapon: Phaser.GameObjects.Image | null = null;
@@ -67,6 +67,7 @@ export class LayeredHeroView {
     }
     this.body.sprite.on(Phaser.Animations.Events.ANIMATION_UPDATE, () => this.followBody());
     this.body.sprite.on(Phaser.Animations.Events.ANIMATION_START, () => this.followBody());
+    this.body.sprite.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => this.events.emit('complete', this.tagName));
   }
 
   /** Null when the body sheet, its json or any present layer's texture is missing. */
@@ -114,6 +115,15 @@ export class LayeredHeroView {
 
   hasTag(tag: string): boolean {
     return this.sheet.tags.has(tag);
+  }
+
+  /** Length of one pass of `tag` at speed 1, or 0 for an unknown tag. */
+  tagDurationMs(tag: string): number {
+    const t = this.sheet.tags.get(tag);
+    if (!t) return 0;
+    let total = 0;
+    for (let i = t.from; i <= t.to; i++) total += this.sheet.durations[i] ?? 100;
+    return total;
   }
 
   /** Starts `tag` on the body at `speed`; the other layers follow its frames. */

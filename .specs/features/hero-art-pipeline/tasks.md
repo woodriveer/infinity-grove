@@ -387,8 +387,8 @@ T14 → T15 → T16 → T17 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] e2e on `?scene=game&save=layered-squad`: `__ig.world()` shows layered, legacy and art-less heroes; a deleted sheet falls back to the portrait and logs the hero id once
-- [ ] Gate passes
+- [x] e2e on `?scene=game&save=layered-squad`: `__ig.world()` shows layered, legacy and art-less heroes; a deleted sheet falls back to the portrait and logs the hero id once
+- [x] Gate passes
 
 **Tests**: e2e
 **Gate**: full

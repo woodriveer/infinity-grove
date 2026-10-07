@@ -20,6 +20,30 @@ export const Assets = {
     "characters/krell/krell-empty": {
       "png": "characters/krell/krell-empty.png",
       "json": "characters/krell/krell-empty.json"
+    },
+    "heroes/test-hero/armor_boots": {
+      "png": "heroes/test-hero/armor_boots.png",
+      "json": "heroes/test-hero/armor_boots.json"
+    },
+    "heroes/test-hero/armor_chest": {
+      "png": "heroes/test-hero/armor_chest.png",
+      "json": "heroes/test-hero/armor_chest.json"
+    },
+    "heroes/test-hero/armor_gloves": {
+      "png": "heroes/test-hero/armor_gloves.png",
+      "json": "heroes/test-hero/armor_gloves.json"
+    },
+    "heroes/test-hero/body": {
+      "png": "heroes/test-hero/body.png",
+      "json": "heroes/test-hero/body.json"
+    },
+    "heroes/test-hero/fx": {
+      "png": "heroes/test-hero/fx.png",
+      "json": "heroes/test-hero/fx.json"
+    },
+    "items/weapons/test-blade": {
+      "png": "items/weapons/test-blade.png",
+      "json": "items/weapons/test-blade.json"
     }
   },
   audio: {
@@ -41,7 +65,14 @@ export type FontKey = keyof typeof Assets.font;
 export type AssetKey = ImageKey | AsepriteKey | AudioKey;
 
 /** Code-generated test art (any path segment starting with `test-`); the release build leaves these out. */
-export const TEST_ASSET_KEYS: readonly string[] = [];
+export const TEST_ASSET_KEYS: readonly string[] = [
+  "heroes/test-hero/armor_boots",
+  "heroes/test-hero/armor_chest",
+  "heroes/test-hero/armor_gloves",
+  "heroes/test-hero/body",
+  "heroes/test-hero/fx",
+  "items/weapons/test-blade"
+];
 
 export const ALL_ASSET_KEYS: readonly string[] = [
   "audio/music/menu-forest",
@@ -55,6 +86,12 @@ export const ALL_ASSET_KEYS: readonly string[] = [
   "fonts/cinzel-decorative-regular",
   "fonts/inter-400",
   "fonts/inter-600",
+  "heroes/test-hero/armor_boots",
+  "heroes/test-hero/armor_chest",
+  "heroes/test-hero/armor_gloves",
+  "heroes/test-hero/body",
+  "heroes/test-hero/fx",
+  "items/weapons/test-blade",
   "ui/backgrounds/forest-bg",
   "ui/backgrounds/menu-bg",
   "ui/frames/plaque",

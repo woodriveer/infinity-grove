@@ -25,6 +25,7 @@
     "gen:check": "tsx tools/gen-check.ts",
     "art:slice": "tsx tools/art-slice.ts",
     "art:export": "tsx tools/art-export.ts",
+    "gen:test-art": "tsx tools/gen-test-art.ts",
     "sim": "tsx tools/sim.ts",
     "soak": "node --expose-gc --import tsx tools/soak.ts",
     "scan:secrets": "tsx tools/scan-secrets.ts",

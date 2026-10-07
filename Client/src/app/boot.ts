@@ -61,6 +61,7 @@ export async function boot(): Promise<void> {
     reducedMotion,
     driveTime: platform.manualClock === null,
     advance,
+    log: (message) => platform.ports.logger.warn(message),
   });
   const game = new Phaser.Game({
     type: Phaser.AUTO,

@@ -1,0 +1,275 @@
+{
+  "frames": [
+    {
+      "duration": 100,
+      "filename": "fx 0.aseprite",
+      "frame": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
+      "rotated": false,
+      "sourceSize": {
+        "h": 512,
+        "w": 512
+      },
+      "spriteSourceSize": {
+        "h": 8,
+        "w": 8,
+        "x": 250,
+        "y": 400
+      },
+      "trimmed": true
+    },
+    {
+      "duration": 100,
+      "filename": "fx 1.aseprite",
+      "frame": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
+      "rotated": false,
+      "sourceSize": {
+        "h": 512,
+        "w": 512
+      },
+      "spriteSourceSize": {
+        "h": 8,
+        "w": 8,
+        "x": 250,
+        "y": 400
+      },
+      "trimmed": true
+    },
+    {
+      "duration": 100,
+      "filename": "fx 2.aseprite",
+      "frame": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "rotated": false,
+      "sourceSize": {
+        "h": 512,
+        "w": 512
+      },
+      "spriteSourceSize": {
+        "h": 8,
+        "w": 8,
+        "x": 250,
+        "y": 400
+      },
+      "trimmed": true
+    },
+    {
+      "duration": 100,
+      "filename": "fx 3.aseprite",
+      "frame": {
+        "h": 8,
+        "w": 8,
+        "x": 24,
+        "y": 0
+      },
+      "rotated": false,
+      "sourceSize": {
+        "h": 512,
+        "w": 512
+      },
+      "spriteSourceSize": {
+        "h": 8,
+        "w": 8,
+        "x": 250,
+        "y": 400
+      },
+      "trimmed": true
+    },
+    {
+      "duration": 100,
+      "filename": "fx 4.aseprite",
+      "frame": {
+        "h": 8,
+        "w": 8,
+        "x": 32,
+        "y": 0
+      },
+      "rotated": false,
+      "sourceSize": {
+        "h": 512,
+        "w": 512
+      },
+      "spriteSourceSize": {
+        "h": 8,
+        "w": 8,
+        "x": 250,
+        "y": 400
+      },
+      "trimmed": true
+    }
+  ],
+  "meta": {
+    "app": "https://www.aseprite.org/",
+    "format": "RGBA8888",
+    "frameTags": [
+      {
+        "direction": "forward",
+        "from": 0,
+        "name": "idle",
+        "to": 0
+      },
+      {
+        "direction": "forward",
+        "from": 1,
+        "name": "attack",
+        "to": 2
+      },
+      {
+        "direction": "forward",
+        "from": 2,
+        "name": "hit",
+        "to": 2
+      },
+      {
+        "direction": "forward",
+        "from": 3,
+        "name": "hurt",
+        "to": 3
+      },
+      {
+        "direction": "forward",
+        "from": 4,
+        "name": "ko",
+        "to": 4
+      }
+    ],
+    "image": "fx.png",
+    "scale": "1",
+    "size": {
+      "h": 8,
+      "w": 40
+    },
+    "slices": [
+      {
+        "color": "#0000ffff",
+        "keys": [
+          {
+            "bounds": {
+              "h": 1,
+              "w": 1,
+              "x": 280,
+              "y": 420
+            },
+            "frame": 0
+          },
+          {
+            "bounds": {
+              "h": 1,
+              "w": 1,
+              "x": 281,
+              "y": 420
+            },
+            "frame": 1
+          },
+          {
+            "bounds": {
+              "h": 1,
+              "w": 1,
+              "x": 282,
+              "y": 420
+            },
+            "frame": 2
+          },
+          {
+            "bounds": {
+              "h": 1,
+              "w": 1,
+              "x": 283,
+              "y": 420
+            },
+            "frame": 3
+          },
+          {
+            "bounds": {
+              "h": 1,
+              "w": 1,
+              "x": 284,
+              "y": 420
+            },
+            "frame": 4
+          }
+        ],
+        "name": "grip"
+      },
+      {
+        "color": "#ff0000ff",
+        "keys": [
+          {
+            "bounds": {
+              "h": 1,
+              "w": 1,
+              "x": 310,
+              "y": 400
+            },
+            "frame": 0
+          },
+          {
+            "bounds": {
+              "h": 1,
+              "w": 1,
+              "x": 311,
+              "y": 400
+            },
+            "frame": 1
+          },
+          {
+            "bounds": {
+              "h": 1,
+              "w": 1,
+              "x": 312,
+              "y": 400
+            },
+            "frame": 2
+          },
+          {
+            "bounds": {
+              "h": 1,
+              "w": 1,
+              "x": 313,
+              "y": 400
+            },
+            "frame": 3
+          },
+          {
+            "bounds": {
+              "h": 1,
+              "w": 1,
+              "x": 314,
+              "y": 400
+            },
+            "frame": 4
+          }
+        ],
+        "name": "tip"
+      },
+      {
+        "color": "#00ff00ff",
+        "keys": [
+          {
+            "bounds": {
+              "h": 1,
+              "w": 1,
+              "x": 284,
+              "y": 420
+            },
+            "frame": 4
+          }
+        ],
+        "name": "grip_behind"
+      }
+    ]
+  }
+}

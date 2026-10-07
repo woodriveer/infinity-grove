@@ -267,3 +267,8 @@
 - Commit: feat(world): layered hero view
 - Decisions (decided in heartbeat): dependency-cruiser rule `presentation-domain-types-and-formatters-only` now also allows value imports from `domain/art/` (pure layout rules the design assigns to the view; CLAUDE.md layer rules updated); missing-weapon-model logging is left to FieldHeroView in T15 (the view has no logger and presentation has no console use).
 - Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.
+
+## 2026-10-07 hero-art-pipeline T15
+- Result: done (see STATE.md entry). Gate: typecheck, lint, validate:content, gen:check, build green; known failures only (combatJump timing, ui-gate criterion 3).
+- Commit: feat(world): heroes render by art mode
+- Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.

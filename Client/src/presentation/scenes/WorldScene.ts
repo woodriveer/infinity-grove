@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
-import { Assets, type AsepriteKey, type ImageKey } from '../../generated/assets.gen';
+import { enchantBand } from '../../domain/art/Playback';
+import { heroLook } from '../../domain/art/HeroLook';
+import { Assets, TEST_ASSET_KEYS, type AsepriteKey, type ImageKey } from '../../generated/assets.gen';
 import type { AppServices } from '../../services/AppServices';
 import type { EffectData } from '../../services/content/schema';
 import type { GameState } from '../../services/state/types';
@@ -23,6 +25,8 @@ export interface WorldOptions {
   /** When false (manual clock), only the dev hook advances game time. */
   driveTime: boolean;
   advance(elapsedMs: number): void;
+  /** Warning sink for recoverable art problems (a hero sheet that failed to load). */
+  log?(message: string): void;
 }
 
 /**
@@ -65,7 +69,9 @@ export class WorldScene extends Phaser.Scene {
       if (key.startsWith('characters/portraits/')) this.load.image(key, Assets.image[key]);
     }
     if (this.opts.audio) this.load.audio('audio/music/menu-forest', Assets.audio['audio/music/menu-forest']);
+    const testKeys = new Set<string>(import.meta.env.MODE === 'production' ? TEST_ASSET_KEYS : []);
     for (const key of Object.keys(Assets.aseprite) as AsepriteKey[]) {
+      if (testKeys.has(key)) continue;
       this.load.aseprite(key, Assets.aseprite[key].png, Assets.aseprite[key].json);
     }
   }
@@ -116,8 +122,33 @@ export class WorldScene extends Phaser.Scene {
   }
 
   /** Field state per squad hero, for the dev hook. */
-  fieldState(): Array<{ heroId: string; pose: string; attacks: number; portraitFallback: boolean }> {
-    return this.field.map((v) => ({ heroId: v.hero.heroId, pose: v.currentPose, attacks: v.attackTotal, portraitFallback: v.portraitFallback }));
+  fieldState(): Array<{
+    heroId: string;
+    pose: string;
+    attacks: number;
+    portraitFallback: boolean;
+    art: string;
+    tag: string | null;
+    weaponModel: string | null;
+    tint: Record<string, string>;
+    enchantBand: number | null;
+  }> {
+    const bands = this.app.content.enchantBands?.bands ?? [];
+    return this.field.map((v) => {
+      const layered = v.layeredState();
+      const look = v.look;
+      return {
+        heroId: v.hero.heroId,
+        pose: v.currentPose,
+        attacks: v.attackTotal,
+        portraitFallback: v.portraitFallback,
+        art: v.artPath,
+        tag: layered?.tag ?? null,
+        weaponModel: layered?.weaponModel ?? null,
+        tint: layered?.tint ?? {},
+        enchantBand: look ? (enchantBand(look.enchantLevel, bands)?.minLevel ?? null) : null,
+      };
+    });
   }
 
   private createMonster(): void {
@@ -190,7 +221,7 @@ export class WorldScene extends Phaser.Scene {
     for (const v of this.field) v.destroy();
     this.field = squad.map((id) => {
       const hero = this.app.content.hero(id);
-      const view = new FieldHeroView(this, hero, this.app.content.animations.find((a) => a.characterId === id) ?? null);
+      const view = new FieldHeroView(this, hero, this.app.content.animations.find((a) => a.characterId === id) ?? null, this.opts.log);
       this.gameLayer.add(view.root);
       return view;
     });
@@ -208,7 +239,9 @@ export class WorldScene extends Phaser.Scene {
     const equipment = s.krellEquipmentId ? this.app.content.equipmentById(s.krellEquipmentId) : null;
     const krellAnim = this.app.content.animations.find((a) => a.characterId === 'krell');
     const krellVariant = krellAnim?.variantByItemId[String(equipment?.animatorItemID ?? 0)] ?? 'empty';
+    const items = new Map(this.app.content.items.map((i) => [i.itemId, i]));
     for (const view of this.field) {
+      if (view.hero.art?.mode === 'layered') view.setLook(heroLook(s.equipment.equippedByHero[view.hero.heroId] ?? {}, items, view.hero.art));
       if (view.hero.heroId === 'krell') view.setVariant(krellVariant);
       else view.setVariant('empty');
       view.sync(enc?.heroes.find((h) => h.heroId === view.hero.heroId), enc, fighting);

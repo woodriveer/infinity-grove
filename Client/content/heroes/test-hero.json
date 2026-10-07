@@ -1,0 +1,28 @@
+{
+  "heroId": "test-hero",
+  "serverHeroId": "1f6e0000-0000-4000-8000-0000000000f1",
+  "displayName": "Test Hero",
+  "heroType": "Nature",
+  "portrait": "",
+  "basePower": 12,
+  "baseHp": 101,
+  "baseDefense": 5,
+  "attackIntervalMs": 800,
+  "abilityByStarTier": [
+    "Test Hero ability, tier 1 (test content)",
+    "Test Hero ability, tier 2 (test content)",
+    "Test Hero ability, tier 3 (test content)",
+    "Test Hero ability, tier 4 (test content)",
+    "Test Hero ability, tier 5 (test content)",
+    "Test Hero ability, tier 6 (test content)",
+    "Test Hero ability, tier 7 (test content)",
+    "Test Hero ability, tier 8 (test content)",
+    "Test Hero ability, tier 9 (test content)",
+    "Test Hero ability, tier 10 (test content)",
+    "Test Hero ability, tier 11 (test content)",
+    "Test Hero ability, tier 12 (test content)"
+  ],
+  "art": {
+    "mode": "layered"
+  }
+}

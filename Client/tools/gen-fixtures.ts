@@ -107,3 +107,19 @@ await build(
   },
   { reconcile: true },
 );
+// One squad with every art path (hero-art-pipeline ART-09): the starter Ranger (portrait only), Test Hero (layered, test blade + vest equipped), Krell (legacy).
+await build(
+  'layered-squad',
+  (app) => {
+    for (const id of ['test-hero', 'krell']) {
+      app.roster.addHeroCard(id);
+      app.roster.tryActivate(id);
+    }
+    for (const id of ['test-blade', 'test-vest']) {
+      app.inventory.addNewToBag(id);
+      const item = app.inventory.bag().find((i) => i.itemId === id);
+      if (item) app.inventory.tryEquip('test-hero', item.instanceId);
+    }
+  },
+  { reconcile: true },
+);

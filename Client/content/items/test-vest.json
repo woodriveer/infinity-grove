@@ -1,0 +1,10 @@
+{
+  "itemId": "test-vest",
+  "displayName": "Test Vest",
+  "slot": "Chest",
+  "archetype": "Strength",
+  "icon": "",
+  "visual": {
+    "color": "#c04040"
+  }
+}

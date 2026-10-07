@@ -1,0 +1,10 @@
+{
+  "itemId": "test-blade",
+  "displayName": "Test Blade",
+  "slot": "Weapon",
+  "archetype": "Strength",
+  "icon": "",
+  "visual": {
+    "weaponModel": "test-blade"
+  }
+}
