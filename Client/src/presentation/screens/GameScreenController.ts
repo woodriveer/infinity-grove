@@ -68,6 +68,21 @@ export class GameScreenController implements ScreenController {
             },
           ],
         },
+        {
+          id: 'field',
+          rows: (enc?.heroes ?? []).map((h) => ({
+            id: `field-${h.heroId}`,
+            nodes: [
+              {
+                id: `game.field.${h.heroId}`,
+                role: 'value' as const,
+                label: this.ui.app.content.hero(h.heroId).displayName,
+                value: `${Math.ceil(h.hp)}/${Math.ceil(h.maxHp)} HP`,
+                enabled: h.alive,
+              },
+            ],
+          })),
+        },
         { id: 'combat', rows: [{ id: 'combat', nodes: [combat] }] },
         {
           id: 'notices',

@@ -25,7 +25,7 @@ type Ig = {
   input(arg: unknown): number;
   click(id: string): void;
   state(): Record<string, unknown> & { gold: number; activeSquad: string[]; heroes: Array<{ heroId: string; starTier: number; duplicatesOwned: number }>; combat: { stageNumber: number; kills: number; clicks: number; phase: string | null; foe: { hp: number; maxHp: number } | null } };
-  world(): { krellAnimation: string | null };
+  world(): { krellAnimation: string | null; field: Array<{ heroId: string; pose: string; attacks: number; portraitFallback: boolean }> };
 };
 
 /** Opens a boot URL (RFR-15) on the test build and waits for the dev hook. */

@@ -1,9 +1,10 @@
 import Phaser from 'phaser';
 import { Assets, type AsepriteKey, type ImageKey } from '../../generated/assets.gen';
 import type { AppServices } from '../../services/AppServices';
-import type { AnimationData, EffectData } from '../../services/content/schema';
+import type { EffectData } from '../../services/content/schema';
 import type { GameState } from '../../services/state/types';
 import { colorHex, phaserColor } from '../theme/tokens';
+import { FieldHeroView } from './FieldHeroView';
 
 /** A live foe is on the field (the encounter is in its fighting phase). */
 function isFighting(s: GameState): boolean {
@@ -37,14 +38,17 @@ export class WorldScene extends Phaser.Scene {
   private menuBg!: Phaser.GameObjects.Image;
   private forestBg!: Phaser.GameObjects.Image;
   private logo!: Phaser.GameObjects.Image;
-  private krell = new Map<string, Phaser.GameObjects.Sprite>();
-  private krellVariant = 'empty';
+  private field: FieldHeroView[] = [];
+  private fieldKey = '';
+  private bossBar!: Phaser.GameObjects.Graphics;
+  private bossTimer!: Phaser.GameObjects.Text;
   private monster!: Phaser.GameObjects.Container;
   private monsterBody!: Phaser.GameObjects.Graphics;
   private fireflies: Phaser.GameObjects.Particles.ParticleEmitter | null = null;
   private lastAttackCount = 0;
   private lastState: GameState | null = null;
   private unsubscribe: (() => void) | null = null;
+  private fieldOrigin = { x: 0, y: 0 };
   private created = false;
 
   constructor(
@@ -57,6 +61,9 @@ export class WorldScene extends Phaser.Scene {
   preload(): void {
     const images: ImageKey[] = ['ui/backgrounds/menu-bg', 'ui/backgrounds/forest-bg', 'ui/logo/logo', 'effects/fireflies/diamond'];
     for (const key of images) this.load.image(key, Assets.image[key]);
+    for (const key of Object.keys(Assets.image) as ImageKey[]) {
+      if (key.startsWith('characters/portraits/')) this.load.image(key, Assets.image[key]);
+    }
     if (this.opts.audio) this.load.audio('audio/music/menu-forest', Assets.audio['audio/music/menu-forest']);
     for (const key of Object.keys(Assets.aseprite) as AsepriteKey[]) {
       this.load.aseprite(key, Assets.aseprite[key].png, Assets.aseprite[key].json);
@@ -71,9 +78,8 @@ export class WorldScene extends Phaser.Scene {
     this.forestBg = this.add.image(0, 0, 'ui/backgrounds/forest-bg');
     this.gameLayer = this.add.container(0, 0, [this.forestBg]);
 
-    const anim = this.app.content.animations.find((a) => a.characterId === 'krell');
-    if (anim) this.createKrell(anim);
     this.createMonster();
+    this.createBossHud();
 
     const effect = this.app.content.effects.find((e) => e.effectId === 'fireflies');
     if (effect && this.opts.effects) this.createFireflies(effect);
@@ -104,21 +110,14 @@ export class WorldScene extends Phaser.Scene {
     this.fireflies?.setVisible(mode === 'game');
   }
 
-  /** Current Krell animation key, for tests and fidelity checks. */
+  /** Current Krell animation key, for tests and fidelity checks (null when Krell is not in the squad). */
   krellAnimation(): string | null {
-    return this.krell.get(this.krellVariant)?.anims.currentAnim?.key ?? null;
+    return this.field.find((v) => v.hero.heroId === 'krell')?.animationKey ?? null;
   }
 
-  private createKrell(anim: AnimationData): void {
-    for (const [variant, def] of Object.entries(anim.variants)) {
-      const sprite = this.add.sprite(0, 0, def.sheet).setOrigin(0.5, 1).setScale(1.6).setVisible(false);
-      sprite.anims.createFromAseprite(def.sheet);
-      sprite.on(Phaser.Animations.Events.ANIMATION_COMPLETE, (a: Phaser.Animations.Animation) => {
-        if (a.key === def.states['punch']?.tag) this.playKrellState(this.lastState);
-      });
-      this.krell.set(variant, sprite);
-      this.gameLayer.add(sprite);
-    }
+  /** Field state per squad hero, for the dev hook. */
+  fieldState(): Array<{ heroId: string; pose: string; attacks: number; portraitFallback: boolean }> {
+    return this.field.map((v) => ({ heroId: v.hero.heroId, pose: v.currentPose, attacks: v.attackTotal, portraitFallback: v.portraitFallback }));
   }
 
   private createMonster(): void {
@@ -137,6 +136,12 @@ export class WorldScene extends Phaser.Scene {
     g.fillStyle(phaserColor('black'), 0.8);
     g.fillCircle(-40, -90, 12);
     g.fillCircle(40, -90, 12);
+  }
+
+  private createBossHud(): void {
+    this.bossBar = this.add.graphics();
+    this.bossTimer = this.add.text(0, 0, '', { fontFamily: 'sans-serif', fontSize: '28px', color: colorHex.ink }).setOrigin(0.5, 0).setVisible(false);
+    this.gameLayer.add([this.bossBar, this.bossTimer]);
   }
 
   private createFireflies(e: EffectData): void {
@@ -166,41 +171,74 @@ export class WorldScene extends Phaser.Scene {
       bg.setScale(Math.max(width / bg.width, height / bg.height));
     }
     this.logo.setPosition(width / 2, oy + 330).setScale(Math.min(1, 900 / this.logo.width));
-    for (const sprite of this.krell.values()) sprite.setPosition(ox + 620, oy + 880);
+    this.fieldOrigin = { x: ox, y: oy };
+    this.placeField();
     this.monster.setPosition(ox + 1340, oy + 880);
+    this.bossBar.setPosition(ox + 1340, oy + 700);
+    this.bossTimer.setPosition(ox + 1340, oy + 650);
     this.fireflies?.setPosition(ox, oy);
     this.cameras.main.setBackgroundColor(colorHex.bgWorld);
   }
 
+  /** Squad heroes stand in a loose line, leader nearest the foe. */
+  private placeField(): void {
+    const { x, y } = this.fieldOrigin;
+    this.field.forEach((v, i) => v.setPosition(x + 1000 - i * 190, y + 880 - (i % 2) * 36));
+  }
+
+  private rebuildField(squad: readonly string[]): void {
+    for (const v of this.field) v.destroy();
+    this.field = squad.map((id) => {
+      const hero = this.app.content.hero(id);
+      const view = new FieldHeroView(this, hero, this.app.content.animations.find((a) => a.characterId === id) ?? null);
+      this.gameLayer.add(view.root);
+      return view;
+    });
+    this.placeField();
+  }
+
   private sync(s: GameState): void {
+    const key = s.activeSquad.join('|');
+    if (key !== this.fieldKey || !this.lastState) {
+      this.fieldKey = key;
+      this.rebuildField(s.activeSquad);
+    }
+    const enc = s.stageCombat.encounter;
+    const fighting = isFighting(s);
     const equipment = s.krellEquipmentId ? this.app.content.equipmentById(s.krellEquipmentId) : null;
-    const anim = this.app.content.animations.find((a) => a.characterId === 'krell');
-    const variant = anim?.variantByItemId[String(equipment?.animatorItemID ?? 0)] ?? 'empty';
-    if (variant !== this.krellVariant || !this.lastState) {
-      this.krellVariant = variant;
-      for (const [name, sprite] of this.krell) sprite.setVisible(name === variant);
+    const krellAnim = this.app.content.animations.find((a) => a.characterId === 'krell');
+    const krellVariant = krellAnim?.variantByItemId[String(equipment?.animatorItemID ?? 0)] ?? 'empty';
+    for (const view of this.field) {
+      if (view.hero.heroId === 'krell') view.setVariant(krellVariant);
+      else view.setVariant('empty');
+      view.sync(enc?.heroes.find((h) => h.heroId === view.hero.heroId), enc, fighting);
     }
 
-    const fighting = isFighting(s);
     this.monster.setVisible(fighting);
+    this.drawBoss(s);
 
     if (s.stageCombat.clicks !== this.lastAttackCount) {
       this.lastAttackCount = s.stageCombat.clicks;
-      const sprite = this.krell.get(this.krellVariant);
-      if (sprite) sprite.play({ key: 'punch', repeat: 0 });
       if (fighting) this.hitFlash();
-    } else if (!this.lastState || isFighting(this.lastState) !== fighting) {
-      this.playKrellState(s);
     }
     this.lastState = s;
   }
 
-  /** Krell.controller parity: walk while searching, idle while facing a monster. */
-  private playKrellState(s: GameState | null): void {
-    const sprite = this.krell.get(this.krellVariant);
-    if (!sprite || !s) return;
-    if (sprite.anims.isPlaying && sprite.anims.currentAnim?.key === 'punch') return;
-    sprite.play({ key: isFighting(s) ? 'idle' : 'walk', repeat: -1 }, true);
+  private drawBoss(s: GameState): void {
+    const enc = s.stageCombat.encounter;
+    const foe = enc?.phase === 'fighting' ? enc.foe : null;
+    const g = this.bossBar;
+    g.clear();
+    if (!foe?.isBoss) {
+      this.bossTimer.setVisible(false);
+      return;
+    }
+    const ratio = Phaser.Math.Clamp(foe.hp / foe.maxHp, 0, 1);
+    g.fillStyle(phaserColor('black'), 0.7).fillRect(-200, 0, 400, 22);
+    g.fillStyle(phaserColor('dangerMismatch'), 1).fillRect(-200, 0, 400 * ratio, 22);
+    const left = enc?.bossStepsLeft;
+    this.bossTimer.setVisible(left !== null && left !== undefined);
+    if (left !== null && left !== undefined) this.bossTimer.setText(`${Math.ceil(left / 10)} s`);
   }
 
   private hitFlash(): void {

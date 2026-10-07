@@ -146,3 +146,9 @@
 - Commit: test(sim): progression, boss fights and FR-11 tuning check
 - Decisions: placeholder retune (monster dpsBase 0.8, boss hp ×20 / dps ×1.2, floors 56 and 75) so one starter ranger reaches stage 4 and FR-11 AC 6 holds; p14 split in three scenario files; see tasks.md T21.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: stage-combat T22
+- Result: done. Gate: typecheck, lint, validate:content, gen:check, npm test (286), build, scan:secrets green; e2e green except pre-existing ui-gate criterion 3 (its skipped siblings pass when run directly).
+- Commit: feat(world): squad heroes fight on the field
+- Decisions: see tasks.md T22 status (punch tag as attack, type-colored block fallback, field nodes in GameScreenController, krellAnimation null without Krell in squad).
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.

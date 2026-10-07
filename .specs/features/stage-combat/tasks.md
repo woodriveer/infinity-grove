@@ -591,6 +591,8 @@ T22 → T23 → T24
 **Gate**: full
 **Commit**: `feat(world): squad heroes fight on the field`
 
+**Status (T22, decided in heartbeat)**: done. Aseprite tags stay `idle`/`walk`/`punch` (punch = attack). Heroes without a portrait asset draw a type-colored block (also flagged `portraitFallback`). Clicks no longer animate a hero; the foe still flashes. `game.field.<heroId>` nodes live in `GameScreenController` (value `hp/maxHp HP`, `enabled` = alive); attack counts and pose come from `__ig.world().field`. `krellAnimation` is null unless Krell is in the squad; the combat e2e now asserts on `field[0]`.
+
 ---
 
 ### T23: Combat HUD

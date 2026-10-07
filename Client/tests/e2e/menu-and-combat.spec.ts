@@ -26,19 +26,19 @@ test('settings: music volume changes and persists (RFR-47)', async ({ page }) =>
 test('combat: the squad searches, fights on its own and gamepad clicks add damage (P2, P3, RFR-43)', async ({ page }) => {
   await open(page, { save: 'new-player', scene: 'game' });
   expect(await node(page, 'game.combat')).toMatchObject({ label: 'Your squad is searching for a monster', enabled: false });
-  expect((await ig(page, (g) => g.world())).krellAnimation).toBe('walk');
+  expect((await ig(page, (g) => g.world())).field[0]).toMatchObject({ heroId: 'ranger', pose: 'walk' });
   await advance(page, 300);
   const target = await node(page, 'game.combat');
   expect(target).toMatchObject({ label: 'Attack Slime', value: '50/50 HP', enabled: true, focused: true });
   expect(await node(page, 'game.progress')).toMatchObject({ value: '1/10' });
-  expect((await ig(page, (g) => g.world())).krellAnimation).toBe('idle');
+  expect((await ig(page, (g) => g.world())).field[0]).toMatchObject({ pose: 'idle' });
   await shot(page, 'combat');
   await pad(page, 'A');
   // A click is 5% of the squad DPS: ranger 12 power x 1.5 (favored Nature) = 18 dps -> 0.9 damage.
   let s = await state(page);
   expect(s.combat.clicks).toBe(1);
   expect(s.combat.foe?.hp).toBeCloseTo(49.1, 6);
-  expect((await ig(page, (g) => g.world())).krellAnimation).toBe('punch');
+  expect((await ig(page, (g) => g.world())).field[0]?.pose).toBe('idle'); // a click is not a hero attack
   await advance(page, 2800); // 49.1 HP left at 18 dps
   s = await state(page);
   expect(s.combat.kills).toBe(1);
@@ -88,4 +88,18 @@ test('HUD menus open with R / I / M and back closes them; back on the bare game 
   }
   await key(page, 'Escape');
   expect(await screen(page)).toBe('game');
+});
+
+test('field: one node per squad hero, attacks follow the interval, portrait fallback is flagged (COMBAT-02)', async ({ page }) => {
+  await open(page, { save: 'new-player', scene: 'game' });
+  await advance(page, 300);
+  const nodes = (await describe(page)).filter((n) => n.id.startsWith('game.field.'));
+  expect(nodes.map((n) => n.id)).toEqual(['game.field.ranger']);
+  expect(nodes[0]).toMatchObject({ enabled: true });
+  expect(nodes[0]?.value).toMatch(/^\d+\/\d+ HP$/);
+  const before = (await ig(page, (g) => g.world())).field[0];
+  expect(before?.portraitFallback).toBe(true);
+  await advance(page, 3000);
+  const after = (await ig(page, (g) => g.world())).field[0];
+  expect(after?.attacks).toBeGreaterThan(before?.attacks ?? 0);
 });
