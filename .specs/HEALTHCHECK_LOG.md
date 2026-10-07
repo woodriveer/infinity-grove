@@ -42,3 +42,10 @@
 - **Commits**: `feat(content): add combat economy kind and boss stage schema`.
 - **Decisions (decided in heartbeat)**: legacy fields stay until their cutover (stage `powerFloor` until T20, monster `maxHp`/`goldMin`/`goldMax` until T18); `content/economy/combat.json` is required and added in T5 with design defaults and placeholder curves (T6 now reviews it instead of adding it); every hero gets placeholder HP 100 / defense 5 / interval 1000 ms until T6; `defaultBossTimerSeconds` is also capped at 60 s; only the first stage-number gap is reported.
 - **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.
+
+## 2026-10-07 — stage-combat T6: placeholder combat content and Krell hero
+
+- **Result**: done. New hero `krell` (linked to `animations/krell.json` by id), per-hero HP/defense/attack interval on all 7 heroes, stages 5–10 with bosses on 5 (default timer) and 10 (45 s), boss monster `elder-slime`. Quick gate green: Vitest 168 passed (was 165), validate:content OK (7 heroes, 2 monsters, 10 stages). e2e: 31 pass; only the known ui-gate criterion 3 fails (186 ms vs < 100 ms, pre-existing since T4). T5 test fixtures that assumed a 4-stage catalog were repointed (boss cases edit stage 5, copies use stages 11/12, full error lists grew); no rule or message changed, no test removed.
+- **Commits**: `feat(content): placeholder combat economy, stages 1-10 and Krell`.
+- **Decisions (decided in heartbeat)**: Krell is Dark, power 12, HP 130, def 6, 900 ms, `serverHeroId` …0007, no portrait yet; the hero ↔ animation link is the `animations/<heroId>.json` entry (design.md:178), so no new `HeroData` field; placeholder per-hero stats, stage names/types and boss floors (200, 1200) are listed in tasks.md T6 and get tuned in T21; `combat.json` kept as in T5.
+- **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.

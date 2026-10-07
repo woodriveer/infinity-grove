@@ -205,12 +205,13 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] `content.test.ts` asserts the loaded catalog has ≥ 10 contiguous stages, boss stages 5 and 10, and Krell as a regular hero
-- [ ] `npm run validate:content` and Quick gate pass
+- [x] `content.test.ts` asserts the loaded catalog has ≥ 10 contiguous stages, boss stages 5 and 10, and Krell as a regular hero
+- [x] `npm run validate:content` and Quick gate pass
 
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(content): placeholder combat economy, stages 1-10 and Krell`
+**Status**: Done (heartbeat 2026-10-07): `content.test.ts` 18 tests (3 new: ≥ 10 contiguous stages with bosses exactly on multiples of `bossEvery` incl. 5 and 10; Krell has a GUID `serverHeroId` and an animations entry; every hero has its own HP/defense/interval); Vitest 168 (was 165); validate:content OK (7 heroes, 2 monsters, 10 stages); e2e green except the known ui-gate criterion 3 (186 ms, pre-existing). T5 fixtures that assumed 4 stages were repointed, rules and messages unchanged: boss cases edit `stages/bramble-throne.json` (stage 5) instead of adding `boss-den`; the duplicate-id copy and the RFR-12 sim fixture use stage 11; the gap case adds stage 12; full error lists grew with the new stage files. Decided in heartbeat: Krell is `krell` (Dark, power 12, HP 130, def 6, 900 ms, `serverHeroId` …0007, no portrait yet); the `animations: krell` link is the existing `animations/krell.json` entry matched by hero id (design.md:178 "has an `animations` entry"), so `HeroData` gets no new field; per-hero placeholder stats (cleric 90/8/1200, druid 110/6/1100, ember-warden 120/4/900, ranger 95/4/800, shade-stalker 85/3/700, tide-caller 105/7/1000); new stages 5 Bramble Throne (Nature, boss, default timer), 6 Sunlit Glade (Light), 7 Cinder Hollow (Fire), 8 Mistwater Shallows (Water), 9 Duskroot Path (Dark), 10 Elder Heart (Light, boss, 45 s timer); boss monster `elder-slime` (no sprite; legacy maxHp/gold fields until T18); boss power floors 200 and 1200 and legacy `powerFloor` 200…1200 are placeholders that T21 tunes; `combat.json` reviewed and kept as in T5; no new asset keys, so no gen:assets.
 
 ---
 

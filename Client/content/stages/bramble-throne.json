@@ -1,0 +1,14 @@
+{
+  "stageId": "bramble-throne",
+  "stageNumber": 5,
+  "displayName": "Bramble Throne",
+  "favoredType": "Nature",
+  "powerFloor": 200,
+  "monsters": [
+    "slime"
+  ],
+  "boss": {
+    "monsterId": "elder-slime",
+    "powerFloor": 200
+  }
+}

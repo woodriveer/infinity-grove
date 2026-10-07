@@ -1,0 +1,25 @@
+{
+  "heroId": "krell",
+  "serverHeroId": "1f6e0000-0000-4000-8000-000000000007",
+  "displayName": "Krell",
+  "heroType": "Dark",
+  "portrait": "",
+  "basePower": 12,
+  "baseHp": 130,
+  "baseDefense": 6,
+  "attackIntervalMs": 900,
+  "abilityByStarTier": [
+    "Krell ability, tier 1 (placeholder)",
+    "Krell ability, tier 2 (placeholder)",
+    "Krell ability, tier 3 (placeholder)",
+    "Krell ability, tier 4 (placeholder)",
+    "Krell ability, tier 5 (placeholder)",
+    "Krell ability, tier 6 (placeholder)",
+    "Krell ability, tier 7 (placeholder)",
+    "Krell ability, tier 8 (placeholder)",
+    "Krell ability, tier 9 (placeholder)",
+    "Krell ability, tier 10 (placeholder)",
+    "Krell ability, tier 11 (placeholder)",
+    "Krell ability, tier 12 (placeholder)"
+  ]
+}

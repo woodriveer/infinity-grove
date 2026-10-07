@@ -1,0 +1,15 @@
+{
+  "stageId": "elder-heart",
+  "stageNumber": 10,
+  "displayName": "Elder Heart",
+  "favoredType": "Light",
+  "powerFloor": 1200,
+  "monsters": [
+    "slime"
+  ],
+  "boss": {
+    "monsterId": "elder-slime",
+    "powerFloor": 1200,
+    "timerSeconds": 45
+  }
+}

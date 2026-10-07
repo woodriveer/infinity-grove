@@ -78,8 +78,8 @@ describe('adding content needs no code change (RFR-12 AC)', () => {
       writeFileSync(
         join(dir, 'stages/fixture-crag.json'),
         JSON.stringify({
-          stageId: 'fixture-crag', stageNumber: 5, displayName: 'Fixture Crag', favoredType: 'Light', powerFloor: 20,
-          monsters: ['slime'], boss: { monsterId: 'slime', powerFloor: 20 },
+          stageId: 'fixture-crag', stageNumber: 11, displayName: 'Fixture Crag', favoredType: 'Light', powerFloor: 20,
+          monsters: ['slime'],
         }),
       );
       const app = compose(defaultConfig('test'), createNodePlatform({ contentRoot: dir }));

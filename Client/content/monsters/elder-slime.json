@@ -1,0 +1,8 @@
+{
+  "monsterId": "elder-slime",
+  "monsterName": "Elder Slime",
+  "sprite": "",
+  "maxHp": 500,
+  "goldMin": 30,
+  "goldMax": 80
+}

@@ -1,0 +1,10 @@
+{
+  "stageId": "cinder-hollow",
+  "stageNumber": 7,
+  "displayName": "Cinder Hollow",
+  "favoredType": "Fire",
+  "powerFloor": 450,
+  "monsters": [
+    "slime"
+  ]
+}

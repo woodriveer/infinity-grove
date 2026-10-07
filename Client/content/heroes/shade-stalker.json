@@ -5,9 +5,9 @@
   "heroType": "Dark",
   "portrait": "",
   "basePower": 13,
-  "baseHp": 100,
-  "baseDefense": 5,
-  "attackIntervalMs": 1000,
+  "baseHp": 85,
+  "baseDefense": 3,
+  "attackIntervalMs": 700,
   "abilityByStarTier": [
     "Shade Stalker ability, tier 1 (placeholder)",
     "Shade Stalker ability, tier 2 (placeholder)",

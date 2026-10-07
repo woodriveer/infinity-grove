@@ -5,9 +5,9 @@
   "heroType": "Fire",
   "portrait": "",
   "basePower": 14,
-  "baseHp": 100,
-  "baseDefense": 5,
-  "attackIntervalMs": 1000,
+  "baseHp": 120,
+  "baseDefense": 4,
+  "attackIntervalMs": 900,
   "abilityByStarTier": [
     "Ember Warden ability, tier 1 (placeholder)",
     "Ember Warden ability, tier 2 (placeholder)",

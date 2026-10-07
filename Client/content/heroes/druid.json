@@ -5,9 +5,9 @@
   "heroType": "Water",
   "portrait": "characters/portraits/druid",
   "basePower": 10,
-  "baseHp": 100,
-  "baseDefense": 5,
-  "attackIntervalMs": 1000,
+  "baseHp": 110,
+  "baseDefense": 6,
+  "attackIntervalMs": 1100,
   "abilityByStarTier": [
     "Druid ability, tier 1 (placeholder)",
     "Druid ability, tier 2 (placeholder)",
