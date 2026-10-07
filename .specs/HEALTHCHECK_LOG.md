@@ -63,3 +63,10 @@
 - **Commits**: `feat(domain): combat encounter model and click`.
 - **Decisions (decided in heartbeat)**: `CombatParams` = economy scalars + `squad` (Active Squad only, slot order) + `stages` (all `StageSpec`s, for auto-advance); hero DPS = `power × dpsPerPower` fixed at stage start; a boss stage spawns only the boss; a click without a fighting foe does nothing; stage clear and boss victory on a kill are left to T9.
 - **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.
+
+## 2026-10-07 — stage-combat T9: CombatRules.advance, live mode
+
+- **Result**: done. `Client/src/domain/combat/CombatRules.ts`: `advance(enc, steps, p)` runs 100 ms steps in the design's fixed order (spawn → squad strikes first → foe damage split, or all to the leader against a boss without the favored type → kill → knock-outs → leader failure → timer → wipe), HP in segment form `hpAtSegmentStart − k × perStep`, stage clear after `monstersPerStage` kills, auto-advance, last stage keeps farming, boss victory/failure with full-HP restarts. 21 unit tests in `Client/tests/unit/combatAdvance.test.ts`. Quick gate green: typecheck, lint, Vitest 208 passed (was 187).
+- **Commits**: `feat(domain): segment-based combat advance`.
+- **Decisions (decided in heartbeat)**: `Encounter.autoAdvance` (a boss failure turns it off inside `advance`); `StageSpec.monsterIds`; the boss timer runs only while the boss is on the field; the AD-004 favored-type check covers the whole Active Squad; rules emit `stageCleared` per normal clear and `kill` + `bossDefeated` per boss kill; the T8 boss-click test now also expects `bossDefeated`.
+- **Pending for the developer**: `git push`; the ui-gate criterion 3 failure; the leftover rolldown folder.

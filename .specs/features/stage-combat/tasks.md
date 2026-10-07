@@ -274,12 +274,13 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] One unit test per listed AC and edge case (empty squad spawns nothing; last stage keeps farming; spawn within 500 ms; killed foe deals no damage that step; leader takes all boss damage without the favored type; knocked-out hero neither attacks nor shares damage; timer failure; leader failure; wipe restarts at full HP)
-- [ ] Quick gate passes
+- [x] One unit test per listed AC and edge case (empty squad spawns nothing; last stage keeps farming; spawn within 500 ms; killed foe deals no damage that step; leader takes all boss damage without the favored type; knocked-out hero neither attacks nor shares damage; timer failure; leader failure; wipe restarts at full HP)
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(domain): segment-based combat advance`
+**Status**: Done (heartbeat 2026-10-07): 21 tests in `Client/tests/unit/combatAdvance.test.ts`; quick gate 208 tests green. Decided in heartbeat: `Encounter.autoAdvance` (with `startStage(stage, p, autoAdvance = true)`) carries auto-advance inside the rules, since a boss failure must turn it off mid-`advance` and a later clear must then restart the stage; T14 keeps `StageCombatSnapshot.autoAdvance` in sync with it. `StageSpec.monsterIds` (from `StageData.monsters`) names the normal foe, drawn as `monsters[monsterIndex % length]`. The boss timer runs only while the boss is on the field (not during the spawn delay). AD-004 checks the favored type over the whole Active Squad, knocked-out heroes included. Rules emit `stageCleared` on every normal clear and `kill` + `bossDefeated` (no `stageCleared`) on a boss kill; the service dedups first clears and appends `StageCleared` after `BossDefeated` (design). `advance` takes no `mode` yet; T10 adds it. The T8 click test on a boss kill now also expects `bossDefeated` (T8 deferred boss victory to T9).
 
 ---
 

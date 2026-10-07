@@ -31,6 +31,7 @@ describe('stageSpec', () => {
     const s = stageSpec(stage(1), eco);
     expect(s.stageNumber).toBe(1);
     expect(s.favoredType).toBe('Nature');
+    expect(s.monsterIds).toEqual(['slime']);
     expect(s.monsterHp).toBe(50);
     expect(s.goldPerKill).toBe(5);
     expect(s.monsterDps).toBe(2);

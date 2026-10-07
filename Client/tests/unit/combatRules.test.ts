@@ -11,10 +11,11 @@ import {
   startStage,
 } from '../../src/domain/combat/CombatRules';
 
-const normal: StageSpec = { stageNumber: 1, favoredType: 'Nature', monsterHp: 100, goldPerKill: 7, monsterDps: 2 };
+const normal: StageSpec = { stageNumber: 1, favoredType: 'Nature', monsterIds: ['slime'], monsterHp: 100, goldPerKill: 7, monsterDps: 2 };
 const bossStage: StageSpec = {
   stageNumber: 2,
   favoredType: 'Fire',
+  monsterIds: ['slime'],
   monsterHp: 120,
   goldPerKill: 8,
   monsterDps: 3,
@@ -144,9 +145,12 @@ describe('click', () => {
     expect(r.enc.spawnStepsLeft * 100).toBeLessThanOrEqual(500);
   });
 
-  it('pays the boss gold for a boss kill', () => {
+  it('pays the boss gold for a boss kill and defeats the boss', () => {
     const r = click(fighting(startStage(bossStage, p), 1, true), p);
-    expect(r.outcomes).toEqual([{ kind: 'kill', gold: 56 }]);
+    expect(r.outcomes).toEqual([
+      { kind: 'kill', gold: 56 },
+      { kind: 'bossDefeated', stageNumber: 2 },
+    ]);
   });
 
   it('does nothing without a foe', () => {

@@ -17,6 +17,8 @@ export interface BossSpec {
 export interface StageSpec {
   stageNumber: number;
   favoredType: HeroType;
+  /** Normal monster ids, drawn in order (visual identity only). */
+  monsterIds: readonly string[];
   monsterHp: number;
   goldPerKill: number;
   monsterDps: number;
@@ -34,7 +36,14 @@ export function stageSpec(stage: StageData, eco: CombatEconomy): StageSpec {
   const monsterHp = m.hpBase * m.hpGrowth ** n;
   const goldPerKill = m.goldBase * m.goldGrowth ** n;
   const monsterDps = m.dpsBase * m.dpsGrowth ** n;
-  const spec: StageSpec = { stageNumber: stage.stageNumber, favoredType: stage.favoredType, monsterHp, goldPerKill, monsterDps };
+  const spec: StageSpec = {
+    stageNumber: stage.stageNumber,
+    favoredType: stage.favoredType,
+    monsterIds: stage.monsters,
+    monsterHp,
+    goldPerKill,
+    monsterDps,
+  };
   if (stage.boss) {
     spec.boss = {
       monsterId: stage.boss.monsterId,
