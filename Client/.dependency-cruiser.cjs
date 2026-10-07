@@ -49,12 +49,12 @@ module.exports = {
     },
     {
       name: 'presentation-domain-types-and-formatters-only',
-      comment: 'F5: presentation imports domain values only from bignum/format; everything else is type-only.',
+      comment: 'F5: presentation imports domain values only from bignum/format and art/ (pure layout rules); everything else is type-only.',
       severity: 'error',
       from: { path: L('presentation') },
       to: {
         path: L('domain'),
-        pathNot: [`${L('domain')}bignum/format`],
+        pathNot: [`${L('domain')}bignum/format`, `${L('domain')}art/`],
         dependencyTypesNot: ['type-only'],
       },
     },

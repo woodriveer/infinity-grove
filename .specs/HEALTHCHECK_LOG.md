@@ -261,3 +261,9 @@
 - Commit: feat(tools): art:export for layered hero sheets
 - Decisions (decided in heartbeat): the stub Aseprite is an injected `RunProcess` (no stub executable); `gen:assets` exports `TEST_ASSET_KEYS` (keys with a `test-` path segment) and the release-build exclusion itself is wired in T15 together with the test-hero asset and content; portrait is copied from `portrait.png` only (a `portrait.aseprite` is not exported, warns when `portrait.png` is missing); `gen:assets` runs via a child process in the CLI only.
 - Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: hero-art-pipeline T14
+- Result: done. `Client/src/presentation/scenes/LayeredHeroView.ts` (not wired yet, covered by the T15 e2e): body-driven frame sync, own namespaced animations `<heroId>/body:<tag>` built from parsed tags (Phaser's `createFromAseprite` keys are global), weapon posed from `grip`/`tip`, `grip_behind` re-stacks, multiply tint per armor layer, `hit` event, `create` returns null on any missing texture/json/frame-count mismatch. Typecheck, lint, build green; `npm test` and e2e fail only on the two known items (combatJump 50 ms timing, ui-gate criterion 3).
+- Commit: feat(world): layered hero view
+- Decisions (decided in heartbeat): dependency-cruiser rule `presentation-domain-types-and-formatters-only` now also allows value imports from `domain/art/` (pure layout rules the design assigns to the view; CLAUDE.md layer rules updated); missing-weapon-model logging is left to FieldHeroView in T15 (the view has no logger and presentation has no console use).
+- Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.

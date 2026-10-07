@@ -67,7 +67,7 @@ then `IG_SYNC_E2E_BACKEND=http://localhost:8080 npm run test:sync-e2e` in `Clien
 
 - `domain/` imports only `domain/`. No I/O, time or randomness except through arguments.
 - `services/` imports `domain/`, `services/`, `src/generated/`, `zod`, and `openapi-fetch` (only in `services/backend/`).
-- `presentation/` imports `services/`, domain **types** (values only from `domain/bignum/format`), `generated/assets.gen`, `phaser`, `preact`.
+- `presentation/` imports `services/`, domain **types** (values only from `domain/bignum/format` and `domain/art/`), `generated/assets.gen`, `phaser`, `preact`.
 - `platform/` implements ports; it never imports `presentation/` or `app/`. Nothing imports `app/`.
 - Only `services/` and `app/` import the writable `GameStore`; presentation gets a `ReadonlyStore`.
 - In `domain/` and `services/`: no `Date.now`, `Math.random`, `performance`, `fetch`, timers, `crypto`, DOM or `process`. Use the injected `Clock`, `Rng`, `IdGenerator` and ports.

@@ -366,7 +366,7 @@ T14 → T15 → T16 → T17 → T18
 - Skill: `phaser-sprites-and-images`
 
 **Done when**:
-- [ ] Not wired yet; covered by the T15 e2e. Typecheck, lint (layer rules) and build pass
+- [x] Not wired yet; covered by the T15 e2e. Typecheck, lint (layer rules) and build pass
 
 **Tests**: none
 **Gate**: full
