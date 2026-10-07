@@ -212,3 +212,9 @@
 - Commit: feat(content): Aseprite sheet reader
 - Decisions: tags outside the frame range are rejected; `sliceAt` holds the last key (Aseprite semantics).
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: hero-art-pipeline T6
+- Result: done. `validateHeroArt(heroes, items, sheets, assetKeys)` in `Client/src/services/content/HeroArtRules.ts`: required tags, attack <= 600 ms, 512x512 canvas, equal frame count/durations vs body, grip/tip keys on every frame, body present, 4096 layer cap, weapon grip/tip + 256 cap, weaponModel resolves. 15 tests in `heroArtRules.test.ts`; typecheck, lint, 314 tests green.
+- Commit: feat(content): enforce the hero art guide rules
+- Decisions: sheets keyed `heroes/<id>/<layer>` and `items/weapons/<id>`; grip/tip are read from the body sheet; "no key for frame" means no key at or before it (Aseprite hold semantics), so frame 0 must be keyed.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.

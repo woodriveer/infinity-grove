@@ -191,8 +191,8 @@ T14 → T15 → T16 → T17 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] One negative fixture per rule asserts the exact message (hero, file, frame/field) and one accepting fixture returns no problems
-- [ ] Quick gate passes
+- [x] One negative fixture per rule asserts the exact message (hero, file, frame/field) and one accepting fixture returns no problems
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick
