@@ -43,7 +43,8 @@ looks.
 | Empty armor slot | Tinted with the hero's `art.neutral` color (content), default the `inkDim` token | Guide §8 step 2 | n |
 | Tint method | Phaser multiply tint of the grayscale layer by the item color | Grayscale × color keeps the cel shading (AD-005) | n |
 | Weapon placement | Weapon image origin at its own `grip`; position = hero `grip` key of the current frame; rotation = angle from hero `grip` to hero `tip` minus the weapon's own `grip`→`tip` angle | Guide §5.2/§6 | n |
-| Weapon behind the body | When the current frame's hero `grip` slice user data is `behind`, the weapon renders under `body` | Guide §5.2 | y (guide) |
+| Weapon behind the body | In frames where the hero's `grip_behind` slice has a key, the weapon renders under `body` (Aseprite user data is per slice, not per frame, so `behind` cannot mark single frames) | Guide §5.2; amended in heartbeat | y (heartbeat) |
+| Layer size cap | Each exported layer PNG is at most 4096 × 4096 (trimmed, packed sheets) | VRAM bound on Steam Deck | y (heartbeat) |
 | Enchant effects | Bands from content: +7–+9 glow on the weapon, +10–+14 glow + hero aura, +15 glow + aura + particles; off when effects are off (tests, low-spec) | Guide §6; refactor RFR-46 | n |
 | Attack playback speed | When the hero's attack interval is shorter than the `attack` tag duration, play it faster by `duration / interval`; never slower than authored | Guide §4 | n |
 | Performance budget | At most 5 heroes × 8 display objects; combat holds 60 fps on the Steam Deck target (refactor RNFR-4) | Bounded composition | n |
@@ -89,6 +90,7 @@ looks.
 6. IF the `body` layer is missing THEN `validate:content` SHALL fail naming the hero.
 7. IF a weapon model lacks the `grip` or `tip` slice THEN `validate:content` SHALL fail naming the model file.
 8. IF an item's `visual.weaponModel` names no exported weapon model THEN `validate:content` SHALL fail naming the item file and field.
+9. IF an exported layer PNG is larger than 4096 × 4096 THEN `validate:content` SHALL fail naming the layer file and its size.
 
 **Independent Test**: negative fixtures (one per rule) under `tests/` produce the named failures, like refactor RFR-10.
 
@@ -104,7 +106,7 @@ looks.
 
 1. WHERE a hero's content has `art: "layered"` the system SHALL render it as one display object per exported layer, all playing the same tag and frame.
 2. The system SHALL stack layers in the order body → armor_boots → armor_gloves → armor_chest → overlays → weapon → fx.
-3. WHILE the current frame's `grip` user data is `behind` the system SHALL render the weapon below `body`.
+3. WHILE the hero's `grip_behind` slice has a key for the current frame the system SHALL render the weapon below `body`.
 4. WHEN a hero has an armor item equipped in a slot THEN the system SHALL tint that slot's layer with the item's `visual.color`.
 5. WHILE a hero has no armor item in a slot the system SHALL tint that slot's layer with the hero's neutral color.
 6. WHEN a hero has a weapon equipped THEN the system SHALL draw its weapon model at the hero's `grip` key for the current frame, rotated toward the `tip` key as defined in the Assumptions.
@@ -177,7 +179,7 @@ looks.
 | --- | --- | --- | --- |
 | ART-01 | P1: Export a hero (AC 1–3) | - | Pending |
 | ART-02 | P1: Export a hero (AC 4–6) | - | Pending |
-| ART-03 | P1: Enforce the guide's rules (hero rules, AC 1–6) | - | Pending |
+| ART-03 | P1: Enforce the guide's rules (hero rules, AC 1–6, 9) | - | Pending |
 | ART-04 | P1: Enforce the guide's rules (weapon/item rules, AC 7–8) | - | Pending |
 | ART-05 | P1: Compose the hero (layers, order, behind, AC 1–3) | - | Pending |
 | ART-06 | P1: Compose the hero (tint, weapon, updates, AC 4–8) | - | Pending |

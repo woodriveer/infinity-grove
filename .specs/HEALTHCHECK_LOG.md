@@ -182,3 +182,9 @@
 - Commit: docs(hero-art-pipeline): tasks
 - Decisions: cross-phase dependencies written as "None (phase N complete)" to satisfy the diagram check; T14 view covered by T15 e2e; no backend tasks (art is presentation only).
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: hero-art-pipeline T1
+- Result: done. Spec amended (grip_behind for ART-05 AC 3, assumptions rows for behind and the 4096 layer cap, new ART-03 AC 9, traceability). Docs only; validate_spec.py not found locally, so not run.
+- Commit: docs(hero-art-pipeline): amend spec for grip_behind and sheet size cap
+- Decisions: size cap is AC 9, not AC 7 as tasks.md says (AC 7 already exists).
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
