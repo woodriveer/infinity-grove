@@ -11,6 +11,8 @@ public record GoldSpentPayload(double GoldMantissa, int GoldExponent);
 
 public record StageClearedPayload(int StageNumber);
 
+public record BossDefeatedPayload(int StageNumber);
+
 public record HeroAcquiredPayload(Guid HeroDefinitionId);
 
 public record ActiveSquadChangedPayload(IReadOnlyList<Guid> HeroDefinitionIds);

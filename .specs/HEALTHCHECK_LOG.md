@@ -20,3 +20,10 @@
 - **Commits**: `feat(backend): BossDefeated rule and boss-stage clear guard`.
 - **Decisions (decided in heartbeat)**: `ApplyStageCleared(stageNumber, bossEvery, now)` signature; ingestion passes `PlayerProgress.DefaultBossEvery` (5) until T3 makes it configurable; `builder.Ignore(HighestBossDefeated)` in EF until T3 adds the column + migration (keeps the running backend's schema valid); committed `shared/openapi` lags the new enum value until T4 re-exports it (CI's openapi diff check would flag it if pushed before T4).
 - **Pending for the developer**: `git push` (hold until T4 so the openapi diff check stays green).
+
+## 2026-10-07 — stage-combat T3: BossDefeated ingestion and persistence
+
+- **Result**: done. `BossDefeatedPayload(int StageNumber)` and its ingestion case; `ProgressOptions.BossEvery` (`Progress` section, default 5) replaces the hardcoded default in `StageCleared` and drives `BossDefeated`; EF maps `highest_boss_defeated` (the T2 `Ignore` is gone) with migration `AddHighestBossDefeated` (int, not null, default 0). Backend gate: build 0 warnings, `dotnet test` 19 passed (was 14). Mutation check: making `StageCleared` ignore the configured `BossEvery` fails 1 test.
+- **Commits**: `feat(backend): ingest BossDefeated events`.
+- **Decisions (decided in heartbeat)**: `ProgressOptions` is a POCO singleton bound in `AddInfrastructure` (no Options package in Application); startup throws if `BossEvery < 1` (a 0 would divide by zero on ingestion); the test project references Application with its own in-memory repositories; VectorGen constructs the service with `new ProgressOptions()` (no vector output change).
+- **Pending for the developer**: `git push` (hold until T4 so the openapi diff check stays green); apply migration `AddHighestBossDefeated` outside Development (Development applies it on startup, `Program.cs:51`).

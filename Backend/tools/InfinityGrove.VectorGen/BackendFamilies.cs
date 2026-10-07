@@ -278,7 +278,7 @@ public static class BackendFamilies
         var accountId = G(999_999);
         var progressRepo = new InMemoryProgressRepository();
         var eventRepo = new InMemoryEventRepository();
-        var service = new PlayerEventIngestionService(progressRepo, eventRepo, new InMemoryCardRepository(), new FixedTimeProvider());
+        var service = new PlayerEventIngestionService(progressRepo, eventRepo, new InMemoryCardRepository(), new FixedTimeProvider(), new ProgressOptions());
         var batchNodes = new JsonArray();
         var autoId = 1;
         foreach (var batch in batches)

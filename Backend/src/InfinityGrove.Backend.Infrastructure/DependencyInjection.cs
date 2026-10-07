@@ -43,6 +43,13 @@ public static class DependencyInjection
 
         services.AddScoped<IPlayerProgressRepository, PlayerProgressRepository>();
         services.AddScoped<IPlayerEventRepository, PlayerEventRepository>();
+        var progressOptions = configuration.GetSection(ProgressOptions.SectionName).Get<ProgressOptions>() ?? new ProgressOptions();
+        if (progressOptions.BossEvery < 1)
+        {
+            throw new InvalidOperationException($"{ProgressOptions.SectionName}:BossEvery must be at least 1.");
+        }
+
+        services.AddSingleton(progressOptions);
         services.AddScoped<IPlayerEventIngestionService, PlayerEventIngestionService>();
 
         services.AddScoped<ICardInstanceRepository, CardInstanceRepository>();

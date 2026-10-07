@@ -308,6 +308,10 @@ namespace InfinityGrove.Backend.Infrastructure.Persistence.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("gold_mantissa");
 
+                    b.Property<int>("HighestBossDefeated")
+                        .HasColumnType("integer")
+                        .HasColumnName("highest_boss_defeated");
+
                     b.Property<long>("LastAppliedSequence")
                         .HasColumnType("bigint")
                         .HasColumnName("last_applied_sequence");

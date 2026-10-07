@@ -135,12 +135,13 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] xUnit over in-memory repositories: a batch `BossDefeated(5)` + `StageCleared(5)` is accepted; `StageCleared(5)` alone is rejected with the message; malformed payload rejected
-- [ ] Migration generated with `dotnet ef migrations add AddHighestBossDefeated`; Backend gate passes
+- [x] xUnit over in-memory repositories: a batch `BossDefeated(5)` + `StageCleared(5)` is accepted; `StageCleared(5)` alone is rejected with the message; malformed payload rejected
+- [x] Migration generated with `dotnet ef migrations add AddHighestBossDefeated`; Backend gate passes
 
 **Tests**: unit
 **Gate**: backend
 **Commit**: `feat(backend): ingest BossDefeated events`
+**Status**: Done (heartbeat 2026-10-07): 19 tests (5 new ingestion cases incl. a 2-case malformed theory and a BossEvery=3 case), 0 warnings; mutant "StageCleared ignores configured BossEvery" killed. Decided in heartbeat: `ProgressOptions` (Application, section `Progress`) is a plain POCO bound in `AddInfrastructure` and injected as a singleton (the Application project has no Options dependency); startup fails if `BossEvery < 1`; the test project now references Application and carries its own in-memory repositories; VectorGen passes `new ProgressOptions()` (vector outputs unchanged).
 
 ---
 

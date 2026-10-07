@@ -21,7 +21,8 @@ public class PlayerEventIngestionService(
     IPlayerProgressRepository progressRepository,
     IPlayerEventRepository eventRepository,
     ICardInstanceRepository cardInstanceRepository,
-    TimeProvider timeProvider) : IPlayerEventIngestionService
+    TimeProvider timeProvider,
+    ProgressOptions progressOptions) : IPlayerEventIngestionService
 {
     public async Task<IngestBatchResult> IngestAsync(Guid accountId, IReadOnlyList<IngestEventCommand> events, CancellationToken cancellationToken)
     {
@@ -109,7 +110,13 @@ public class PlayerEventIngestionService(
             case PlayerEventType.StageCleared:
             {
                 var payload = Deserialize<StageClearedPayload>(incoming.Payload, "StageCleared");
-                progress.ApplyStageCleared(payload.StageNumber, PlayerProgress.DefaultBossEvery, nowUtc);
+                progress.ApplyStageCleared(payload.StageNumber, progressOptions.BossEvery, nowUtc);
+                break;
+            }
+            case PlayerEventType.BossDefeated:
+            {
+                var payload = Deserialize<BossDefeatedPayload>(incoming.Payload, "BossDefeated");
+                progress.ApplyBossDefeated(payload.StageNumber, progressOptions.BossEvery, nowUtc);
                 break;
             }
             case PlayerEventType.HeroAcquired:
