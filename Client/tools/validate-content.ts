@@ -10,6 +10,7 @@
 import { resolve } from 'node:path';
 import { ALL_ASSET_KEYS } from '../src/generated/assets.gen';
 import { FsContentSource } from '../src/platform/node/NodePorts';
+import { checkHeroArt } from './lib/artCheck';
 import { ContentError, loadContent } from '../src/services/content/ContentLoader';
 
 const argIndex = process.argv.indexOf('--content');
@@ -27,6 +28,8 @@ if (parseErrors.length > 0) {
 
 try {
   const c = loadContent(entries, ALL_ASSET_KEYS);
+  const artProblems = checkHeroArt(c, resolve('assets'), ALL_ASSET_KEYS);
+  if (artProblems.length > 0) throw new ContentError(artProblems);
   console.log(
     `validate:content: OK — ${c.heroes.length} heroes, ${c.monsters.length} monsters, ${c.stages.length} stages, ` +
       `${c.items.length} items, ${c.equipment.length} equipment, ${c.animations.length} animations, ${c.effects.length} effects (${root})`,

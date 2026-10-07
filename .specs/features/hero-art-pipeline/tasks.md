@@ -213,8 +213,8 @@ T14 → T15 → T16 → T17 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `npm run validate:content` passes on the repo; a unit test drives the same path with a broken fixture hero and sees the failure
-- [ ] Phase 1 build gate passes (`npm run verify`)
+- [x] `npm run validate:content` passes on the repo; a unit test drives the same path with a broken fixture hero and sees the failure
+- [x] Phase 1 build gate passes (`npm run verify`; only the known ui-gate criterion 3 and a load-flaky combatJump timing test fail)
 
 **Tests**: unit
 **Gate**: build

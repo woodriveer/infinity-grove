@@ -218,3 +218,10 @@
 - Commit: feat(content): enforce the hero art guide rules
 - Decisions: sheets keyed `heroes/<id>/<layer>` and `items/weapons/<id>`; grip/tip are read from the body sheet; "no key for frame" means no key at or before it (Aseprite hold semantics), so frame 0 must be keyed.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-07 heartbeat: hero-art-pipeline T7
+- Result: done. `checkHeroArt` (`Client/tools/lib/artCheck.ts`) reads layered hero layer and weapon model sheets from `assets/` by manifest key and runs `validateHeroArt`; `validate-content.ts` calls it after `loadContent` (runtime loader unchanged). Krell content gets `art: {mode: "legacy"}`. 4 new tests in `artCheck.test.ts`. validate:content, typecheck, lint, build, scan:secrets green.
+- Gate: `npm run verify` is red only for known issues: e2e ui-gate criterion 3 (pre-existing) and the combatJump 50 ms wall-clock test, which failed under load in verify and passes alone (5/5).
+- Commit: feat(content): validate layered hero art in validate:content
+- Decisions (decided in heartbeat): the check lives in `tools/lib` (I/O stays out of services); missing sheets for keys absent from the manifest are skipped so `validateHeroArt` reports them.
+- Pending for the developer: push; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.
