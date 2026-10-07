@@ -1,0 +1,8 @@
+{
+  "artId": "enchant-bands",
+  "bands": [
+    { "minLevel": 7, "glow": true, "aura": false },
+    { "minLevel": 10, "glow": true, "aura": true },
+    { "minLevel": 15, "glow": true, "aura": true, "particles": "enchant-sparks" }
+  ]
+}

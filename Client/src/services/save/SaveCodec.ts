@@ -19,6 +19,7 @@ const instance = z
     instanceId: z.string().min(1),
     itemId: z.string().min(1),
     affixRolls: z.partialRecord(z.enum(AFFIX_TYPES), z.number()),
+    enchantLevel: z.number().int().nonnegative().optional(),
   })
   .strict();
 

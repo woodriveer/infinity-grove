@@ -56,7 +56,7 @@ export async function boot(): Promise<void> {
     noticeTimer.update(now);
   };
   const world = new WorldScene(app, {
-    effects: config.effects === 'on',
+    effects: config.effects === 'on' || params?.effects === true,
     audio: config.effects === 'on',
     reducedMotion,
     driveTime: platform.manualClock === null,

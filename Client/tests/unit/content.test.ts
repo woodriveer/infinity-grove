@@ -191,7 +191,10 @@ describe('placeholder combat content (stage-combat COMBAT-02, COMBAT-03)', () =>
 });
 
 describe('hero art content (hero-art-pipeline ART-06, ART-08, ART-09)', () => {
-  const bands = (list: unknown[]) => add('art/enchant-bands.json', { artId: 'enchant-bands', bands: list });
+  const bands = (list: unknown[]) => (entries: ContentEntry[]) => [
+    ...entries.filter((e) => e.path !== 'art/enchant-bands.json'),
+    { path: 'art/enchant-bands.json', json: { artId: 'enchant-bands', bands: list } },
+  ];
   const band = (minLevel: number) => ({ minLevel, glow: true, aura: false });
 
   it('accepts hero art, item visuals and sorted enchant bands', () => {
@@ -248,6 +251,6 @@ describe('hero art content (hero-art-pipeline ART-06, ART-08, ART-09)', () => {
   it('exposes the bands on the catalog', () => {
     const c = loadContent(bands([band(1)])(base), ALL_ASSET_KEYS);
     expect(c.enchantBands?.bands).toHaveLength(1);
-    expect(loadContent(base, ALL_ASSET_KEYS).enchantBands).toBeNull();
+    expect(loadContent(base, ALL_ASSET_KEYS).enchantBands?.bands.map((b) => b.minLevel)).toEqual([7, 10, 15]);
   });
 });

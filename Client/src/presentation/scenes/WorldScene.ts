@@ -132,6 +132,9 @@ export class WorldScene extends Phaser.Scene {
     weaponModel: string | null;
     tint: Record<string, string>;
     enchantBand: number | null;
+    effects: string[];
+    hits: number;
+    attackSpeed: number;
   }> {
     const bands = this.app.content.enchantBands?.bands ?? [];
     return this.field.map((v) => {
@@ -147,6 +150,9 @@ export class WorldScene extends Phaser.Scene {
         weaponModel: layered?.weaponModel ?? null,
         tint: layered?.tint ?? {},
         enchantBand: look ? (enchantBand(look.enchantLevel, bands)?.minLevel ?? null) : null,
+        effects: layered?.effects ?? [],
+        hits: layered?.hits ?? 0,
+        attackSpeed: layered?.attackSpeed ?? 1,
       };
     });
   }
@@ -240,8 +246,14 @@ export class WorldScene extends Phaser.Scene {
     const krellAnim = this.app.content.animations.find((a) => a.characterId === 'krell');
     const krellVariant = krellAnim?.variantByItemId[String(equipment?.animatorItemID ?? 0)] ?? 'empty';
     const items = new Map(this.app.content.items.map((i) => [i.itemId, i]));
+    const bands = this.app.content.enchantBands?.bands ?? [];
     for (const view of this.field) {
-      if (view.hero.art?.mode === 'layered') view.setLook(heroLook(s.equipment.equippedByHero[view.hero.heroId] ?? {}, items, view.hero.art));
+      if (view.hero.art?.mode === 'layered') {
+        const look = heroLook(s.equipment.equippedByHero[view.hero.heroId] ?? {}, items, view.hero.art);
+        view.setLook(look);
+        const band = enchantBand(look.enchantLevel, bands);
+        view.setEnchant(band, this.opts.effects, this.app.content.effects.find((e) => e.effectId === band?.particles) ?? null);
+      }
       if (view.hero.heroId === 'krell') view.setVariant(krellVariant);
       else view.setVariant('empty');
       view.sync(enc?.heroes.find((h) => h.heroId === view.hero.heroId), enc, fighting);

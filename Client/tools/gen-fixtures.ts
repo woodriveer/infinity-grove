@@ -16,7 +16,7 @@ import { ReplayBackend, TEST_TICKET } from './lib/replayBackend';
 
 const HOUR = 3_600_000;
 
-async function build(name: string, play: (app: AppContext) => Promise<void> | void, opts: { reconcile?: boolean; lastSeenOffsetMs?: number } = {}): Promise<void> {
+async function build(name: string, play: (app: AppContext) => Promise<void> | void, opts: { reconcile?: boolean; lastSeenOffsetMs?: number; patch?: (save: SaveGameData) => SaveGameData } = {}): Promise<void> {
   const store = new MemorySaveStore();
   const backend = new ReplayBackend();
   const platform = createNodePlatform({ seed: 1000 + name.length, saveStore: store });
@@ -27,7 +27,7 @@ async function build(name: string, play: (app: AppContext) => Promise<void> | vo
   if (opts.reconcile) await app.sync.syncNow();
   await app.sync.persist();
   const save = (await new SaveCodec(new WebCryptoCipher(), platform.logger).decode(store.bytes)) as SaveGameData;
-  const out: SaveGameData = { ...save, lastSeenAtMs: DEFAULT_EPOCH_MS + (opts.lastSeenOffsetMs ?? 0) };
+  const out: SaveGameData = (opts.patch ?? ((x) => x))({ ...save, lastSeenAtMs: DEFAULT_EPOCH_MS + (opts.lastSeenOffsetMs ?? 0) });
   writeFileSync(`fixtures/saves/${name}.json`, SaveCodec.toPlainJson(out));
   console.log(`fixtures:gen: ${name} (gold ${app.store.get().gold}, ${app.store.get().heroes.length} heroes, ${out.unsyncedEvents.length} unsynced events)`);
 }
@@ -123,3 +123,26 @@ await build(
   },
   { reconcile: true },
 );
+// The layered squad with the test blade at +6/+7/+10/+15 (the band edges of content/art/enchant-bands.json, ART-08).
+for (const level of [6, 7, 10, 15]) {
+  await build(
+    `layered-squad-e${level}`,
+    (app) => {
+      for (const id of ['test-hero', 'krell']) {
+        app.roster.addHeroCard(id);
+        app.roster.tryActivate(id);
+      }
+      app.inventory.addNewToBag('test-blade');
+      const item = app.inventory.bag().find((i) => i.itemId === 'test-blade');
+      if (item) app.inventory.tryEquip('test-hero', item.instanceId);
+    },
+    {
+      reconcile: true,
+      patch: (save) => {
+        const weapon = save.local.equippedByHero['test-hero']?.Weapon;
+        if (!weapon) throw new Error('test-hero has no weapon to enchant');
+        return { ...save, local: { ...save.local, equippedByHero: { ...save.local.equippedByHero, 'test-hero': { ...save.local.equippedByHero['test-hero'], Weapon: { ...weapon, enchantLevel: level } } } } };
+      },
+    },
+  );
+}

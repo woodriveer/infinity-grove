@@ -1,0 +1,11 @@
+{
+  "effectId": "enchant-sparks",
+  "texture": "effects/fireflies/diamond",
+  "count": 12,
+  "lifespanMs": [2000, 4000],
+  "speed": [8, 24],
+  "scale": [0.1, 0.3],
+  "alpha": [0.1, 0.9],
+  "tint": "accentGlow",
+  "reducedMotionCount": 3
+}

@@ -8,6 +8,8 @@ export interface EquipmentInstance {
   readonly instanceId: string;
   readonly itemId: string;
   readonly affixRolls: Readonly<Partial<Record<AffixType, number>>>;
+  /** Absent means +0; equipment-enchant owns the rule, hero-art-pipeline only displays it. */
+  readonly enchantLevel?: number;
 }
 
 export function getAffix(item: EquipmentInstance, affix: AffixType): number {

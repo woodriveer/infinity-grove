@@ -24,6 +24,8 @@ export interface DevParams {
   save: string | undefined;
   seed: number | undefined;
   clock: 'manual' | 'real';
+  /** `?effects=on` shows enchant effects on the test build (off there by default). */
+  effects: boolean;
 }
 
 export function parseParams(search: string): DevParams {
@@ -36,6 +38,7 @@ export function parseParams(search: string): DevParams {
     save: q.get('save') ?? undefined,
     seed: seed !== null && Number.isFinite(Number(seed)) ? Number(seed) : undefined,
     clock: q.get('clock') === 'manual' ? 'manual' : 'real',
+    effects: q.get('effects') === 'on',
   };
 }
 

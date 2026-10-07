@@ -1,0 +1,55 @@
+{
+  "formatVersion": 2,
+  "steamId64": "76561198000000001",
+  "lastReconciledAtMs": 1767225600000,
+  "lastSeenAtMs": 1767225600000,
+  "lastReconciledState": {
+    "goldMantissa": 0,
+    "goldExponent": 0,
+    "furthestStageCleared": 0,
+    "lastAppliedSequence": 6,
+    "roster": [
+      {
+        "heroDefinitionId": "1f6e0000-0000-4000-8000-000000000001",
+        "ownedCount": 1,
+        "starTier": 0
+      },
+      {
+        "heroDefinitionId": "1f6e0000-0000-4000-8000-0000000000f1",
+        "ownedCount": 1,
+        "starTier": 0
+      },
+      {
+        "heroDefinitionId": "1f6e0000-0000-4000-8000-000000000007",
+        "ownedCount": 1,
+        "starTier": 0
+      }
+    ],
+    "activeSquadHeroIds": [
+      "1f6e0000-0000-4000-8000-000000000001",
+      "1f6e0000-0000-4000-8000-0000000000f1",
+      "1f6e0000-0000-4000-8000-000000000007"
+    ]
+  },
+  "unsyncedEvents": [],
+  "nextSequenceNumber": 7,
+  "local": {
+    "equipmentBag": [],
+    "equippedByHero": {
+      "test-hero": {
+        "Weapon": {
+          "instanceId": "4246bb1558c1409fb83f8229f865a838",
+          "itemId": "test-blade",
+          "affixRolls": {},
+          "enchantLevel": 15
+        }
+      }
+    },
+    "presets": [],
+    "krellEquipmentId": "wclaw01",
+    "combat": {
+      "stageNumber": 1,
+      "autoAdvance": true
+    }
+  }
+}

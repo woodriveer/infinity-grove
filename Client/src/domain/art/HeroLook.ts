@@ -15,12 +15,9 @@ export const NEUTRAL_TINT: HexColor = '#808080';
 
 const ARMOR_SLOTS: readonly ArmorSlot[] = ['Chest', 'Gloves', 'Boots'];
 
-/**
- * Enchant level of an instance. The enchant feature has not added the field yet, so this is the
- * seam: absent means 0 (ART-08).
- */
+/** Enchant level of an instance; absent means 0 (ART-08). */
 export function enchantLevelOf(instance: EquipmentInstance): number {
-  const level = (instance as { enchantLevel?: unknown }).enchantLevel;
+  const level = instance.enchantLevel;
   return typeof level === 'number' && level > 0 ? level : 0;
 }
 

@@ -431,8 +431,8 @@ T14 → T15 → T16 → T17 → T18
 - Skill: `phaser-particles`
 
 **Done when**:
-- [ ] e2e: fixture weapon at +6/+7/+10/+15 reports the right band; effects off reports none; attack speed reported for a short interval; hit event counted once per attack
-- [ ] `validate:content` passes with the bands file
+- [x] e2e: fixture weapon at +6/+7/+10/+15 reports the right band; effects off reports none; attack speed reported for a short interval; hit event counted once per attack
+- [x] `validate:content` passes with the bands file
 
 **Tests**: e2e
 **Gate**: full

@@ -277,3 +277,8 @@
 - Result: done. Scenario `p15-hero-look.json` and e2e `hero-look.spec.ts` (unequip/equip weapon and vest by gamepad, asserts model and tint in `__ig.world()`); no view fix needed. Gate: typecheck, lint, npm test green; e2e fails only on known ui-gate criterion 3.
 - Commit: test(world): equipment drives the hero look
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-07 hero-art-pipeline T17
+- Result: done (see STATE.md entry). Gate: typecheck, lint, validate:content, gen:check, npm test green; e2e fails only on known ui-gate criterion 3.
+- Commit: feat(world): enchant effects, attack speed and hit event
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.

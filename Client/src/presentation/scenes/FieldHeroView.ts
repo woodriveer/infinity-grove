@@ -2,8 +2,8 @@ import Phaser from 'phaser';
 import type { Encounter, FieldHero } from '../../domain/combat/CombatRules';
 import { attackSpeed } from '../../domain/art/Playback';
 import type { ArmorSlot, HeroLook } from '../../domain/art/HeroLook';
-import type { HeroData } from '../../domain/content/types';
-import type { AnimationData } from '../../services/content/schema';
+import type { EnchantBand, HeroData } from '../../domain/content/types';
+import type { AnimationData, EffectData } from '../../services/content/schema';
 import { HeroTypeDisplay } from '../HeroTypeDisplay';
 import { phaserColor } from '../theme/tokens';
 import { LayeredHeroView } from './LayeredHeroView';
@@ -42,6 +42,8 @@ export class FieldHeroView {
   private lastHp: number | null = null;
   private currentLook: HeroLook | null = null;
   private koShown = false;
+  private hits = 0;
+  private speed = 1;
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -54,6 +56,7 @@ export class FieldHeroView {
       this.layered = LayeredHeroView.create(scene, hero.heroId);
       if (this.layered) {
         this.root.add(this.layered.root);
+        this.layered.events.on('hit', () => this.hits++);
         this.layered.events.on('complete', () => {
           this.busyUntilIdle = false;
           this.playBase();
@@ -107,7 +110,7 @@ export class FieldHeroView {
   }
 
   /** Layered state for tests: playing tag, weapon model and armor tints as `#rrggbb`. */
-  layeredState(): { tag: string | null; weaponModel: string | null; tint: Partial<Record<ArmorSlot, string>> } | null {
+  layeredState(): { tag: string | null; weaponModel: string | null; tint: Partial<Record<ArmorSlot, string>>; effects: string[]; hits: number; attackSpeed: number } | null {
     const v = this.layered;
     if (!v) return null;
     const tint: Partial<Record<ArmorSlot, string>> = {};
@@ -115,13 +118,18 @@ export class FieldHeroView {
       const n = v.tintOf(slot);
       if (n !== undefined) tint[slot] = `#${n.toString(16).padStart(6, '0')}`;
     }
-    return { tag: v.currentTag, weaponModel: v.weaponModel?.replace('items/weapons/', '') ?? null, tint };
+    return { tag: v.currentTag, weaponModel: v.weaponModel?.replace('items/weapons/', '') ?? null, tint, effects: v.activeEffects, hits: this.hits, attackSpeed: this.speed };
   }
 
   /** Applies what the hero wears (layered path only). */
   setLook(look: HeroLook): void {
     this.currentLook = look;
     this.layered?.setLook(look);
+  }
+
+  /** Shows the enchant band's effects on a layered hero (no-op on the other paths). */
+  setEnchant(band: EnchantBand | null, effectsOn: boolean, particles: EffectData | null): void {
+    this.layered?.setEnchant(band, effectsOn, particles);
   }
 
   get currentPose(): FieldPose {
@@ -204,7 +212,8 @@ export class FieldHeroView {
         this.attacks += n - this.lastAttacks;
         if (view.hasTag('attack')) {
           this.busyUntilIdle = true;
-          view.play('attack', attackSpeed(view.tagDurationMs('attack'), live.attackIntervalMs), false);
+          this.speed = attackSpeed(view.tagDurationMs('attack'), live.attackIntervalMs);
+          view.play('attack', this.speed, false);
         }
       }
       this.lastAttacks = n;

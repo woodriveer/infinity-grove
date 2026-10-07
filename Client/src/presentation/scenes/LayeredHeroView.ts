@@ -2,8 +2,11 @@ import Phaser from 'phaser';
 import { layerOrder, type LayerSlot } from '../../domain/art/LayerOrder';
 import { weaponPose, type Point } from '../../domain/art/WeaponPose';
 import type { ArmorSlot, HeroLook } from '../../domain/art/HeroLook';
+import type { EnchantBand } from '../../domain/content/types';
 import { Assets } from '../../generated/assets.gen';
 import { parseAsepriteSheet, sliceAt, type SheetInfo } from '../../services/content/AsepriteSheet';
+import type { EffectData } from '../../services/content/schema';
+import { phaserColor } from '../theme/tokens';
 
 const SCALE = 1.6;
 const ARMOR_LAYERS: Readonly<Record<ArmorSlot, LayerSlot>> = {
@@ -43,7 +46,7 @@ function sheetOf(scene: Phaser.Scene, key: string): SheetInfo | null {
  */
 export class LayeredHeroView {
   readonly root: Phaser.GameObjects.Container;
-  /** `hit`: once each time the body shows the first frame of tag `hit`; `complete`: a non-looping tag finished. */
+  /** `hit`: once each time an `attack` pass reaches the first frame of tag `hit`; `complete`: a non-looping tag finished. */
   readonly events = new Phaser.Events.EventEmitter();
   private readonly layers = new Map<LayerSlot, Layer>();
   private weapon: Phaser.GameObjects.Image | null = null;
@@ -52,6 +55,10 @@ export class LayeredHeroView {
   private behind = false;
   private tagName: string | null = null;
   private tintByLayer = new Map<LayerSlot, number>();
+  private lastFrame = -1;
+  private glow: Phaser.GameObjects.Image | null = null;
+  private aura: Phaser.GameObjects.Sprite | null = null;
+  private sparks: Phaser.GameObjects.Particles.ParticleEmitter | null = null;
 
   private constructor(
     private readonly scene: Phaser.Scene,
@@ -150,9 +157,91 @@ export class LayeredHeroView {
     this.followBody();
   }
 
+  /** Enchant effects shown right now; empty when effects are off or no band applies (ART-08). */
+  get activeEffects(): string[] {
+    const out: string[] = [];
+    if (this.glow) out.push('glow');
+    if (this.aura) out.push('aura');
+    if (this.sparks) out.push('particles');
+    return out;
+  }
+
+  /** Shows the band's glow (weapon copy), aura (body copy) and particles; no band or `enabled` false clears them. */
+  setEnchant(band: EnchantBand | null, enabled: boolean, particles: EffectData | null): void {
+    const shown = enabled ? band : null;
+    this.setGlow(shown?.glow === true);
+    this.setAura(shown?.aura === true);
+    this.setSparks(shown?.particles !== undefined ? particles : null);
+    this.followBody();
+  }
+
   destroy(): void {
     this.events.removeAllListeners();
     this.root.destroy();
+  }
+
+  private setGlow(on: boolean): void {
+    if (on === (this.glow !== null)) return;
+    this.glow?.destroy();
+    this.glow = null;
+    if (!on) return;
+    this.glow = this.scene.add.image(0, 0, '__DEFAULT').setBlendMode(Phaser.BlendModes.ADD).setTint(phaserColor('accentGlow')).setAlpha(0.6).setVisible(false);
+    this.root.add(this.glow);
+    this.applyOrder();
+  }
+
+  /** The glow is a tinted additive copy of the weapon image; it follows weapon changes. */
+  private poseGlow(): void {
+    const { glow, weapon } = this;
+    if (!glow) return;
+    if (!weapon) {
+      glow.setVisible(false);
+      return;
+    }
+    if (glow.texture.key !== weapon.texture.key) glow.setTexture(weapon.texture.key, weapon.frame.name);
+    glow
+      .setOrigin(weapon.originX, weapon.originY)
+      .setVisible(weapon.visible)
+      .setPosition(weapon.x, weapon.y)
+      .setRotation(weapon.rotation)
+      .setScale(1.12);
+  }
+
+  private setAura(on: boolean): void {
+    if (on === (this.aura !== null)) return;
+    this.aura?.destroy();
+    this.aura = null;
+    if (!on) return;
+    const body = this.body.sprite;
+    this.aura = this.scene.add
+      .sprite(0, 0, body.texture.key, body.frame.name)
+      .setOrigin(0.5, 1)
+      .setScale(1.08)
+      .setBlendMode(Phaser.BlendModes.ADD)
+      .setTint(phaserColor('accentGlow'))
+      .setAlpha(0.35);
+    this.root.add(this.aura);
+    this.applyOrder();
+  }
+
+  private setSparks(effect: EffectData | null): void {
+    if ((effect === null) === (this.sparks === null)) return;
+    this.sparks?.destroy();
+    this.sparks = null;
+    if (!effect || !this.scene.textures.exists(effect.texture)) return;
+    this.sparks = this.scene.add.particles(0, -this.sheet.canvas.h / 2, effect.texture, {
+      x: { min: -20, max: 20 },
+      lifespan: { min: effect.lifespanMs[0] / 4, max: effect.lifespanMs[1] / 4 },
+      speedY: { min: -effect.speed[1] * 3, max: -effect.speed[0] * 3 },
+      scale: { start: effect.scale[1], end: effect.scale[0] },
+      alpha: { start: effect.alpha[1], end: effect.alpha[0] },
+      tint: phaserColor(effect.tint),
+      blendMode: Phaser.BlendModes.ADD,
+      frequency: Math.max(30, Math.round(effect.lifespanMs[1] / 4 / Math.max(1, effect.count))),
+      maxAliveParticles: effect.count,
+    });
+    this.root.add(this.sparks);
+    this.applyOrder();
   }
 
   private animKey(tag: string): string {
@@ -206,8 +295,11 @@ export class LayeredHeroView {
       if (l !== body) l.sprite.setFrame(l.frames[index]!);
     }
     const hit = this.sheet.tags.get('hit');
-    if (hit && index === hit.from && this.tagName !== null) this.events.emit('hit');
+    if (hit && index === hit.from && index !== this.lastFrame && this.tagName === 'attack') this.events.emit('hit');
+    this.lastFrame = index;
+    this.aura?.setFrame(body.frames[index]!);
     this.poseWeapon(index);
+    this.poseGlow();
   }
 
   private poseWeapon(frame: number): void {
@@ -234,9 +326,12 @@ export class LayeredHeroView {
 
   private applyOrder(): void {
     let index = 0;
+    if (this.aura) this.root.moveTo(this.aura, index++);
     for (const slot of layerOrder(this.behind)) {
       const obj = slot === 'weapon' ? this.weapon : this.layers.get(slot)?.sprite;
       if (obj) this.root.moveTo(obj, index++);
+      if (slot === 'weapon' && obj && this.glow) this.root.moveTo(this.glow, index++);
     }
+    if (this.sparks) this.root.moveTo(this.sparks, index);
   }
 }
