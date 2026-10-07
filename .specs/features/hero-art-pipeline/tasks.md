@@ -169,8 +169,8 @@ T14 → T15 → T16 → T17 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] Recorded Aseprite JSON fixture parses to the expected frame count, durations, tags and slice keys; malformed JSON reports the field
-- [ ] Quick gate passes
+- [x] Recorded Aseprite JSON fixture parses to the expected frame count, durations, tags and slice keys; malformed JSON reports the field
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick

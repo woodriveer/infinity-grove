@@ -206,3 +206,9 @@
 - Commit: feat(content): schemas for hero art, item visuals and enchant bands
 - Decisions: `weaponModel` is a kebab-case id; only `enchant-bands` is an accepted `art` file id.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e; loosen or de-flake the combatJump timing test.
+
+## 2026-10-07 heartbeat: hero-art-pipeline T5
+- Result: done. `parseAsepriteSheet` (zod subset of json-array: frames, tags with summed durations, slices with sorted keys, canvas, image size) throwing `SheetError` with field paths; `sliceAt` helper for T6/T14. 6 new tests; typecheck, lint, tests green.
+- Commit: feat(content): Aseprite sheet reader
+- Decisions: tags outside the frame range are rejected; `sliceAt` holds the last key (Aseprite semantics).
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
