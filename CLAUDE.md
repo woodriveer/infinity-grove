@@ -106,12 +106,12 @@ in the same change:
 
 A task is not done until these tests exist and pass; never weaken or delete a test to make a change pass.
 
-## Healthcheck (autonomous runs)
+## Heartbeat (autonomous runs)
 
-A prompt containing **healthcheck** starts an unattended run. The developer is not available: decide
+A prompt containing **heartbeat** starts an unattended run. The developer is not available: decide
 on your own (pick the recommended option, the spec's defaults, the design's choices) and never stop to
 ask. Every decision goes to `.specs/STATE.md` (an `AD-NNN` when it is project-level, otherwise the
-feature's notes) with "decided in healthcheck" so the developer can review it later.
+feature's notes) with "decided in heartbeat" so the developer can review it later.
 
 ### 1. Check status
 
