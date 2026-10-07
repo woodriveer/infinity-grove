@@ -91,6 +91,67 @@ new port in `services/ports.ts` first, implemented in `platform/`.
 3. Rules shared with the backend: add or extend a VectorGen family; TS must match the RFR-21 tolerance.
 4. `npm run verify` green. Screenshots (`npm run test:e2e:screenshots`) are for looking, not for gating.
 
+## Tests are mandatory for every change
+
+Every new feature and every change to existing behavior ships with tests on **both sides it touches**,
+in the same change:
+
+- **Client**: unit tests for domain/services, a `scenarios/*.json` with an `expect` block for each new
+  or changed game flow, and e2e for each new or changed screen. When a change retires a flow, rewrite
+  its scenario/e2e in the same commit instead of deleting the coverage.
+- **Backend**: xUnit tests in `Backend/tests/` for every new or changed rule (event ingestion,
+  validation, rewards, purchases, auth), including the rejection paths. A change that only touches the
+  client still needs backend tests when the backend must accept or reject something new.
+- Rules shared by both sides also get a VectorGen family (see above).
+
+A task is not done until these tests exist and pass; never weaken or delete a test to make a change pass.
+
+## Healthcheck (autonomous runs)
+
+A prompt containing **healthcheck** starts an unattended run. The developer is not available: decide
+on your own (pick the recommended option, the spec's defaults, the design's choices) and never stop to
+ask. Every decision goes to `.specs/STATE.md` (an `AD-NNN` when it is project-level, otherwise the
+feature's notes) with "decided in healthcheck" so the developer can review it later.
+
+### 1. Check status
+
+1. Read `.specs/STATE.md` (Handoff + Decisions) and reconcile it with git (`status`, recent commits)
+   and each feature's `tasks.md`, as the tlc-spec-driven skill's resume procedure says.
+2. Read the locks in `.specs/locks/*.lock` (gitignored). A lock is live if its `heartbeat` is under
+   2 h old; an older one is stale: delete it, and if its task has uncommitted changes, discard them
+   only after recording what was there in the run log.
+
+### 2. Pick the work
+
+- **No live lock**: take the first open task (`[ ]`, in order, dependencies met) of the active
+  feature in the Handoff. If that feature has no approved `tasks.md` yet, the work is its next phase
+  (Design, then Tasks), approved by you under this autonomy. If the feature is done, move to the next
+  feature in the Handoff/Queued list.
+- **A live lock exists**: tasks of the same feature run strictly in order, so do not start one; end the
+  run ("waiting for <lock>") and let the next healthcheck pick up. **Exception, parallel work**: you may
+  start a task from a *different* feature whose dependencies are met and whose files do not overlap the
+  locked task's files. Run it in its own git worktree on branch `hc/<feature>-<task>` and rebase it onto
+  `main` when done.
+- One task (or one phase) per run.
+
+### 3. Run it
+
+1. Write `.specs/locks/<feature>-<task>.lock` (`task`, `startedAt`, `heartbeat`, `worktree`, `files`)
+   before touching code; refresh `heartbeat` after each gate run.
+2. Execute with the tlc-spec-driven skill (tests on both sides, see above; gate green; one atomic
+   commit with `tasks.md` updated). After the last task of a feature the Verifier runs as usual.
+3. If the gate still fails after 3 fix attempts: mark the task `blocked` in `tasks.md` with the reason
+   and the failing output, commit that note, and stop.
+4. Delete the lock, update the Handoff in `.specs/STATE.md`, and append a short entry to
+   `.specs/HEALTHCHECK_LOG.md` (date, task, result, commits, decisions taken).
+
+### Limits of autonomy
+
+Local work and local commits on `main` (or the `hc/*` worktree branch) are allowed. Never `git push`,
+force-push, rewrite history, run `npm run steam:upload`, touch production data or secrets, or change
+the Unity client (`InfinityGrove/`). These wait for the developer and are listed in the run log as
+pending.
+
 ## Design freeze (refactor S6)
 
 A port/infra change never changes game behavior. A behavior change goes to the game PRD first and
