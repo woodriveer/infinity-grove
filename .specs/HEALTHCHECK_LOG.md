@@ -105,3 +105,9 @@
 - Gate: green except pre-existing ui-gate criterion 3 and a load-sensitive timing test (combatJump 12 h farming, passes alone).
 - Decisions: see tasks.md T14 (stageCombat.encounter nullable; cap in stateFromSave).
 - Pending for developer: push.
+
+## 2026-10-07 — stage-combat T15
+- Result: done. `StageCombatService` (`step`, `click`, outcome handling) + 9 tests in `Client/tests/unit/stageCombatService.test.ts`. Typecheck, lint, Vitest green except the load-sensitive combatJump 12 h timing (passes alone).
+- Commits: `feat(services): stage combat step, click and outcomes`.
+- Decisions (decided in heartbeat): see tasks.md T15 (whole-gold rounding, BossDefeated only above furthest, restart on squad change, leader loss fails the boss stage).
+- Pending for developer: push.

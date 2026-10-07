@@ -416,13 +416,15 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] Unit tests per outcome, including event order `BossDefeated` before `StageCleared` and no duplicate `StageCleared` on replays
-- [ ] Quick gate passes
+- [x] Unit tests per outcome, including event order `BossDefeated` before `StageCleared` and no duplicate `StageCleared` on replays
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(services): stage combat step, click and outcomes`
 
+
+**Status**: Done (heartbeat 2026-10-07): 9 tests in `Client/tests/unit/stageCombatService.test.ts`. Quick gate green except the known load-sensitive combatJump 12 h timing test (passes alone). Decided in heartbeat: kill gold is rounded to whole gold and the same amount goes to the wallet and `pendingIncome` (no event yet; T17 flushes); `BossDefeated` is emitted only for a boss stage above `furthestStageCleared` (right before its `StageCleared`); the encounter restarts when the squad ids change (non-boss) and a boss stage whose leader changed or vanished fails as `cause: 'leader'`; `step(dtMs)` runs `round(dtMs/100)` steps (min 1).
 ---
 
 ### T16: Stage navigation commands and squad lock
