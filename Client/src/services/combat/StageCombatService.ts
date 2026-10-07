@@ -1,8 +1,9 @@
 import type { CombatOutcome, CombatParams, CombatResult, Encounter } from '../../domain/combat/CombatRules';
 import { advance, click, stageAt, startStage } from '../../domain/combat/CombatRules';
+import { BigDouble } from '../../domain/bignum/BigDouble';
 import { BossFailureLabel } from '../../domain/combat/BossFailureLabel';
 import type { ServiceDeps } from '../core';
-import { withEvent } from '../core';
+import { withEvent, withGold } from '../core';
 import type { GameState, StageCombatSnapshot } from '../state/types';
 import { CombatParamsBuilder } from './CombatParamsBuilder';
 
@@ -55,6 +56,61 @@ export class StageCombatService {
     if (!stage.boss) return false;
     this.withEncounter(s, startStage(stage, params, true));
     return true;
+  }
+
+  /**
+   * Farms `ms` of game time without clearing stages (COMBAT-07): the offline and gap catch-up. Kill gold goes to
+   * the wallet and the pending income; the fight itself stays where it was (a boss stage keeps its encounter).
+   */
+  fastForward(ms: number): { gold: number; kills: number } {
+    const none = { gold: 0, kills: 0 };
+    const steps = Math.floor(ms / STEP_MS);
+    if (!(steps > 0)) return none;
+    const s = this.prepared();
+    const enc = s.stageCombat.encounter;
+    if (!enc) return none;
+    const params = this.params(s);
+    const r = advance(enc, steps, params, 'farming');
+    let state = s;
+    let sc: StageCombatSnapshot = { ...s.stageCombat };
+    let gold = 0;
+    let kills = 0;
+    for (const o of r.outcomes) {
+      if (o.kind !== 'kill') continue;
+      const g = Math.max(0, Math.round(o.gold));
+      gold += g;
+      kills++;
+      state = { ...state, gold: Math.min(2147483647, state.gold + g) };
+    }
+    sc = { ...sc, kills: sc.kills + kills, pendingIncome: sc.pendingIncome + gold, encounter: stageAt(enc.stageNumber, params).boss ? enc : r.enc };
+    this.deps.store.commit({ ...state, stageCombat: sc });
+    return { gold, kills };
+  }
+
+  /** Appends one `GoldEarned` for the income gathered since the last flush (the wallet already holds it). */
+  flushIncome(): void {
+    const s = this.deps.store.get();
+    const pending = s.stageCombat.pendingIncome;
+    if (!(pending > 0)) return;
+    const big = BigDouble.fromDouble(pending);
+    const next = withEvent(this.deps, s, 'GoldEarned', { goldMantissa: big.mantissa, goldExponent: big.exponent });
+    this.deps.store.commit({ ...next, stageCombat: { ...next.stageCombat, pendingIncome: 0 } });
+  }
+
+  /** Spends gold if the wallet covers it; pending income is flushed first so the log stays in order. */
+  trySpendGold(amount: number): boolean {
+    const s = this.deps.store.get();
+    if (amount < 0 || s.gold < amount) return false;
+    this.flushIncome();
+    this.deps.store.commit(withGold(this.deps, this.deps.store.get(), s.gold - amount));
+    return true;
+  }
+
+  /** Rewards and other whole-gold grants: wallet plus its own `GoldEarned`. */
+  addGold(amount: number): void {
+    if (amount <= 0) return;
+    const s = this.deps.store.get();
+    this.deps.store.commit(withGold(this.deps, s, s.gold + amount));
   }
 
   setAutoAdvance(on: boolean): void {

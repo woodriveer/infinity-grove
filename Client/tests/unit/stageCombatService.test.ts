@@ -210,4 +210,56 @@ describe('StageCombatService', () => {
     expect(roster.tryActivate('other')).toBe(true);
     expect(store.get().activeSquad).toEqual(['strong', 'other']);
   });
+  describe('fast-forward and income (T17)', () => {
+    it('10 min of steps and fastForward(10 min) give the same gold within 1e-6', () => {
+      const a = setup(['strong'], 3, 2);
+      a.svc.setAutoAdvance(false);
+      a.svc.step(100);
+      const b = setup(['strong'], 3, 2);
+      b.svc.setAutoAdvance(false);
+      b.svc.step(100);
+      const g0 = a.store.get().gold;
+      for (let i = 0; i < 6000; i++) a.svc.step(100);
+      const r = b.svc.fastForward(600000);
+      const stepped = a.store.get().gold - g0;
+      expect(r.gold).toBeGreaterThan(0);
+      expect(Math.abs(r.gold - stepped) / stepped).toBeLessThan(1e-6);
+      expect(r.kills).toBeGreaterThan(0);
+    });
+
+    it('fast-forward never clears stages or emits stage events', () => {
+      const { svc, store, events } = setup(['strong'], 0, 1);
+      svc.fastForward(600000);
+      expect(store.get().furthestStageCleared).toBe(0);
+      expect(events().filter((e) => e.startsWith('StageCleared') || e.startsWith('BossDefeated'))).toHaveLength(0);
+    });
+
+    it('a boss stage farms the stage before it and keeps its encounter', () => {
+      const { svc, store } = setup(['strong'], 4, 5);
+      svc.step(100);
+      const before = store.get().stageCombat.encounter;
+      const r = svc.fastForward(60000);
+      expect(r.gold).toBeGreaterThan(0);
+      expect(store.get().stageCombat.encounter).toBe(before);
+      expect(store.get().furthestStageCleared).toBe(4);
+    });
+
+    it('a spend after kills logs GoldEarned before GoldSpent and clears the pending income', () => {
+      const { svc, store, events } = setup(['strong'], 3, 2);
+      svc.fastForward(60000);
+      const gold = store.get().gold;
+      expect(gold).toBeGreaterThan(5);
+      expect(svc.trySpendGold(5)).toBe(true);
+      expect(events().map((e) => e.split(':')[0])).toEqual(['GoldEarned', 'GoldSpent']);
+      expect(store.get().gold).toBe(gold - 5);
+      expect(store.get().stageCombat.pendingIncome).toBe(0);
+      expect(svc.trySpendGold(1e9)).toBe(false);
+    });
+
+    it('zero income flushes nothing', () => {
+      const { svc, events } = setup(['strong'], 3, 2);
+      svc.flushIncome();
+      expect(events()).toHaveLength(0);
+    });
+  });
 });

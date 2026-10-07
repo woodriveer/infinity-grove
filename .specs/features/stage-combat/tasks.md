@@ -464,12 +464,14 @@ T22 → T23 → T24
 - Skill: NONE
 
 **Done when**:
-- [ ] Unit tests: 10 min of steps vs. `fastForward(10 min)` gold within relative 1e-6; fast-forward never clears stages; spend after kills logs `GoldEarned` before `GoldSpent`; zero income flushes nothing
-- [ ] Quick gate passes
+- [x] Unit tests: 10 min of steps vs. `fastForward(10 min)` gold within relative 1e-6; fast-forward never clears stages; spend after kills logs `GoldEarned` before `GoldSpent`; zero income flushes nothing
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick
 **Commit**: `feat(services): fast-forward and batched gold income`
+
+**Status**: Done (heartbeat 2026-10-07): 5 new tests in `Client/tests/unit/stageCombatService.test.ts`; lint, typecheck, `npm test` green. Decided in heartbeat: `fastForward(ms)` returns `{gold, kills}`, runs `floor(ms/100)` farming steps on the prepared encounter and keeps the stored encounter untouched when it is a boss stage (farming uses the stage before); `flushIncome` only appends the event (the wallet already holds kill gold); `addGold` is a plain `withGold` (own `GoldEarned`). `CombatService` keeps its own copies until T18.
 
 ---
 

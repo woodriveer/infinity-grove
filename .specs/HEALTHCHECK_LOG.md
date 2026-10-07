@@ -117,3 +117,9 @@
 - Commits: `feat(services): stage jump, boss retry and squad lock`.
 - Decisions (decided in heartbeat): see tasks.md T16 (`fightBoss` targets furthest + 1 and needs a boss stage; lock = encounter with a boss timer).
 - Pending for developer: push.
+
+## 2026-10-07 — stage-combat T17
+- Result: done; lint, typecheck, npm test (249) green.
+- Commit: feat(services): fast-forward and batched gold income
+- Decisions: see tasks.md T17 status (decided in heartbeat).
+- Pending for the developer: git push; ui-gate criterion 3.
