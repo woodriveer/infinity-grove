@@ -1,0 +1,18 @@
+{
+  "description": "P15: the layered test hero loses weapon and vest through services, then gets the blade back from the bag",
+  "save": "layered-squad",
+  "seed": 7,
+  "steps": [
+    { "do": "unequip", "heroId": "test-hero", "slot": "Weapon" },
+    { "do": "unequip", "heroId": "test-hero", "slot": "Chest" },
+    { "do": "equip", "heroId": "test-hero", "itemId": "test-blade" }
+  ],
+  "expect": {
+    "final": {
+      "equipment": {
+        "bag": ["test-vest"],
+        "equipped": { "test-hero": { "Weapon": "test-blade" } }
+      }
+    }
+  }
+}

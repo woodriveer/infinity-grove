@@ -409,8 +409,8 @@ T14 → T15 → T16 → T17 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] Scenario passes with `expect`; e2e passes; fixes to the view only if the tests expose a defect
-- [ ] Gate passes
+- [x] Scenario passes with `expect`; e2e passes; fixes to the view only if the tests expose a defect
+- [x] Gate passes (known ui-gate criterion 3 failure only)
 
 **Tests**: e2e
 **Gate**: full
