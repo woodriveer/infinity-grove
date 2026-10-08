@@ -407,3 +407,9 @@
 - Result: done. typecheck, lint, npm test (379) green; full verify not run (Quick gate task).
 - Decisions (decided in heartbeat): typed 401 is read from openapi-fetch's parsed `error` (the response body is already consumed); 5 unrelated uncommitted files (floating damage numbers) left untouched and uncommitted.
 - Pending for the developer: push; ui-gate criterion 3; commit or review the floating-damage work in progress.
+
+## 2026-10-08 heartbeat: single-active-session T7
+- Result: done. typecheck, lint, npm test (385) green; 6 new tests in `tests/unit/session-replaced-sync.test.ts`. Full verify not run (Quick gate task).
+- Commit: feat(sync): pause on session-replaced; Play here and Quit
+- Decisions (decided in heartbeat): `PlatformPorts.lifecycle` is optional until T8 adds the browser/electron impls, then becomes required; `SaveSyncService` takes `AppLifecycle | null` as last constructor arg. The 5 unrelated uncommitted floating-damage files were left untouched.
+- Pending for the developer: push; ui-gate criterion 3; commit or review the floating-damage work in progress.

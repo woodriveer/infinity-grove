@@ -2,7 +2,7 @@ import { resolve } from 'node:path';
 import type { CloudStore, HttpPort, PlatformPorts, SaveStore } from '../../services/ports';
 import { LocalOnlyCloudStore } from '../../services/sync/LocalOnlyCloudStore';
 import { WebCryptoCipher } from '../shared/WebCryptoCipher';
-import { FsContentSource, ManualClock, MemoryLogger, MemorySaveStore, NodeHttpPort } from './NodePorts';
+import { FsContentSource, ManualClock, MemoryLogger, MemorySaveStore, NodeHttpPort, RecordingLifecycle } from './NodePorts';
 
 export interface NodePlatformOptions {
   seed?: number;
@@ -18,7 +18,7 @@ export interface NodePlatformOptions {
 export const DEFAULT_EPOCH_MS = Date.UTC(2026, 0, 1);
 
 /** PlatformPorts for Vitest, the sim and soak: manual clock, fixed seed, disk content (AD-17). */
-export function createNodePlatform(options: NodePlatformOptions = {}): PlatformPorts & { clock: ManualClock; logger: MemoryLogger } {
+export function createNodePlatform(options: NodePlatformOptions = {}): PlatformPorts & { clock: ManualClock; logger: MemoryLogger; lifecycle: RecordingLifecycle } {
   return {
     clock: new ManualClock(options.nowMs ?? DEFAULT_EPOCH_MS),
     http: options.http ?? new NodeHttpPort(10_000),
@@ -28,6 +28,7 @@ export function createNodePlatform(options: NodePlatformOptions = {}): PlatformP
     cipher: new WebCryptoCipher(),
     content: new FsContentSource(options.contentRoot ?? resolve(import.meta.dirname, '../../../content')),
     logger: new MemoryLogger(options.echoLogs ?? false),
+    lifecycle: new RecordingLifecycle(),
     rngSeed: options.seed ?? 42,
   };
 }

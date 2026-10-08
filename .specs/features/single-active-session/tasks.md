@@ -163,9 +163,9 @@ Phase 3 (modal):    T10 → T11
 **Requirement**: SESSION-02 (AC 3-5), SESSION-04
 
 **Done when**:
-- [ ] Unit (fake BackendApi): a typed 401 on flush sets the flag; further `syncNow` calls do not authenticate; `playHere` authenticates, clears the flag, pulls state, rebases and flushes; offline `playHere` keeps the flag; `quitGame` persists then calls `AppLifecycle.quit`; `TickDriver` does not step while replaced and resumes after
-- [ ] Offline edge: no flag set until a call actually returns the typed 401
-- [ ] Quick gate passes
+- [x] Unit (fake BackendApi): a typed 401 on flush sets the flag; further `syncNow` calls do not authenticate; `playHere` authenticates, clears the flag, pulls state, rebases and flushes; offline `playHere` keeps the flag; `quitGame` persists then calls `AppLifecycle.quit`; `TickDriver` does not step while replaced and resumes after
+- [x] Offline edge: no flag set until a call actually returns the typed 401
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick

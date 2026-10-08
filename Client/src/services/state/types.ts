@@ -68,6 +68,8 @@ export interface SyncStatus {
   readonly online: boolean;
   readonly lastSyncAtMs: number;
   readonly inFlight: boolean;
+  /** Transient: the backend answered `session-replaced` (the account signed in on another device). */
+  readonly sessionReplaced: boolean;
 }
 
 export type Notice =

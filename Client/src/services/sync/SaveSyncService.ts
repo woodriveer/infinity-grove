@@ -7,7 +7,7 @@ import type { BackendApi } from '../backend/BackendApi';
 import type { StageCombatService } from '../combat/StageCombatService';
 import type { ServiceDeps } from '../core';
 import { PlayerEventLog, STALE_SEQUENCE_REASON } from '../events/PlayerEventLog';
-import type { SaveStore, SteamIdentity } from '../ports';
+import type { AppLifecycle, SaveStore, SteamIdentity } from '../ports';
 import type { RosterService } from '../roster/RosterService';
 import type { SaveCodec } from '../save/SaveCodec';
 import { applySnapshotToLive, project, saveFromState, stateFromSave } from '../state/projection';
@@ -33,6 +33,7 @@ export class SaveSyncService {
     private readonly backend: BackendApi,
     private readonly combat: StageCombatService,
     private readonly roster: RosterService,
+    private readonly lifecycle: AppLifecycle | null = null,
   ) {}
 
   /** Loads the save (or starts a new game) and applies offline accrual. */
@@ -89,12 +90,43 @@ export class SaveSyncService {
 
   /** Authenticates, pulls canonical state, flushes pending events, persists. Never throws. */
   async connect(): Promise<void> {
-    if (await this.authenticate()) {
-      const server = await this.backend.getState();
-      if (server) this.applyCanonical(server);
-      await this.flush();
-    }
+    if (!this.isReplaced() && (await this.authenticate())) await this.pullAndFlush();
     await this.persist();
+  }
+
+  /** The account signed in on another device: nothing syncs until the player picks "Play here". */
+  private isReplaced(): boolean {
+    return this.deps.store.get().sync.sessionReplaced;
+  }
+
+  private async pullAndFlush(): Promise<void> {
+    const server = await this.backend.getState();
+    this.noteReplaced();
+    if (server) this.applyCanonical(server);
+    await this.flush();
+  }
+
+  /** Raises the flag once a call actually came back as `session-replaced`; never before. */
+  private noteReplaced(): void {
+    if (this.backend.sessionReplaced && !this.isReplaced()) this.setSync({ sessionReplaced: true });
+  }
+
+  /** "Play here": log in again (taking the session back), adopt the canonical state, resend pending events. Offline keeps the modal. */
+  async playHere(): Promise<void> {
+    if (!this.isReplaced() || this.deps.store.get().sync.inFlight) return;
+    this.setSync({ inFlight: true });
+    try {
+      if (await this.authenticate()) await this.pullAndFlush();
+      await this.persist();
+    } finally {
+      this.setSync({ inFlight: false });
+    }
+  }
+
+  /** Quit from the modal: save locally and to the cloud, then ask the shell to close. */
+  async quitGame(): Promise<void> {
+    await this.persistLocalAndCloud();
+    this.lifecycle?.quit();
   }
 
   /** Periodic/suspend sync (SyncNowAsync). Skips while one is in flight. */
@@ -102,6 +134,10 @@ export class SaveSyncService {
     this.combat.flushIncome();
     const s = this.deps.store.get();
     if (s.sync.inFlight) return;
+    if (s.sync.sessionReplaced) {
+      await this.persist();
+      return;
+    }
     this.setSync({ inFlight: true });
     try {
       if (this.backend.isAuthenticated || (await this.authenticate())) await this.flush();
@@ -133,7 +169,11 @@ export class SaveSyncService {
   private async authenticate(): Promise<boolean> {
     const ticket = this.identity ? await this.identity.getAuthTicketHex().catch(() => null) : null;
     const ok = await this.backend.authenticateWithSteam(ticket);
-    this.setSync({ authenticated: ok, online: ok || this.deps.store.get().sync.online });
+    this.setSync({
+      authenticated: ok,
+      online: ok || this.deps.store.get().sync.online,
+      sessionReplaced: ok ? false : this.deps.store.get().sync.sessionReplaced,
+    });
     if (ok && this.backend.steamId64) {
       const s = this.deps.store.get();
       this.deps.store.commit({ ...s, steamId64: this.backend.steamId64 });
@@ -146,7 +186,8 @@ export class SaveSyncService {
     if (!this.backend.isAuthenticated || pending.length === 0) return;
     const response = await this.backend.ingestBatch(pending);
     if (!response) {
-      this.setSync({ online: false });
+      this.noteReplaced();
+      if (!this.isReplaced()) this.setSync({ online: false });
       return;
     }
     let s = this.deps.store.get();

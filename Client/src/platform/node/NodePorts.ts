@@ -106,3 +106,11 @@ export class MemoryLogger implements Logger {
     if (this.echo) process.stderr.write(`${level}: ${m}\n`);
   }
 }
+
+/** AppLifecycle double: counts quit requests. */
+export class RecordingLifecycle {
+  quits = 0;
+  quit(): void {
+    this.quits += 1;
+  }
+}

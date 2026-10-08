@@ -59,6 +59,11 @@ export interface Logger {
   error(message: string): void;
 }
 
+/** Asks the shell to close the app (the session-replaced modal's Quit). */
+export interface AppLifecycle {
+  quit(): void;
+}
+
 /** Everything compose() needs from the platform (AD-4). */
 export interface PlatformPorts {
   readonly clock: Clock;
@@ -69,6 +74,8 @@ export interface PlatformPorts {
   readonly cipher: Cipher;
   readonly content: ContentSource;
   readonly logger: Logger;
+  /** Absent until every platform implements it (T8 makes it required). */
+  readonly lifecycle?: AppLifecycle;
   /** Seed for the game's Rng (platform picks it at boot; tests and sim fix it). */
   readonly rngSeed: number;
 }

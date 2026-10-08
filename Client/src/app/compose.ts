@@ -60,7 +60,7 @@ export function compose(config: AppConfig, platform: PlatformPorts, overrides: C
   const stages = new StageService(deps);
   const codec = new SaveCodec(platform.cipher, platform.logger);
   const cloudSync = new SteamCloudSync(platform.cloudStore, codec, platform.logger);
-  const sync = new SaveSyncService(deps, platform.saveStore, codec, cloudSync, identity, backend, combat, roster);
+  const sync = new SaveSyncService(deps, platform.saveStore, codec, cloudSync, identity, backend, combat, roster, platform.lifecycle ?? null);
   const tick = new TickDriver(deps, combat, sync, content.settings.syncIntervalSeconds * 1000);
   const notices = new NoticeService(deps);
 

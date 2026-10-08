@@ -24,6 +24,7 @@ export class TickDriver {
 
   advance(elapsedMs: number): void {
     if (!(elapsedMs > 0)) return;
+    if (this.deps.store.get().sync.sessionReplaced) return; // another device owns the account: no stepping, no credit
     let pending = this.carryMs + elapsedMs;
     if (pending > CATCH_UP_CAP_MS) {
       const excess = pending - CATCH_UP_CAP_MS;

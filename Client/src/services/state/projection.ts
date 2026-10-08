@@ -23,7 +23,7 @@ export function emptyGameState(): GameState {
     equipment: { bag: [], equippedByHero: {} },
     presets: [],
     eventLog: PlayerEventLog.empty(),
-    sync: { authenticated: false, online: false, lastSyncAtMs: 0, inFlight: false },
+    sync: { authenticated: false, online: false, lastSyncAtMs: 0, inFlight: false, sessionReplaced: false },
     notices: [],
   };
 }
