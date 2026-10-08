@@ -216,9 +216,9 @@ Phase 3 (modal):    T10 → T11
 **Requirement**: SESSION-02 (AC 3-5)
 
 **Done when**:
-- [ ] e2e: after `__ig.sessionReplaced()` + `advance` past the sync interval the modal appears, focus is on `session.quit`, combat state does not change while open; gamepad right + A on Play here closes it and combat resumes; Quit calls the lifecycle port (recorded by the node double)
-- [ ] Offline edge e2e: no modal before the first failing sync
-- [ ] Full gate passes (`verify` red only for the known ui-gate criterion 3)
+- [x] e2e: after `__ig.sessionReplaced()` + `advance` past the sync interval the modal appears, focus is on `session.quit`, combat state does not change while open; gamepad right + A on Play here closes it and combat resumes; Quit calls the lifecycle port (recorded by the node double)
+- [x] Offline edge e2e: no modal before the first failing sync
+- [x] Full gate passes (`verify` fully green this run)
 
 **Tests**: e2e
 **Gate**: full

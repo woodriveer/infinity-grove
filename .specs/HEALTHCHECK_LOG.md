@@ -425,3 +425,9 @@
 - Commit: test(sync): dev hook for a replaced session
 - Decisions (decided in heartbeat): double is opt-in via URL so existing e2e keep NoBackend; the typed 401 appears on the next call that reaches the backend with pending events (as the real server); committed only T9 hunks of dev-hooks.ts/helpers.ts, the unrelated floating-damage WIP stays uncommitted.
 - Pending for the developer: push; run test:sync-e2e.
+
+## 2026-10-08 heartbeat: single-active-session T10
+- Result: done. Session-replaced modal as a UiDialog over the top layer (focus on Quit, trapped, back/attack ignored); 3 e2e tests (no modal before failing sync, gamepad Play here resumes combat, Quit calls the lifecycle). `npm run verify` fully green.
+- Commit: feat(ui): session-replaced modal
+- Decisions (decided in heartbeat): reused the existing dialog mechanism instead of a new Preact overlay component; it replaces a screen dialog if both would show. e2e needs `build:test` before a direct `playwright test` (stale bundle otherwise).
+- Pending for the developer: push; commit the floating-damage WIP; run test:sync-e2e.

@@ -7,7 +7,7 @@ import { MenuScreenController, SettingsController } from './screens/MenuControll
 import { RosterController } from './screens/RosterController';
 import { StageSelectController } from './screens/StageSelectController';
 import type { ScreenController, UiContext } from './screens/types';
-import { isInteractive, nodesOf, visibleNodes, type ScreenId, type ScreenModel, type SemanticNode, type UiNode } from './ui/model';
+import { isInteractive, nodesOf, visibleNodes, type ScreenId, type ScreenModel, type UiDialog, type SemanticNode, type UiNode } from './ui/model';
 
 /** Semantic actions (AD-16): every device maps to these; controllers never see raw input. */
 export type SemanticAction =
@@ -130,7 +130,7 @@ export class UiController implements UiContext {
   }
 
   attack(): void {
-    if (this.base !== 'game') return;
+    if (this.base !== 'game' || this.sessionReplaced()) return;
     this.hooks.onAttack();
   }
 
@@ -198,6 +198,7 @@ export class UiController implements UiContext {
         this.attack();
         break;
       case 'back': {
+        if (this.sessionReplaced()) return;
         const ctrl = this.controllers[this.screen];
         if (ctrl.back?.()) return;
         if (this.stack.length > 0) this.close();
@@ -245,6 +246,23 @@ export class UiController implements UiContext {
 
   // ---------- internals ----------
 
+  private sessionReplaced(): boolean {
+    return this.app.store.get().sync.sessionReplaced;
+  }
+
+  private sessionDialog(): UiDialog {
+    return {
+      id: 'session',
+      title: 'Session replaced',
+      body: 'Infinity Grove was opened on another device.',
+      initialFocus: 'session.quit',
+      nodes: [
+        { id: 'session.quit', role: 'button', label: 'Quit', glyph: 'back', onActivate: () => void this.app.sync.quitGame() },
+        { id: 'session.playHere', role: 'button', label: 'Play here', primary: true, glyph: 'confirm', onActivate: () => void this.app.sync.playHere() },
+      ],
+    };
+  }
+
   private focusKey(): string {
     const model = this.models.at(-1);
     return model?.dialog ? model.dialog.id : this.screen;
@@ -258,6 +276,8 @@ export class UiController implements UiContext {
   private rebuild(): void {
     const ids: ScreenId[] = [this.base, ...this.stack];
     this.models = ids.map((id) => this.controllers[id].build());
+    // Another device took the account: a modal sits on the top layer until Play here or Quit.
+    if (this.sessionReplaced()) this.models = [...this.models.slice(0, -1), { ...(this.models.at(-1) as ScreenModel), dialog: this.sessionDialog() }];
     const model = this.current();
     const dialogId = model.dialog?.id ?? null;
     if (dialogId !== this.dialogShown) {
