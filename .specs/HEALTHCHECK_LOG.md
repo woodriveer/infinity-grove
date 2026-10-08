@@ -467,3 +467,9 @@
 - Commit: docs(specs): boss-drops design
 - Decisions (decided in heartbeat): catalog generated from client content (`npm run gen:drops` -> `shared/drop-catalog`, `gen:check` staleness); hero grants via the existing HeroAcquired path; item grants in a `RewardGrants` table applied idempotently by grant id; `MonsterKillsBatch` event with a server-time token bucket (400 ms/kill, cap 108 000); bag-full as a client grant queue; rolls tested by xUnit only (no VectorGen family for rolls, a `drop-rules` family for shared numbers). Risk recorded: a modified client can still edit its own save (needs a server inventory, out of scope).
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e; commit the floating-damage WIP. Next run: boss-drops Tasks.
+
+## 2026-10-08 heartbeat: boss-drops Tasks
+- Result: done. `.specs/features/boss-drops/tasks.md` (16 tasks, 4 phases: content+catalog, backend, client, proof); validate_tasks.py 0 errors. Docs only, no gate run.
+- Commit: docs(specs): boss-drops tasks
+- Decisions (decided in heartbeat): backend work split into one task per concern (catalog, rules, kill bucket, grants table, kill batch, boss grants, contract); T4/T5/T6 chained linearly although independent, to satisfy the plan validator; sync-e2e task written but not run (Docker). Floating-damage WIP left untouched.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e; commit the floating-damage WIP. Next run: boss-drops T1.
