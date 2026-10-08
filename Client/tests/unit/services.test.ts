@@ -329,6 +329,13 @@ describe('pending events rebase above the server cursor (SESSION-03)', () => {
     expect(PlayerEventLog.rebase(PlayerEventLog.empty(), 10).pending).toEqual([]);
   });
 
+  it('PlayerEventLog.rebase renumbers when the first pending event equals the cursor', () => {
+    const log = { pending: [rec('a', 3), rec('b', 4)], nextSequenceNumber: 5 };
+    const r = PlayerEventLog.rebase(log, 3);
+    expect(r.pending.map((e) => [e.clientEventId, e.sequenceNumber])).toEqual([['a', 4], ['b', 5]]);
+    expect(r.nextSequenceNumber).toBe(6);
+  });
+
   it('a login with pending events at or below the server cursor sends them renumbered', async () => {
     const backend = new AheadBackend();
     backend.cursor = 50;

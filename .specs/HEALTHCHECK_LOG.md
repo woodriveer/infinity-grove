@@ -443,3 +443,9 @@
 - Gaps (decided in heartbeat: recorded as follow-ups, not blocking): survivors on the equal-to-cursor case (backend `<=` and client rebase `>`), no test for the Program.cs JwtBearer 401 `session-replaced` mapping (needs a WebApplicationFactory test), stale-reason string duplicated in TS and C# without a cross-check, sync-e2e and test:shell not run.
 - Commit: docs(specs): single-active-session validation
 - Pending for the developer: push; run test:sync-e2e; commit the floating-damage WIP.
+
+## 2026-10-08 heartbeat: single-active-session boundary tests
+- Result: done. Equal-to-cursor tests: backend `An_unknown_event_exactly_at_the_cursor_is_rejected_as_stale` (kills B4) and client `rebase renumbers when the first pending event equals the cursor` (kills C2). Backend 33 and services.test.ts 27 green.
+- Commit: test(sync): equal-to-cursor stale boundary
+- Decisions (decided in heartbeat): picked the cheap boundary follow-ups before the WebApplicationFactory test; unrelated floating-damage WIP left untouched.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.

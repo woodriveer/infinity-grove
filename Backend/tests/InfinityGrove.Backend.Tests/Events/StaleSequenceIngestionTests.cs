@@ -47,6 +47,19 @@ public class StaleSequenceIngestionTests
     }
 
     [Fact]
+    public async Task An_unknown_event_exactly_at_the_cursor_is_rejected_as_stale()
+    {
+        var service = await WithCursorAt3();
+
+        var result = await service.IngestAsync(AccountId, [StageCleared(3, 4)], CancellationToken.None);
+
+        var verdict = Assert.Single(result.Results);
+        Assert.Equal(PlayerEventStatus.Rejected, verdict.Status);
+        Assert.Equal("Stale sequence; resend after login.", verdict.RejectionReason);
+        Assert.Equal(3, _progress.Find(AccountId)!.LastAppliedSequence);
+    }
+
+    [Fact]
     public async Task The_same_event_id_renumbered_above_the_cursor_is_then_accepted()
     {
         var service = await WithCursorAt3();
