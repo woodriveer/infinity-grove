@@ -21,5 +21,6 @@
     "Tide Caller ability, tier 10 (placeholder)",
     "Tide Caller ability, tier 11 (placeholder)",
     "Tide Caller ability, tier 12 (placeholder)"
-  ]
+  ],
+  "minStage": 9
 }

@@ -62,6 +62,8 @@ export interface HeroData {
   attackIntervalMs: number;
   /** Ability text per star tier, index 0 = 1★ .. index 11 = 12★. */
   abilityByStarTier: string[];
+  /** First stage whose boss can drop this hero (boss-drops DROP-01); default 1. */
+  minStage?: number;
   art?: HeroArt;
 }
 
@@ -112,6 +114,23 @@ export interface CombatEconomy {
   defenseK: number;
   monster: { hpBase: number; hpGrowth: number; goldBase: number; goldGrowth: number; dpsBase: number; dpsGrowth: number };
   boss: { hpMultiplier: number; dpsMultiplier: number; goldMultiplier: number };
+}
+
+/** content/economy/drops.json (boss-drops DROP-03): chances and item bands; the backend rolls, the client only displays. */
+export interface DropEconomy {
+  /** Chance per normal monster kill to drop an item (0..1). */
+  normalChance: number;
+  /** Chance per boss defeat to drop an item, independent of the hero roll (0..1). */
+  bossChance: number;
+  /** Client bag size; granted items beyond it wait in the grant queue. */
+  bagCapacity: number;
+  /** Ascending by fromStage; a stage uses the last band whose fromStage is <= the stage. */
+  itemBands: DropItemBand[];
+}
+
+export interface DropItemBand {
+  fromStage: number;
+  itemIds: string[];
 }
 
 /** Data/EquipmentItemData.cs: a droppable/craftable gear template (FR-19). */

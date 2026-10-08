@@ -254,3 +254,54 @@ describe('hero art content (hero-art-pipeline ART-06, ART-08, ART-09)', () => {
     expect(loadContent(base, ALL_ASSET_KEYS).enchantBands?.bands.map((b) => b.minLevel)).toEqual([7, 10, 15]);
   });
 });
+
+describe('drop content validation (boss-drops DROP-01, DROP-03)', () => {
+  it('loads the drop economy and hero minStage', () => {
+    const c = loadContent(base, ALL_ASSET_KEYS);
+    expect(c.drops).toMatchObject({ normalChance: 0.03, bossChance: 0.25, bagCapacity: 100 });
+    expect(c.hero('tide-caller').minStage).toBe(9);
+    expect(c.hero('krell').minStage).toBeUndefined();
+  });
+
+  it('rejects content without the drop economy', () => {
+    expect(problems((entries) => entries.filter((e) => e.path !== 'economy/drops.json'))).toEqual(['economy/drops.json: missing']);
+  });
+
+  it('rejects a minStage below 1', () => {
+    expect(problems(edit('heroes/druid.json', (j) => (j['minStage'] = 0)))).toEqual([
+      'heroes/druid.json: minStage: Too small: expected number to be >0',
+    ]);
+  });
+
+  it('rejects a chance outside 0..1', () => {
+    expect(problems(edit('economy/drops.json', (j) => (j['normalChance'] = 1.5)))).toEqual([
+      'economy/drops.json: normalChance: Too big: expected number to be <=1',
+    ]);
+    expect(problems(edit('economy/drops.json', (j) => (j['bossChance'] = -0.1)))).toEqual([
+      'economy/drops.json: bossChance: Too small: expected number to be >=0',
+    ]);
+  });
+
+  it('rejects an unknown item id in a band', () => {
+    expect(
+      problems(edit('economy/drops.json', (j) => ((j['itemBands'] as { itemIds: string[] }[])[1]!.itemIds.push('no-such-item')))),
+    ).toEqual(["economy/drops.json: itemBands.1.itemIds.5 'no-such-item' has no items/no-such-item.json"]);
+  });
+
+  it('requires bands that cover stage 1 in ascending order', () => {
+    expect(problems(edit('economy/drops.json', (j) => ((j['itemBands'] as { fromStage: number }[])[0]!.fromStage = 2)))).toEqual([
+      'economy/drops.json: itemBands.0.fromStage must be 1 so every stage has a band',
+    ]);
+    expect(problems(edit('economy/drops.json', (j) => ((j['itemBands'] as { fromStage: number }[])[1]!.fromStage = 1)))).toEqual([
+      'economy/drops.json: itemBands: fromStage must be strictly ascending',
+    ]);
+  });
+
+  it('requires every boss stage to have an eligible hero', () => {
+    const lateOnly = (entries: ContentEntry[]) =>
+      entries.map((e) => (e.path.startsWith('heroes/') ? { ...e, json: { ...(e.json as object), minStage: 6 } } : e));
+    expect(problems(lateOnly)).toEqual([
+      'stages/bramble-throne.json: boss stage 5 has no hero it can drop (no heroes/*.json with minStage <= 5)',
+    ]);
+  });
+});

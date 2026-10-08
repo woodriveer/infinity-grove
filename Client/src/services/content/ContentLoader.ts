@@ -1,6 +1,7 @@
 import type { z } from 'zod';
 import type {
   CombatEconomy,
+  DropEconomy,
   EnchantBandsData,
   Equipment,
   EquipmentItemData,
@@ -13,6 +14,7 @@ import type { ContentEntry } from '../ports';
 import {
   CONTENT_KINDS,
   combatEconomySchema,
+  dropEconomySchema,
   settingsSchema,
   type AnimationData,
   type ContentKind,
@@ -24,6 +26,7 @@ import {
 export interface ContentCatalog {
   readonly settings: GameSettings;
   readonly combat: CombatEconomy;
+  readonly drops: DropEconomy;
   readonly heroes: readonly HeroData[];
   readonly monsters: readonly MonsterData[];
   readonly stages: readonly StageData[];
@@ -51,6 +54,7 @@ export class ContentError extends Error {
 
 const SETTINGS_PATH = 'settings/game.json';
 const COMBAT_PATH = 'economy/combat.json';
+const DROPS_PATH = 'economy/drops.json';
 
 /**
  * Validates schema, id/file-name agreement, uniqueness and every cross-reference;
@@ -65,6 +69,8 @@ export function loadContent(entries: readonly ContentEntry[], assetKeys: readonl
   let settings: GameSettings | null = null;
   let combat: CombatEconomy | null = null;
   let combatFound = false;
+  let drops: DropEconomy | null = null;
+  let dropsFound = false;
   const assets = new Set(assetKeys);
   const seenIds: Record<string, Map<string, string>> = {};
 
@@ -84,9 +90,16 @@ export function loadContent(entries: readonly ContentEntry[], assetKeys: readonl
       else problems.push(...issues(path, r.error));
       continue;
     }
+    if (path === DROPS_PATH) {
+      dropsFound = true;
+      const r = dropEconomySchema.safeParse(entry.json);
+      if (r.success) drops = r.data;
+      else problems.push(...issues(path, r.error));
+      continue;
+    }
     const [kind, file] = path.split('/');
     if (!kind || !file || !(kind in CONTENT_KINDS)) {
-      problems.push(`${path}: unknown content kind '${kind ?? ''}' (expected one of ${Object.keys(CONTENT_KINDS).join(', ')}, ${SETTINGS_PATH} or ${COMBAT_PATH})`);
+      problems.push(`${path}: unknown content kind '${kind ?? ''}' (expected one of ${Object.keys(CONTENT_KINDS).join(', ')}, ${SETTINGS_PATH}, ${COMBAT_PATH} or ${DROPS_PATH})`);
       continue;
     }
     const def = CONTENT_KINDS[kind as ContentKind];
@@ -181,6 +194,30 @@ export function loadContent(entries: readonly ContentEntry[], assetKeys: readonl
   }
 
   if (!combatFound) problems.push(`${COMBAT_PATH}: missing`);
+  if (!dropsFound) problems.push(`${DROPS_PATH}: missing`);
+  if (drops) {
+    // By file name, so an item file that fails its own schema reports once, not again here.
+    const itemIds = new Set(
+      sorted
+        .map((e) => e.path.replace(/\\/g, '/'))
+        .filter((p) => p.startsWith('items/'))
+        .map((p) => p.slice('items/'.length).replace(/\.json$/, '')),
+    );
+    drops.itemBands.forEach((band, b) => {
+      band.itemIds.forEach((itemId, i) => {
+        if (!itemIds.has(itemId)) problems.push(`${DROPS_PATH}: itemBands.${b}.itemIds.${i} '${itemId}' has no items/${itemId}.json`);
+      });
+    });
+    if (drops.itemBands[0]!.fromStage !== 1) problems.push(`${DROPS_PATH}: itemBands.0.fromStage must be 1 so every stage has a band`);
+    if (combat) {
+      for (const s of stages) {
+        if (!s.boss) continue;
+        if (!heroes.some((h) => (h.minStage ?? 1) <= s.stageNumber)) {
+          problems.push(`stages/${s.stageId}.json: boss stage ${s.stageNumber} has no hero it can drop (no heroes/*.json with minStage <= ${s.stageNumber})`);
+        }
+      }
+    }
+  }
 
   if (problems.length > 0) throw new ContentError(problems);
 
@@ -200,6 +237,7 @@ export function loadContent(entries: readonly ContentEntry[], assetKeys: readonl
   return {
     settings: settings as GameSettings,
     combat: combat as CombatEconomy,
+    drops: drops as DropEconomy,
     heroes: [...heroes].sort((a, b) => a.heroId.localeCompare(b.heroId)),
     monsters,
     stages: [...stages].sort((a, b) => a.stageNumber - b.stageNumber),

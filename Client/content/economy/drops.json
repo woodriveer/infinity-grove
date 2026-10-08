@@ -1,0 +1,25 @@
+{
+  "normalChance": 0.03,
+  "bossChance": 0.25,
+  "bagCapacity": 100,
+  "itemBands": [
+    {
+      "fromStage": 1,
+      "itemIds": [
+        "bark-blade",
+        "leaf-mail",
+        "wind-boots"
+      ]
+    },
+    {
+      "fromStage": 6,
+      "itemIds": [
+        "bark-blade",
+        "leaf-mail",
+        "wind-boots",
+        "sage-staff",
+        "thorn-gloves"
+      ]
+    }
+  ]
+}

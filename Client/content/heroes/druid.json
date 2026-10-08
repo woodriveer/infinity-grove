@@ -21,5 +21,6 @@
     "Druid ability, tier 10 (placeholder)",
     "Druid ability, tier 11 (placeholder)",
     "Druid ability, tier 12 (placeholder)"
-  ]
+  ],
+  "minStage": 1
 }

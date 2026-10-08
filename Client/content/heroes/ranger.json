@@ -21,5 +21,6 @@
     "Ranger ability, tier 10 (placeholder)",
     "Ranger ability, tier 11 (placeholder)",
     "Ranger ability, tier 12 (placeholder)"
-  ]
+  ],
+  "minStage": 3
 }

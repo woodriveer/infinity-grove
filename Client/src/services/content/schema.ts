@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { ARCHETYPES } from '../../domain/Archetype';
 import type {
   CombatEconomy,
+  DropEconomy,
   Equipment,
   EnchantBandsData,
   EquipmentItemData,
@@ -41,6 +42,7 @@ export const heroSchema = z
     baseDefense: nonNegInt,
     attackIntervalMs: z.number().int().positive(),
     abilityByStarTier: z.array(z.string()).length(12, 'must list 12 star tiers'),
+    minStage: z.number().int().positive().optional(),
     art: z.object({ mode: z.enum(['layered', 'legacy']), neutral: hexColor.optional() }).strict().optional(),
   })
   .strict() satisfies z.ZodType<HeroData>;
@@ -103,6 +105,19 @@ export const combatEconomySchema = z
       .strict(),
   })
   .strict() satisfies z.ZodType<CombatEconomy>;
+
+/** content/economy/drops.json (boss-drops design, Data Models). */
+export const dropEconomySchema = z
+  .object({
+    normalChance: z.number().min(0).max(1),
+    bossChance: z.number().min(0).max(1),
+    bagCapacity: z.number().int().positive(),
+    itemBands: z
+      .array(z.object({ fromStage: z.number().int().positive(), itemIds: z.array(id).min(1) }).strict())
+      .min(1)
+      .refine((bands) => bands.every((b, i) => i === 0 || b.fromStage > bands[i - 1]!.fromStage), 'fromStage must be strictly ascending'),
+  })
+  .strict() satisfies z.ZodType<DropEconomy>;
 
 const ARMOR_SLOTS: readonly string[] = ['Chest', 'Gloves', 'Boots'];
 

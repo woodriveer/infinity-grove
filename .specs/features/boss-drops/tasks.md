@@ -60,9 +60,9 @@ Phase 4 (proof):              T14 → T15 → T16
 **Requirement**: DROP-01 (AC 4), DROP-03
 
 **Done when**:
-- [ ] Unit: schema accepts the new file and `minStage`; rejects `minStage` 0, a chance outside 0..1, an unknown item id in a band
-- [ ] `validate:content` rules: every boss stage has an eligible hero in some type; bands cover stage 1; errors name file and field
-- [ ] Quick gate passes
+- [x] Unit: schema accepts the new file and `minStage`; rejects `minStage` 0, a chance outside 0..1, an unknown item id in a band
+- [x] `validate:content` rules: every boss stage has an eligible hero in some type; bands cover stage 1; errors name file and field
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick
