@@ -4,8 +4,7 @@ import type { PlayerEventType } from '../../domain/PlayerEventType';
 import type { EventLogState } from '../state/types';
 import { serializePayload, type PayloadOf } from './payloads';
 
-/** The backend's rejection text for an unknown event numbered at or below its cursor (exact match, spec SESSION-03). */
-export const STALE_SEQUENCE_REASON = 'Stale sequence; resend after login.';
+export { STALE_SEQUENCE_REASON } from '../../domain/PlayerProgressReplay';
 
 /**
  * Append-only local event log (Unity PlayerEventLog, AD-6). Pure functions over

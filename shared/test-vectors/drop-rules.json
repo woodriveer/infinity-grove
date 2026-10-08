@@ -1,0 +1,9 @@
+{
+  "family": "drop-rules",
+  "source": "backend",
+  "tolerance": "exact",
+  "generator": "ProgressOptions defaults, DropCatalog (shared/drop-catalog) and DropRules constants",
+  "cases": [
+    {"op":"config","minKillIntervalMs":400,"killBucketCap":108000,"maxKillsPerEvent":1000,"normalDropChance":0.03,"bossDropChance":0.25,"bagCapacity":100,"firstDefeatHeroChance":1,"repeatHeroChance":0.01}
+  ]
+}

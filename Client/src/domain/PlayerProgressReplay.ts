@@ -18,6 +18,12 @@ import { DEFAULT_BOSS_EVERY, isBossStage } from './StageRules';
 
 export const ACTIVE_SQUAD_CAPACITY = 5;
 
+/** The backend's rejection text for an unknown event numbered at or below its cursor (EventRejections.StaleSequence, spec SESSION-03). */
+export const STALE_SEQUENCE_REASON = 'Stale sequence; resend after login.';
+
+/** ProgressOptions.MaxKillsPerEvent; proven equal to the backend by the drop-rules vectors. */
+export const MAX_KILLS_PER_EVENT = 1000;
+
 export interface IngestEvent {
   readonly clientEventId: string;
   readonly sequenceNumber: number;
@@ -55,7 +61,7 @@ export const PlayerProgressReplay = {
     return { state, highestBossDefeated: lastBossStageUpTo(state.furthestStageCleared, bossEvery), bossEvery, verdicts: {} };
   },
 
-  /** IngestAsync: events in sequence order; resends report the prior verdict; stale sequences are accepted no-ops. */
+  /** IngestAsync: events in sequence order; resends report the prior verdict; stale unknown events are rejected and not recorded. */
   ingestBatch(ledger: ProgressLedger, events: readonly IngestEvent[]): { ledger: ProgressLedger; results: IngestResult[] } {
     let state = ledger.state;
     let highestBossDefeated = ledger.highestBossDefeated;
@@ -70,7 +76,7 @@ export const PlayerProgressReplay = {
         continue;
       }
       if (incoming.sequenceNumber <= state.lastAppliedSequence) {
-        results.push({ clientEventId: id, status: 'Accepted', rejectionReason: null });
+        results.push({ clientEventId: id, status: 'Rejected', rejectionReason: STALE_SEQUENCE_REASON });
         continue;
       }
       try {
@@ -135,6 +141,20 @@ function applyToProgress(progress: ReplayProgress, type: string, payload: unknow
       ensureStageReachable(state, stageNumber);
       if (!isBossStage(stageNumber, bossEvery)) throw new EventValidationError(`Stage ${stageNumber} is not a boss stage.`);
       return { ...progress, highestBossDefeated: Math.max(progress.highestBossDefeated, stageNumber) };
+    }
+    case 'MonsterKillsBatch': {
+      // The kill-rate bucket needs server time, so the prediction checks only the stage and count rules.
+      const p = readObject(payload, 'MonsterKillsBatch');
+      const stageNumber = readInt(p, 'stageNumber', 'MonsterKillsBatch');
+      const count = readInt(p, 'count', 'MonsterKillsBatch');
+      ensureStageReachable(state, stageNumber);
+      if (isBossStage(stageNumber, bossEvery)) {
+        throw new EventValidationError(`Stage ${stageNumber} is a boss stage and has no normal monster kills.`);
+      }
+      if (count < 1 || count > MAX_KILLS_PER_EVENT) {
+        throw new EventValidationError(`Kill count must be between 1 and ${MAX_KILLS_PER_EVENT}.`);
+      }
+      return progress;
     }
     case 'HeroAcquired': {
       const p = readObject(payload, 'HeroAcquired');

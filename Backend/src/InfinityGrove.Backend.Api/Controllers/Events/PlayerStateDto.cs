@@ -1,4 +1,6 @@
+using System.Text.Json;
 using InfinityGrove.Backend.Application.Events;
+using InfinityGrove.Backend.Application.Rewards;
 
 namespace InfinityGrove.Backend.Api.Controllers.Events;
 
@@ -26,10 +28,38 @@ public record PlayerStateDto(
         snapshot.ActiveSquadHeroIds);
 }
 
-public record EventIngestionResultDto(Guid ClientEventId, string Status, string? RejectionReason)
+public record AffixRollDto(string Affix, int Value);
+
+/// <summary>One reward the server decided for an event (AD-001); the client applies it once by <see cref="GrantId"/>.</summary>
+public record RewardGrantResponseDto(
+    Guid GrantId,
+    string Kind,
+    Guid SourceClientEventId,
+    Guid? HeroDefinitionId,
+    bool? IsNewHero,
+    string? ItemId,
+    IReadOnlyList<AffixRollDto>? AffixRolls)
+{
+    private static readonly JsonSerializerOptions Web = new(JsonSerializerDefaults.Web);
+
+    public static RewardGrantResponseDto From(RewardGrantDto grant) => new(
+        grant.GrantId,
+        grant.Kind,
+        grant.SourceClientEventId,
+        grant.HeroDefinitionId,
+        grant.IsNewHero,
+        grant.ItemId,
+        grant.AffixRollsJson is null
+            ? null
+            : JsonSerializer.Deserialize<List<AffixRollDto>>(grant.AffixRollsJson, Web));
+}
+
+public record EventIngestionResultDto(
+    Guid ClientEventId, string Status, string? RejectionReason, IReadOnlyList<RewardGrantResponseDto> Grants)
 {
     public static EventIngestionResultDto FromResult(EventIngestionResult result) =>
-        new(result.ClientEventId, result.Status.ToString(), result.RejectionReason);
+        new(result.ClientEventId, result.Status.ToString(), result.RejectionReason,
+            [.. result.Grants.Select(RewardGrantResponseDto.From)]);
 }
 
 public record IngestEventsBatchResponse(IReadOnlyList<EventIngestionResultDto> Results, PlayerStateDto State);

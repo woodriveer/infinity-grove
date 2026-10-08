@@ -4,7 +4,7 @@ import type { StageSpec } from './StageCurves';
 
 /** Steps per second: one combat step is 100 ms (AD-007). */
 const STEPS_PER_SECOND = 10;
-const STEP_MS = 1000 / STEPS_PER_SECOND;
+export const STEP_MS = 1000 / STEPS_PER_SECOND;
 
 /** One Active Squad hero as combat sees it; benched heroes are never members. */
 export interface SquadMember {

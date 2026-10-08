@@ -307,7 +307,9 @@ class AheadBackend extends ReplayBackend {
     const fresh = events.filter((e) => e.sequenceNumber > this.cursor);
     const stale = events.filter((e) => e.sequenceNumber <= this.cursor);
     this.rejectedStale.push(...stale.map((e) => e.clientEventId));
-    const r = await super.ingestBatch(fresh.map((e) => ({ ...e, sequenceNumber: e.sequenceNumber - this.cursor })));
+    // Map the other device's sequences away so the in-process ledger sees a gapless stream.
+    const shift = this.cursor - this.ledger.state.lastAppliedSequence;
+    const r = await super.ingestBatch(fresh.map((e) => ({ ...e, sequenceNumber: e.sequenceNumber - shift })));
     this.cursor += fresh.length;
     const results: EventVerdict[] = [
       ...stale.map((e) => ({ clientEventId: e.clientEventId, accepted: false, rejectionReason: STALE_SEQUENCE_REASON })),

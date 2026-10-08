@@ -10,6 +10,7 @@ using InfinityGrove.Backend.Domain.Drops;
 using InfinityGrove.Backend.Domain.Events;
 using InfinityGrove.Backend.Domain.Progress;
 using InfinityGrove.Backend.Domain.Rewards;
+using InfinityGrove.Backend.Infrastructure.Drops;
 
 namespace InfinityGrove.VectorGen;
 
@@ -26,6 +27,7 @@ public static class BackendFamilies
         yield return EventPayloads();
         yield return EventValidation();
         yield return StageRules();
+        yield return DropRulesFamily();
     }
 
     // ---------- big numbers (BreakInfinity.cs) ----------
@@ -248,6 +250,7 @@ public static class BackendFamilies
         }
         foreach (var s in new[] { 1, 2, 17, 250, 100000 }) Add("StageCleared", new StageClearedPayload(s));
         foreach (var s in new[] { 5, 10, 250, 100000 }) Add("BossDefeated", new BossDefeatedPayload(s));
+        foreach (var (s, c) in new[] { (1, 1), (4, 25), (7, 1000) }) Add("MonsterKillsBatch", new MonsterKillsBatchPayload(s, c));
         foreach (var n in new[] { 1, 42, 0xABCDEF }) Add("HeroAcquired", new HeroAcquiredPayload(G(n)));
         Add("ActiveSquadChanged", new ActiveSquadChangedPayload(Array.Empty<Guid>()));
         Add("ActiveSquadChanged", new ActiveSquadChangedPayload(new[] { G(1) }));
@@ -261,6 +264,7 @@ public static class BackendFamilies
     {
         static JsonObject Gold(double m, int e) => new() { ["goldMantissa"] = m, ["goldExponent"] = e };
         static JsonObject Stage(int n) => new() { ["stageNumber"] = n };
+        static JsonObject Kills(int stage, int count) => new() { ["stageNumber"] = stage, ["count"] = count };
         static JsonObject Hero(int n) => new() { ["heroDefinitionId"] = G(n).ToString() };
         static JsonObject Squad(params int[] ns) => new() { ["heroDefinitionIds"] = new JsonArray(ns.Select(n => (JsonNode)G(n).ToString()).ToArray()) };
 
@@ -285,6 +289,20 @@ public static class BackendFamilies
                     new("StageCleared", 4, Stage(4)), new("BossDefeated", 5, Stage(5)) },
                 new() { new("StageCleared", 6, Stage(5)), new("StageCleared", 7, Stage(6)) },
             }),
+            ("kill-batches", new() { new() {
+                new("StageCleared", 1, Stage(1)), new("StageCleared", 2, Stage(2)),
+                new("MonsterKillsBatch", 3, Kills(1, 25)), new("MonsterKillsBatch", 4, Kills(2, 1000)),
+                new("MonsterKillsBatch", 5, Kills(3, 5)), new("MonsterKillsBatch", 6, Kills(4, 1)),
+                new("MonsterKillsBatch", 7, Kills(1, 0)), new("MonsterKillsBatch", 8, Kills(1, 1001)),
+                new("MonsterKillsBatch", 9, Kills(1, -3)), new("MonsterKillsBatch", 10, Kills(0, 5)),
+                new("StageCleared", 11, Stage(3)), new("StageCleared", 12, Stage(4)),
+                new("MonsterKillsBatch", 13, Kills(5, 10)), new("MonsterKillsBatch", 14, Kills(6, 10)),
+                new("MonsterKillsBatch", 15, new JsonObject()), new("MonsterKillsBatch", 16, new JsonObject { ["count"] = "x" }),
+                new("MonsterKillsBatch", 17, Kills(4, 1000)) } }),
+            ("drops-roll-all", new() { new() {
+                new("StageCleared", 1, Stage(1)), new("StageCleared", 2, Stage(2)), new("StageCleared", 3, Stage(3)),
+                new("StageCleared", 4, Stage(4)), new("MonsterKillsBatch", 5, Kills(4, 3)),
+                new("BossDefeated", 6, Stage(5)), new("BossDefeated", 7, Stage(5)) } }),
             ("malformed-boss-payloads", new() { new() {
                 new("BossDefeated", 1, new JsonObject()), new("BossDefeated", 2, new JsonObject { ["stageNumber"] = "x" }),
                 new("BossDefeated", 3, new JsonObject { ["StageNumber"] = 1.5 }) } }),
@@ -311,18 +329,19 @@ public static class BackendFamilies
         var cases = new List<JsonNode>();
         foreach (var (name, batches) in scenarios)
         {
-            cases.Add(RunScenario(name, batches));
+            // 0.999 never passes a chance below 1 (only the first boss defeat always grants a hero); 0.0 passes every chance.
+            cases.Add(RunScenario(name, batches, name == "drops-roll-all" ? 0.0 : 0.999));
         }
         return new VectorFamily("event-validation", "backend", "PlayerEventIngestionService.IngestAsync over in-memory repositories (real PlayerProgress rules)", cases);
     }
 
-    private static JsonObject RunScenario(string name, List<List<EventSpec>> batches)
+    private static JsonObject RunScenario(string name, List<List<EventSpec>> batches, double roll)
     {
         var accountId = G(999_999);
         var progressRepo = new InMemoryProgressRepository();
         var eventRepo = new InMemoryEventRepository();
         var service = new PlayerEventIngestionService(progressRepo, eventRepo, new InMemoryCardRepository(), new FixedTimeProvider(), new ProgressOptions(),
-            new InMemoryRewardGrantRepository(), NoDropCatalog, new NeverDropRandom());
+            new InMemoryRewardGrantRepository(), EmbeddedDropCatalogLoader.Load(), new FixedDropRandom(roll));
         var batchNodes = new JsonArray();
         var autoId = 1;
         foreach (var batch in batches)
@@ -351,6 +370,16 @@ public static class BackendFamilies
                     ["status"] = r.Status.ToString(),
                     ["rejectionReason"] = r.RejectionReason,
                 }).ToArray()),
+                // The server's rewards (ids are random, so left out). The client mirror applies hero grants to its roster.
+                ["grants"] = new JsonArray(result.Results.SelectMany(r => r.Grants).Select(g => (JsonNode)new JsonObject
+                {
+                    ["kind"] = g.Kind,
+                    ["sourceClientEventId"] = g.SourceClientEventId.ToString(),
+                    ["heroDefinitionId"] = g.HeroDefinitionId?.ToString(),
+                    ["isNewHero"] = g.IsNewHero,
+                    ["itemId"] = g.ItemId,
+                    ["affixRollsJson"] = g.AffixRollsJson,
+                }).ToArray()),
                 ["state"] = Snapshot(result.CanonicalState),
             });
         }
@@ -372,12 +401,37 @@ public static class BackendFamilies
         ["activeSquadHeroIds"] = new JsonArray(s.ActiveSquadHeroIds.Select(g => (JsonNode)g.ToString()).ToArray()),
     };
 
-    // event-validation does not cover drops (the drop-rules family will), so nothing may drop here.
-    private static readonly DropCatalog NoDropCatalog = new([], [], [], [], new Dictionary<string, IReadOnlyList<DropAffixRange>>(), 0, 0, 100);
-
-    private sealed class NeverDropRandom : IDropRandom
+    private sealed class FixedDropRandom(double value) : IDropRandom
     {
-        public double NextDouble() => 0.999;
+        public double NextDouble() => value;
+    }
+
+    // ---------- drops ----------
+
+    /// <summary>
+    /// DROP-04: the numbers the client content and the backend options must share (the generated catalog
+    /// carries the chances; kill interval, bucket cap and batch cap come from <see cref="ProgressOptions"/>).
+    /// </summary>
+    private static VectorFamily DropRulesFamily()
+    {
+        var catalog = EmbeddedDropCatalogLoader.Load();
+        var options = new ProgressOptions();
+        var cases = new List<JsonNode>
+        {
+            new JsonObject
+            {
+                ["op"] = "config",
+                ["minKillIntervalMs"] = options.MinKillIntervalMs,
+                ["killBucketCap"] = options.KillBucketCap,
+                ["maxKillsPerEvent"] = options.MaxKillsPerEvent,
+                ["normalDropChance"] = Json.D(catalog.NormalDropChance),
+                ["bossDropChance"] = Json.D(catalog.BossDropChance),
+                ["bagCapacity"] = catalog.BagCapacity,
+                ["firstDefeatHeroChance"] = Json.D(DropRules.HeroDropChance(true)),
+                ["repeatHeroChance"] = Json.D(DropRules.HeroDropChance(false)),
+            },
+        };
+        return new VectorFamily("drop-rules", "backend", "ProgressOptions defaults, DropCatalog (shared/drop-catalog) and DropRules constants", cases);
     }
 
     private sealed class InMemoryRewardGrantRepository : IRewardGrantRepository

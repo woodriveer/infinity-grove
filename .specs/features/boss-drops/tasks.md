@@ -205,9 +205,9 @@ Phase 4 (proof):              T14 → T15 → T16
 **Requirement**: DROP-04
 
 **Done when**:
-- [ ] `pwsh tools/export-openapi.ps1` and `generate-vectors.ps1` run; `gen:check` clean
-- [ ] Vector test fails when the content `normalChance`/`bossChance` or the sim kill interval differs from the backend options (checked once by editing a value locally)
-- [ ] Backend and Full gates pass
+- [x] `pwsh tools/export-openapi.ps1` and `generate-vectors.ps1` run; `gen:check` clean
+- [x] Vector test fails when the content `normalChance`/`bossChance` or the sim kill interval differs from the backend options (checked once by editing a value locally)
+- [x] Backend and Full gates pass
 
 **Tests**: vectors
 **Gate**: full

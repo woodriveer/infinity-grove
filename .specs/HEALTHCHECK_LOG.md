@@ -520,3 +520,9 @@
 - Commit: feat(backend): boss defeat drops
 - Decisions (decided in heartbeat): the out-of-order boss message stays "Cannot clear stage <n> before stage <m>." (the existing text, shared with the client replay; design.md's "Cannot defeat boss" wording was wrong); a second device's duplicate first defeat counts as a repeat (HighestBossDefeated already moved), so it grants a hero only at 1%.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e; commit the floating-damage WIP. Next run: boss-drops T9.
+
+## 2026-10-08 heartbeat: boss-drops T9
+- Result: done. Grants on the API result, openapi + client schema regenerated, `drop-rules` vector family, kill-batch and drops-roll-all scenarios, TS vector test (fails when content normalChance changes, checked once). `dotnet test` 91 green; `npm test` 412, typecheck, lint, gen:check, validate:content, build green; e2e not run (unrelated WIP in WorldScene).
+- Commit: feat(contract): drop grants in the API and drop-rules vectors
+- Decisions (decided in heartbeat): grants travel as `{grantId, kind, sourceClientEventId, heroDefinitionId?, isNewHero?, itemId?, affixRolls?[{affix,value}]}`; the event-validation runner uses the real embedded catalog with a fixed random (0.999 = only the first boss defeat grants, 0.0 = everything drops) and the TS test applies the hero grants of the vector to the mirror roster; the kill bucket is not mirrored client-side (needs server time) and has backend tests only; stale-sequence rejection moved into the domain mirror (`STALE_SEQUENCE_REASON` re-exported by PlayerEventLog) and the AheadBackend test double now shifts sequences instead of relying on the old accepted no-op.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e; commit the floating-damage WIP. Next run: boss-drops T10.

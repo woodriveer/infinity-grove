@@ -169,6 +169,7 @@ describe('event-validation (backend)', () => {
   type Batch = {
     events: Array<{ clientEventId: string; sequenceNumber: number; type: string; payload: unknown }>;
     results: Array<{ clientEventId: string; status: string; rejectionReason: string | null }>;
+    grants: Array<{ kind: string; heroDefinitionId: string | null }>;
     state: Record<string, unknown>;
   };
   const file = loadVectors<{ scenario: string; batches: Batch[] }>('event-validation');
@@ -178,6 +179,11 @@ describe('event-validation (backend)', () => {
       for (const batch of c.batches) {
         const r = PlayerProgressReplay.ingestBatch(ledger, batch.events as IngestEvent[]);
         ledger = r.ledger;
+        // Hero grants are decided by the server (AD-001); the canonical roster brings them to the client.
+        for (const g of batch.grants.filter((x) => x.kind === 'Hero')) {
+          const state = PlayerProgressReplay.applyEvent(ledger.state, 'HeroAcquired', { heroDefinitionId: g.heroDefinitionId });
+          ledger = { ...ledger, state: { ...state, lastAppliedSequence: ledger.state.lastAppliedSequence } };
+        }
         expect(r.results, c.scenario).toEqual(batch.results);
         expect(ledger.state, c.scenario).toEqual(batch.state);
       }

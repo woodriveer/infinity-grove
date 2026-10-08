@@ -454,6 +454,11 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        AffixRollDto: {
+            affix?: string | null;
+            /** Format: int32 */
+            value?: number;
+        };
         CardInstanceDto: {
             /** Format: uuid */
             id?: string;
@@ -466,6 +471,7 @@ export interface components {
             clientEventId?: string;
             status?: string | null;
             rejectionReason?: string | null;
+            grants?: components["schemas"]["RewardGrantResponseDto"][] | null;
         };
         FinalizePurchaseResponse: {
             success?: boolean;
@@ -520,7 +526,7 @@ export interface components {
             currency?: string | null;
         };
         /** @enum {string} */
-        PlayerEventType: "GoldEarned" | "GoldSpent" | "StageCleared" | "HeroAcquired" | "ActiveSquadChanged" | "BossDefeated";
+        PlayerEventType: "GoldEarned" | "GoldSpent" | "StageCleared" | "HeroAcquired" | "ActiveSquadChanged" | "BossDefeated" | "MonsterKillsBatch";
         PlayerStateDto: {
             /** Format: double */
             goldMantissa?: number;
@@ -546,6 +552,18 @@ export interface components {
             instance?: string | null;
         } & {
             [key: string]: unknown;
+        };
+        RewardGrantResponseDto: {
+            /** Format: uuid */
+            grantId?: string;
+            kind?: string | null;
+            /** Format: uuid */
+            sourceClientEventId?: string;
+            /** Format: uuid */
+            heroDefinitionId?: string | null;
+            isNewHero?: boolean | null;
+            itemId?: string | null;
+            affixRolls?: components["schemas"]["AffixRollDto"][] | null;
         };
         RosterEntryDto: {
             /** Format: uuid */

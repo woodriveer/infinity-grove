@@ -573,6 +573,20 @@
   },
   "components": {
     "schemas": {
+      "AffixRollDto": {
+        "type": "object",
+        "properties": {
+          "affix": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "CardInstanceDto": {
         "type": "object",
         "properties": {
@@ -604,6 +618,13 @@
           },
           "rejectionReason": {
             "type": "string",
+            "nullable": true
+          },
+          "grants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RewardGrantResponseDto"
+            },
             "nullable": true
           }
         },
@@ -772,7 +793,8 @@
           "StageCleared",
           "HeroAcquired",
           "ActiveSquadChanged",
-          "BossDefeated"
+          "BossDefeated",
+          "MonsterKillsBatch"
         ],
         "type": "string"
       },
@@ -852,6 +874,44 @@
           }
         },
         "additionalProperties": { }
+      },
+      "RewardGrantResponseDto": {
+        "type": "object",
+        "properties": {
+          "grantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "nullable": true
+          },
+          "sourceClientEventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "heroDefinitionId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "isNewHero": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "itemId": {
+            "type": "string",
+            "nullable": true
+          },
+          "affixRolls": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AffixRollDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "RosterEntryDto": {
         "type": "object",
