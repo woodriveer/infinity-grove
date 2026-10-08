@@ -40,6 +40,7 @@ public static class DependencyInjection
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<ISessionTokenService, JwtSessionTokenService>();
         services.AddScoped<ISteamAuthenticationService, SteamAuthenticationService>();
+        services.AddScoped<ISessionValidator, SessionValidator>();
 
         services.AddScoped<IPlayerProgressRepository, PlayerProgressRepository>();
         services.AddScoped<IPlayerEventRepository, PlayerEventRepository>();

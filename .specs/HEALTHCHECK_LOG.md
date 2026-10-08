@@ -384,3 +384,9 @@
 - Task: single-active-session T2. Result: done; backend build + 26 tests green (4 new in `Auth/SessionTokenTests.cs`). Commit: feat(backend): session id in the access token.
 - Decisions (decided in heartbeat): `SteamAuthenticationService` already called `StartSession` (T1), so T2 only added the `sid` claim; the test project now references Infrastructure to exercise the real `JwtSessionTokenService`. Floating-damage Client changes left untouched.
 - Pending for the developer: push; commit floating damage numbers; ui-gate criterion 3; combatJump flake; test:sync-e2e.
+
+## 2026-10-08 heartbeat: single-active-session T3
+- Result: done. `ISessionValidator`/`SessionValidator`, JwtBearer events in Program.cs (missing `sid` = plain 401, mismatch = 401 problem `type: session-replaced`). Backend build + 29 xUnit green. Program wiring has no automated test (per task, covered by T10/T11 sync-e2e).
+- Commit: feat(backend): answer replaced sessions with 401 session-replaced
+- Decisions (decided in heartbeat): the replaced flag travels in `HttpContext.Items` from `OnTokenValidated` to `OnChallenge`. Unrelated uncommitted client changes (dev-hooks, WorldScene, StageCombatService, e2e helpers) were present before the run and left untouched.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.

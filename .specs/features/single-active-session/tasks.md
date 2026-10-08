@@ -93,9 +93,9 @@ Phase 3 (modal):    T10 → T11
 **Requirement**: SESSION-01 (AC 2)
 
 **Done when**:
-- [ ] xUnit: validator accepts the current id, rejects an old id, rejects an unknown account
-- [ ] Program wiring builds; behavior verified by T10's sync-e2e (documented in the task note)
-- [ ] Backend gate passes
+- [x] xUnit: validator accepts the current id, rejects an old id, rejects an unknown account
+- [x] Program wiring builds; behavior verified by T10's sync-e2e (documented in the task note)
+- [x] Backend gate passes
 
 **Tests**: unit
 **Gate**: backend
