@@ -13,6 +13,8 @@ public record StageClearedPayload(int StageNumber);
 
 public record BossDefeatedPayload(int StageNumber);
 
+public record MonsterKillsBatchPayload(int StageNumber, int Count);
+
 public record HeroAcquiredPayload(Guid HeroDefinitionId);
 
 public record ActiveSquadChangedPayload(IReadOnlyList<Guid> HeroDefinitionIds);

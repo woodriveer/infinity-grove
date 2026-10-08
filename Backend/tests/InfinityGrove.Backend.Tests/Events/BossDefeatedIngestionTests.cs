@@ -19,7 +19,8 @@ public class BossDefeatedIngestionTests
 
     private PlayerEventIngestionService NewService(int bossEvery = 5) => new(
         _progress, _events, new InMemoryCardRepository(), FixedTimeProvider.Instance,
-        new ProgressOptions { BossEvery = bossEvery });
+        new ProgressOptions { BossEvery = bossEvery },
+        new InMemoryRewardGrantRepository(), IngestionTestKit.Catalog(), new IngestionTestKit.ScriptedRandom(0.999));
 
     private IngestEventCommand Event(PlayerEventType type, string payloadJson)
     {

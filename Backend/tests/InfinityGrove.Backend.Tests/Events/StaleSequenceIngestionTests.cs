@@ -15,7 +15,8 @@ public class StaleSequenceIngestionTests
 
     private PlayerEventIngestionService NewService() => new(
         _progress, _events, new InMemoryCardRepository(), FixedTimeProvider.Instance,
-        new ProgressOptions { BossEvery = 5 });
+        new ProgressOptions { BossEvery = 5 },
+        new InMemoryRewardGrantRepository(), IngestionTestKit.Catalog(), new IngestionTestKit.ScriptedRandom(0.999));
 
     private static IngestEventCommand StageCleared(long sequence, int stage, Guid? id = null)
     {

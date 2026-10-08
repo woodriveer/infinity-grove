@@ -40,6 +40,7 @@ public static class DependencyInjection
 
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton<DropCatalog>(_ => EmbeddedDropCatalogLoader.Load());
+        services.AddSingleton<IDropRandom, CryptoDropRandom>();
 
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<ISessionTokenService, JwtSessionTokenService>();

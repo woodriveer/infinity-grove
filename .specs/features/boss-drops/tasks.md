@@ -166,10 +166,10 @@ Phase 4 (proof):              T14 → T15 → T16
 **Requirement**: DROP-03 (AC 1, 3), DROP-04 (AC 2)
 
 **Done when**:
-- [ ] xUnit accepted path: count 10 with scripted rolls yields the expected grants; nothing granted at chance 0
-- [ ] xUnit rejection paths: kill rate "Kill rate exceeds the possible maximum.", stage beyond furthest + 1, boss stage, count 0, count 1001 (all rejected whole, nothing persisted)
-- [ ] xUnit: resend of a recorded event returns the same grant ids and rolls nothing new
-- [ ] Backend gate passes
+- [x] xUnit accepted path: count 10 with scripted rolls yields the expected grants; nothing granted at chance 0
+- [x] xUnit rejection paths: kill rate "Kill rate exceeds the possible maximum.", stage beyond furthest + 1, boss stage, count 0, count 1001 (all rejected whole, nothing persisted)
+- [x] xUnit: resend of a recorded event returns the same grant ids and rolls nothing new
+- [x] Backend gate passes
 
 **Tests**: unit
 **Gate**: backend

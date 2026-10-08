@@ -13,4 +13,5 @@ public enum PlayerEventType
     HeroAcquired = 3,
     ActiveSquadChanged = 4,
     BossDefeated = 5,
+    MonsterKillsBatch = 6,
 }

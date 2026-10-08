@@ -2,9 +2,12 @@ using System.Text.Json;
 using BreakInfinity;
 using InfinityGrove.Backend.Application.Cards;
 using InfinityGrove.Backend.Application.Progress;
+using InfinityGrove.Backend.Application.Rewards;
 using InfinityGrove.Backend.Domain.Cards;
+using InfinityGrove.Backend.Domain.Drops;
 using InfinityGrove.Backend.Domain.Events;
 using InfinityGrove.Backend.Domain.Progress;
+using InfinityGrove.Backend.Domain.Rewards;
 
 namespace InfinityGrove.Backend.Application.Events;
 
@@ -22,7 +25,10 @@ public class PlayerEventIngestionService(
     IPlayerEventRepository eventRepository,
     ICardInstanceRepository cardInstanceRepository,
     TimeProvider timeProvider,
-    ProgressOptions progressOptions) : IPlayerEventIngestionService
+    ProgressOptions progressOptions,
+    IRewardGrantRepository rewardGrantRepository,
+    DropCatalog dropCatalog,
+    IDropRandom dropRandom) : IPlayerEventIngestionService
 {
     public async Task<IngestBatchResult> IngestAsync(Guid accountId, IReadOnlyList<IngestEventCommand> events, CancellationToken cancellationToken)
     {
@@ -36,6 +42,7 @@ public class PlayerEventIngestionService(
 
         var results = new List<EventIngestionResult>(events.Count);
         var toPersist = new List<PlayerEvent>(events.Count);
+        var newGrants = new List<RewardGrant>();
 
         // Sequence order matters: later events may depend on state a prior event in
         // the same batch established (e.g. HeroAcquired before ActiveSquadChanged).
@@ -46,7 +53,10 @@ public class PlayerEventIngestionService(
             {
                 // Same batch resent after a dropped response (AD-6's "syncs opportunistically"):
                 // already durably recorded — report the real prior verdict without reapplying it.
-                results.Add(new EventIngestionResult(incoming.ClientEventId, existing.Status, existing.RejectionReason));
+                // Rewards are not rolled again: the stored grants of that event come back instead.
+                var stored = await rewardGrantRepository.ListBySourceEventAsync(accountId, incoming.ClientEventId, cancellationToken);
+                results.Add(new EventIngestionResult(
+                    incoming.ClientEventId, existing.Status, existing.RejectionReason, [.. stored.Select(RewardGrantDto.From)]));
                 continue;
             }
 
@@ -62,11 +72,14 @@ public class PlayerEventIngestionService(
             var payloadJson = incoming.Payload.GetRawText();
             try
             {
-                await ApplyEventAsync(progress, incoming, nowUtc, cancellationToken);
+                var granted = new List<RewardGrant>();
+                await ApplyEventAsync(progress, incoming, nowUtc, granted, cancellationToken);
                 progress.AdvanceSequence(incoming.SequenceNumber);
+                newGrants.AddRange(granted);
                 toPersist.Add(PlayerEvent.Accepted(
                     accountId, incoming.ClientEventId, incoming.SequenceNumber, incoming.Type, payloadJson, incoming.OccurredAtUtc, nowUtc));
-                results.Add(new EventIngestionResult(incoming.ClientEventId, PlayerEventStatus.Accepted, null));
+                results.Add(new EventIngestionResult(
+                    incoming.ClientEventId, PlayerEventStatus.Accepted, null, [.. granted.Select(RewardGrantDto.From)]));
             }
             catch (EventValidationException ex)
             {
@@ -80,6 +93,7 @@ public class PlayerEventIngestionService(
         }
 
         await eventRepository.AddRangeAsync(toPersist, cancellationToken);
+        await rewardGrantRepository.AddRangeAsync(newGrants, cancellationToken);
         await progressRepository.SaveChangesAsync(cancellationToken);
 
         return new IngestBatchResult(results, ToSnapshot(progress));
@@ -91,7 +105,7 @@ public class PlayerEventIngestionService(
         return progress is null ? PlayerProgressSnapshot.Empty() : ToSnapshot(progress);
     }
 
-    private async Task ApplyEventAsync(PlayerProgress progress, IngestEventCommand incoming, DateTimeOffset nowUtc, CancellationToken cancellationToken)
+    private async Task ApplyEventAsync(PlayerProgress progress, IngestEventCommand incoming, DateTimeOffset nowUtc, List<RewardGrant> granted, CancellationToken cancellationToken)
     {
         switch (incoming.Type)
         {
@@ -119,6 +133,24 @@ public class PlayerEventIngestionService(
                 progress.ApplyBossDefeated(payload.StageNumber, progressOptions.BossEvery, nowUtc);
                 break;
             }
+            case PlayerEventType.MonsterKillsBatch:
+            {
+                var payload = Deserialize<MonsterKillsBatchPayload>(incoming.Payload, "MonsterKillsBatch");
+                progress.ApplyMonsterKillsBatch(
+                    payload.StageNumber, payload.Count, progressOptions.BossEvery, progressOptions.MaxKillsPerEvent,
+                    progressOptions.MinKillIntervalMs, progressOptions.KillBucketCap, nowUtc);
+
+                // DROP-03: the number of drops is decided here, never by the client.
+                var drops = DropRules.CountNormalDrops(payload.Count, dropCatalog.NormalDropChance, dropRandom);
+                for (var i = 0; i < drops; i++)
+                {
+                    var item = DropRules.RollItem(dropCatalog, payload.StageNumber, dropRandom);
+                    granted.Add(RewardGrant.ForItem(
+                        progress.AccountId, incoming.ClientEventId, item.ItemId, SerializeRolls(item.AffixRolls), nowUtc));
+                }
+
+                break;
+            }
             case PlayerEventType.HeroAcquired:
             {
                 var payload = Deserialize<HeroAcquiredPayload>(incoming.Payload, "HeroAcquired");
@@ -144,6 +176,9 @@ public class PlayerEventIngestionService(
                 throw new EventValidationException($"Unknown event type: {incoming.Type}");
         }
     }
+
+    private static string SerializeRolls(IReadOnlyList<RolledAffix> rolls) =>
+        JsonSerializer.Serialize(rolls.Select(r => new { affix = r.Affix, value = r.Value }));
 
     private static readonly JsonSerializerOptions PayloadSerializerOptions = new()
     {

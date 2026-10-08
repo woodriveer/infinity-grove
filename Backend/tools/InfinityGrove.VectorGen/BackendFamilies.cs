@@ -4,9 +4,12 @@ using BreakInfinity;
 using InfinityGrove.Backend.Application.Cards;
 using InfinityGrove.Backend.Application.Events;
 using InfinityGrove.Backend.Application.Progress;
+using InfinityGrove.Backend.Application.Rewards;
 using InfinityGrove.Backend.Domain.Cards;
+using InfinityGrove.Backend.Domain.Drops;
 using InfinityGrove.Backend.Domain.Events;
 using InfinityGrove.Backend.Domain.Progress;
+using InfinityGrove.Backend.Domain.Rewards;
 
 namespace InfinityGrove.VectorGen;
 
@@ -318,7 +321,8 @@ public static class BackendFamilies
         var accountId = G(999_999);
         var progressRepo = new InMemoryProgressRepository();
         var eventRepo = new InMemoryEventRepository();
-        var service = new PlayerEventIngestionService(progressRepo, eventRepo, new InMemoryCardRepository(), new FixedTimeProvider(), new ProgressOptions());
+        var service = new PlayerEventIngestionService(progressRepo, eventRepo, new InMemoryCardRepository(), new FixedTimeProvider(), new ProgressOptions(),
+            new InMemoryRewardGrantRepository(), NoDropCatalog, new NeverDropRandom());
         var batchNodes = new JsonArray();
         var autoId = 1;
         foreach (var batch in batches)
@@ -367,6 +371,28 @@ public static class BackendFamilies
         }).ToArray()),
         ["activeSquadHeroIds"] = new JsonArray(s.ActiveSquadHeroIds.Select(g => (JsonNode)g.ToString()).ToArray()),
     };
+
+    // event-validation does not cover drops (the drop-rules family will), so nothing may drop here.
+    private static readonly DropCatalog NoDropCatalog = new([], [], [], [], new Dictionary<string, IReadOnlyList<DropAffixRange>>(), 0, 0, 100);
+
+    private sealed class NeverDropRandom : IDropRandom
+    {
+        public double NextDouble() => 0.999;
+    }
+
+    private sealed class InMemoryRewardGrantRepository : IRewardGrantRepository
+    {
+        private readonly List<RewardGrant> _grants = new();
+
+        public Task AddRangeAsync(IEnumerable<RewardGrant> grants, CancellationToken cancellationToken)
+        {
+            _grants.AddRange(grants);
+            return Task.CompletedTask;
+        }
+
+        public Task<IReadOnlyList<RewardGrant>> ListBySourceEventAsync(Guid accountId, Guid sourceClientEventId, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<RewardGrant>>(_grants.Where(g => g.AccountId == accountId && g.SourceClientEventId == sourceClientEventId).ToList());
+    }
 
     private sealed class FixedTimeProvider : TimeProvider
     {

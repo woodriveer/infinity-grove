@@ -140,6 +140,34 @@ public class PlayerProgress
         UpdatedAtUtc = nowUtc;
     }
 
+    /// <summary>
+    /// DROP-03/DROP-04: a counted batch of normal-monster kills. The stage must be reachable (at most one past
+    /// furthest progress) and not a boss stage, the count within the per-event bound, and the kills within the
+    /// token bucket. Any failure rejects the whole event and leaves the bucket untouched.
+    /// </summary>
+    public void ApplyMonsterKillsBatch(
+        int stageNumber, int count, int bossEvery, int maxKillsPerEvent, int killIntervalMs, int killBucketCap, DateTimeOffset nowUtc)
+    {
+        EnsureStageReachable(stageNumber);
+
+        if (IsBossStage(stageNumber, bossEvery))
+        {
+            throw new EventValidationException($"Stage {stageNumber} is a boss stage and has no normal monster kills.");
+        }
+
+        if (count < 1 || count > maxKillsPerEvent)
+        {
+            throw new EventValidationException($"Kill count must be between 1 and {maxKillsPerEvent}.");
+        }
+
+        if (!TryConsumeKills(count, nowUtc, killIntervalMs, killBucketCap))
+        {
+            throw new EventValidationException(KillRateExceededReason);
+        }
+    }
+
+    public const string KillRateExceededReason = "Kill rate exceeds the possible maximum.";
+
     public static bool IsBossStage(int stageNumber, int bossEvery) => stageNumber % bossEvery == 0;
 
     private void EnsureStageReachable(int stageNumber)

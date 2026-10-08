@@ -1,4 +1,5 @@
 using System.Text.Json;
+using InfinityGrove.Backend.Application.Rewards;
 using InfinityGrove.Backend.Domain.Events;
 
 namespace InfinityGrove.Backend.Application.Events;
@@ -11,7 +12,14 @@ public record IngestEventCommand(
     DateTimeOffset OccurredAtUtc,
     JsonElement Payload);
 
-public record EventIngestionResult(Guid ClientEventId, PlayerEventStatus Status, string? RejectionReason);
+public record EventIngestionResult(
+    Guid ClientEventId, PlayerEventStatus Status, string? RejectionReason, IReadOnlyList<RewardGrantDto> Grants)
+{
+    public EventIngestionResult(Guid clientEventId, PlayerEventStatus status, string? rejectionReason)
+        : this(clientEventId, status, rejectionReason, [])
+    {
+    }
+}
 
 public record RosterEntrySnapshot(Guid HeroDefinitionId, int OwnedCount, int StarTier);
 
