@@ -449,3 +449,9 @@
 - Commit: test(sync): equal-to-cursor stale boundary
 - Decisions (decided in heartbeat): picked the cheap boundary follow-ups before the WebApplicationFactory test; unrelated floating-damage WIP left untouched.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-08 heartbeat: single-active-session 401 mapping test
+- Result: done. `Backend/tests/.../Api/SessionReplacedHttpTests.cs` (WebApplicationFactory, hosted services and the session validator stubbed): replaced session -> 401 `application/problem+json` type `session-replaced`; missing token -> plain 401. Test project now references the Api project and `Microsoft.AspNetCore.Mvc.Testing` 8.0.11. Backend 35/35 green. Client untouched; client gate not re-run.
+- Commit: test(auth): 401 session-replaced mapping over HTTP
+- Decisions (decided in heartbeat): picked this follow-up over the anime-style docs alignment, which needs art-direction wording from the developer; config set through environment variables because Program reads the JWT key while building.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e; commit the floating-damage WIP.
