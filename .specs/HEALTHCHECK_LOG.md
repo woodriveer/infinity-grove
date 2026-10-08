@@ -455,3 +455,9 @@
 - Commit: test(auth): 401 session-replaced mapping over HTTP
 - Decisions (decided in heartbeat): picked this follow-up over the anime-style docs alignment, which needs art-direction wording from the developer; config set through environment variables because Program reads the JWT key while building.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e; commit the floating-damage WIP.
+
+## 2026-10-08 heartbeat: single-active-session follow-up (stale-reason cross-check)
+- Result: done. `Client/tests/unit/stale-reason-contract.test.ts` reads `EventRejections.cs` and asserts `STALE_SEQUENCE_REASON` equals the backend constant; passes, eslint clean. No backend change, so no new xUnit test needed.
+- Commit: test(sync): stale reason matches backend constant
+- Decisions (decided in heartbeat): cross-check as a client unit test reading the C# source (no VectorGen family for a single literal). Left the unrelated uncommitted floating-damage WIP untouched.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. Queued: docs alignment with anime style (AD-005).
