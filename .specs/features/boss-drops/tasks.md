@@ -132,8 +132,8 @@ Phase 4 (proof):              T14 → T15 → T16
 **Requirement**: DROP-04 (AC 2)
 
 **Done when**:
-- [ ] xUnit: first call starts with a full bucket capped at `KillBucketCap`; refills by elapsed/400 ms; a count above the allowance is refused and leaves the bucket unchanged; a clock going backwards grants nothing
-- [ ] Backend gate passes
+- [x] xUnit: first call starts with a full bucket capped at `KillBucketCap`; refills by elapsed/400 ms; a count above the allowance is refused and leaves the bucket unchanged; a clock going backwards grants nothing
+- [x] Backend gate passes
 
 **Tests**: unit
 **Gate**: backend

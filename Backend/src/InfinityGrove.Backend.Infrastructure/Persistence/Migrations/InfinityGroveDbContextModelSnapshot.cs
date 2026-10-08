@@ -316,6 +316,14 @@ namespace InfinityGrove.Backend.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("highest_boss_defeated");
 
+                    b.Property<long?>("KillAllowance")
+                        .HasColumnType("bigint")
+                        .HasColumnName("kill_allowance");
+
+                    b.Property<DateTimeOffset?>("KillAllowanceAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("kill_allowance_at_utc");
+
                     b.Property<long>("LastAppliedSequence")
                         .HasColumnType("bigint")
                         .HasColumnName("last_applied_sequence");

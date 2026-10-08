@@ -29,6 +29,10 @@ public class PlayerProgress
     /// <summary>AD-002: the highest boss stage whose timed boss the account has defeated (0 = none).</summary>
     public int HighestBossDefeated { get; private set; }
 
+    /// <summary>DROP-04: kills still allowed by the token bucket as of <see cref="KillAllowanceAtUtc"/>; null until the first batch.</summary>
+    public long? KillAllowance { get; private set; }
+    public DateTimeOffset? KillAllowanceAtUtc { get; private set; }
+
     /// <summary>The highest client SequenceNumber processed so far, accepted or rejected — see AdvanceSequence.</summary>
     public long LastAppliedSequence { get; private set; }
 
@@ -192,6 +196,35 @@ public class PlayerProgress
         _activeSquadHeroIds.Clear();
         _activeSquadHeroIds.AddRange(heroDefinitionIds);
         UpdatedAtUtc = nowUtc;
+    }
+
+    /// <summary>
+    /// DROP-04: token bucket on server time. The first call starts with a full bucket
+    /// (<paramref name="cap"/>); it refills one kill per <paramref name="intervalMs"/>.
+    /// A claim above the allowance is refused and leaves the bucket untouched; a clock
+    /// that went backwards grants nothing.
+    /// </summary>
+    public bool TryConsumeKills(int count, DateTimeOffset nowUtc, int intervalMs, int cap)
+    {
+        var allowance = KillAllowance ?? cap;
+        var at = KillAllowanceAtUtc ?? nowUtc;
+
+        if (nowUtc > at)
+        {
+            var refill = (long)(nowUtc - at).TotalMilliseconds / intervalMs;
+            allowance = Math.Min(cap, allowance + refill);
+            at = allowance >= cap ? nowUtc : at.AddMilliseconds(refill * intervalMs);
+        }
+
+        if (count > allowance)
+        {
+            return false;
+        }
+
+        KillAllowance = allowance - count;
+        KillAllowanceAtUtc = at;
+        UpdatedAtUtc = nowUtc;
+        return true;
     }
 
     /// <summary>

@@ -32,6 +32,12 @@ public class PlayerProgressConfiguration : IEntityTypeConfiguration<PlayerProgre
             .HasColumnName("highest_boss_defeated")
             .IsRequired();
 
+        builder.Property(p => p.KillAllowance)
+            .HasColumnName("kill_allowance");
+
+        builder.Property(p => p.KillAllowanceAtUtc)
+            .HasColumnName("kill_allowance_at_utc");
+
         builder.Property(p => p.LastAppliedSequence)
             .HasColumnName("last_applied_sequence")
             .IsRequired();
