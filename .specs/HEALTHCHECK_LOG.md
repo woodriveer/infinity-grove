@@ -287,3 +287,84 @@
 - Result: done (see STATE.md entry). Gate: typecheck, lint, validate:content, gen:check, build green; known failures only (combatJump timing, ui-gate criterion 3).
 - Commit: feat(world): two-color armor tint
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-07 heartbeat (22:37Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z). No commits, no decisions.
+
+## 2026-10-07 heartbeat (22:39Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 14 min old). No commits, no decisions.
+
+## 2026-10-07 heartbeat (22:41Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 15 min old). No commits, no decisions.
+
+## 2026-10-07 heartbeat (22:43Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 17 min old). No commits, no decisions.
+
+## 2026-10-07 heartbeat (22:44Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 19 min old). No commits, no decisions.
+
+## 2026-10-07 heartbeat (22:46Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 21 min old). No commits, no decisions.
+
+## 2026-10-07 heartbeat (22:48Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 23 min old). No commits, no decisions.
+
+## 2026-10-07 heartbeat (22:50Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 25 min old). No commits, no decisions.
+
+## 2026-10-07 heartbeat (22:52Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 27 min old). No commits, no decisions.
+
+## 2026-10-07 heartbeat (22:54Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 29 min old). No commits, no decisions.
+
+## 2026-10-07 heartbeat (22:56Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 30 min old). No commits, no decisions.
+
+## 2026-10-07 heartbeat (22:58Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 33 min old). No commits, no decisions.
+
+## 2026-10-07 heartbeat (23:00Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 34 min old; no validation.md yet). No commits, no decisions.
+
+## 2026-10-07 heartbeat (23:02Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 37 min old; no validation.md yet; goes stale at 00:25Z). No commits, no decisions.
+
+## 2026-10-07 heartbeat (23:04Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 39 min old; no validation.md yet; goes stale at 00:25Z). No commits, no decisions.
+
+## 2026-10-07 heartbeat (23:06Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 40 min old; no validation.md yet; goes stale at 00:25Z). No commits, no decisions.
+
+## 2026-10-07 heartbeat (23:09Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 43 min old; no validation.md yet; goes stale at 00:25Z). No commits, no decisions.
+
+## 2026-10-07 heartbeat (23:12Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 46 min old; no validation.md yet; goes stale at 00:25Z). No commits, no decisions.
+
+## 2026-10-07 heartbeat (23:15Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 50 min old; no validation.md yet; goes stale at 00:25Z). No commits, no decisions.
+
+## 2026-10-07 heartbeat (23:18Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 53 min old; no validation.md yet; goes stale at 00:25Z). No commits, no decisions.
+
+## 2026-10-07 heartbeat (23:20Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 55 min old; no validation.md yet; goes stale at 00:25Z). No commits, no decisions.
+
+## 2026-10-07 heartbeat (23:23Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 58 min old; no validation.md yet; goes stale at 00:25Z). No commits, no decisions.
+
+## 2026-10-07 heartbeat (23:25Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 60 min old; no validation.md yet; goes stale at 00:25Z). No commits, no decisions.
+
+## 2026-10-07 heartbeat (23:28Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 63 min old; no validation.md yet; goes stale at 00:25Z). No commits, no decisions.
+
+## 2026-10-07 heartbeat (23:31Z)
+- Task: none. Result: waiting for hero-art-pipeline-verifier (live lock, heartbeat 22:25:40Z, 65 min old; no validation.md yet; goes stale at 00:25Z). No commits, no decisions.
+
+## 2026-10-08 heartbeat (01:11Z)
+- Task: hero-art-pipeline Verifier. Result: PASS (`.specs/features/hero-art-pipeline/validation.md`). Gates: typecheck, lint, validate:content, gen:check, build green; npm test 370/370; e2e 47/47 (known flaky items passed this run). 9/10 mutants killed.
+- Decisions (decided in heartbeat): the verifier lock from 2026-10-07 22:25Z was stale (>2 h), deleted; the verifier run was redone via sub-agent. Uncommitted floating-damage-number changes in Client/ belong to no lock, so left untouched and uncommitted.
+- Commit: docs(specs): hero-art-pipeline validation
+- Pending for the developer: push; commit/review the floating damage numbers work in the tree; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.
