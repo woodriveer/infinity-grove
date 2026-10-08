@@ -22,6 +22,7 @@
     "validate:content": "tsx tools/validate-content.ts",
     "gen:assets": "tsx tools/gen-assets.ts",
     "gen:api": "openapi-typescript ../shared/openapi/openapi.json -o src/generated/api/schema.ts",
+    "gen:drops": "tsx tools/gen-drops.ts",
     "gen:check": "tsx tools/gen-check.ts",
     "art:slice": "tsx tools/art-slice.ts",
     "art:export": "tsx tools/art-export.ts",

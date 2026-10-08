@@ -1,0 +1,191 @@
+{
+  "heroes": [
+    {
+      "heroId": "dawn-cleric",
+      "serverHeroId": "1f6e0000-0000-4000-8000-000000000004",
+      "heroType": "Light",
+      "minStage": 1
+    },
+    {
+      "heroId": "druid",
+      "serverHeroId": "1f6e0000-0000-4000-8000-000000000002",
+      "heroType": "Water",
+      "minStage": 1
+    },
+    {
+      "heroId": "ember-warden",
+      "serverHeroId": "1f6e0000-0000-4000-8000-000000000003",
+      "heroType": "Fire",
+      "minStage": 1
+    },
+    {
+      "heroId": "krell",
+      "serverHeroId": "1f6e0000-0000-4000-8000-000000000007",
+      "heroType": "Dark",
+      "minStage": 1
+    },
+    {
+      "heroId": "ranger",
+      "serverHeroId": "1f6e0000-0000-4000-8000-000000000001",
+      "heroType": "Nature",
+      "minStage": 3
+    },
+    {
+      "heroId": "shade-stalker",
+      "serverHeroId": "1f6e0000-0000-4000-8000-000000000005",
+      "heroType": "Dark",
+      "minStage": 6
+    },
+    {
+      "heroId": "tide-caller",
+      "serverHeroId": "1f6e0000-0000-4000-8000-000000000006",
+      "heroType": "Water",
+      "minStage": 9
+    }
+  ],
+  "stages": [
+    {
+      "stageNumber": 1,
+      "favoredType": "Nature",
+      "isBoss": false
+    },
+    {
+      "stageNumber": 2,
+      "favoredType": "Fire",
+      "isBoss": false
+    },
+    {
+      "stageNumber": 3,
+      "favoredType": "Water",
+      "isBoss": false
+    },
+    {
+      "stageNumber": 4,
+      "favoredType": "Dark",
+      "isBoss": false
+    },
+    {
+      "stageNumber": 5,
+      "favoredType": "Nature",
+      "isBoss": true
+    },
+    {
+      "stageNumber": 6,
+      "favoredType": "Light",
+      "isBoss": false
+    },
+    {
+      "stageNumber": 7,
+      "favoredType": "Fire",
+      "isBoss": false
+    },
+    {
+      "stageNumber": 8,
+      "favoredType": "Water",
+      "isBoss": false
+    },
+    {
+      "stageNumber": 9,
+      "favoredType": "Dark",
+      "isBoss": false
+    },
+    {
+      "stageNumber": 10,
+      "favoredType": "Light",
+      "isBoss": true
+    }
+  ],
+  "itemBands": [
+    {
+      "fromStage": 1,
+      "itemIds": [
+        "bark-blade",
+        "leaf-mail",
+        "wind-boots"
+      ]
+    },
+    {
+      "fromStage": 6,
+      "itemIds": [
+        "bark-blade",
+        "leaf-mail",
+        "sage-staff",
+        "thorn-gloves",
+        "wind-boots"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "itemId": "bark-blade",
+      "slot": "Weapon"
+    },
+    {
+      "itemId": "leaf-mail",
+      "slot": "Chest"
+    },
+    {
+      "itemId": "sage-staff",
+      "slot": "Weapon"
+    },
+    {
+      "itemId": "test-blade",
+      "slot": "Weapon"
+    },
+    {
+      "itemId": "test-vest",
+      "slot": "Chest"
+    },
+    {
+      "itemId": "thorn-gloves",
+      "slot": "Gloves"
+    },
+    {
+      "itemId": "wind-boots",
+      "slot": "Boots"
+    }
+  ],
+  "affixRanges": {
+    "Weapon": [
+      {
+        "affix": "CritChance",
+        "min": 1,
+        "max": 25
+      },
+      {
+        "affix": "AttackPercent",
+        "min": 1,
+        "max": 50
+      },
+      {
+        "affix": "CritDamage",
+        "min": 5,
+        "max": 100
+      }
+    ],
+    "Chest": [
+      {
+        "affix": "Defense",
+        "min": 1,
+        "max": 40
+      }
+    ],
+    "Boots": [
+      {
+        "affix": "Speed",
+        "min": 1,
+        "max": 30
+      }
+    ],
+    "Gloves": [
+      {
+        "affix": "Precision",
+        "min": 1,
+        "max": 30
+      }
+    ]
+  },
+  "normalDropChance": 0.03,
+  "bossDropChance": 0.25,
+  "bagCapacity": 100
+}

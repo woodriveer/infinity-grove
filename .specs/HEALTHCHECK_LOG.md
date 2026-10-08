@@ -479,3 +479,9 @@
 - Commit: feat(content): drop tables and hero minStage
 - Decisions (decided in heartbeat): six placeholder heroes get minStage 1/1/1/3/6/9 (dawn-cleric, druid, ember-warden, ranger, shade-stalker, tide-caller); krell and test-hero keep the default 1; item bands: stage 1 (bark-blade, leaf-mail, wind-boots), stage 6 adds sage-staff, thorn-gloves.
 - Pending for the developer: push; ui-gate criterion 3; unrelated floating-damage WIP left uncommitted.
+
+## 2026-10-08 heartbeat: boss-drops T2
+- Result: done. Catalog generator `npm run gen:drops`, `gen:check` includes it, `tests/unit/dropCatalog.test.ts` (6 tests). Typecheck, lint, npm test (404), gen:check green.
+- Commit: feat(tools): generate the drop catalog from content
+- Decisions (decided in heartbeat): heroes without a serverHeroId and the generated test-hero are left out of the catalog (krell is in, Dark, minStage 1).
+- Pending for the developer: push; ui-gate criterion 3; unrelated floating-damage WIP left uncommitted. Next run: boss-drops T3.

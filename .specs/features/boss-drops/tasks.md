@@ -78,9 +78,9 @@ Phase 4 (proof):              T14 → T15 → T16
 **Requirement**: DROP-01, DROP-03, DROP-04
 
 **Done when**:
-- [ ] Unit: catalog lists every hero with `serverHeroId`, boss flags and favored types per stage, slot affix ranges equal `CraftingRules`
-- [ ] Unit: `gen:check` detects a changed hero `minStage` without regeneration
-- [ ] Quick gate passes
+- [x] Unit: catalog lists every hero with `serverHeroId`, boss flags and favored types per stage, slot affix ranges equal `CraftingRules`
+- [x] Unit: `gen:check` detects a changed hero `minStage` without regeneration
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick
