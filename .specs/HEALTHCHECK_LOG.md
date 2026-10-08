@@ -437,3 +437,9 @@
 - Commit: test(sync): two-device scenario without the B7 workaround
 - Decisions (decided in heartbeat): correction message matched loosely (`have `) because A's farmed gold may change the balance.
 - Pending for the developer: push; run test:sync-e2e (expectations unverified against a real backend); commit the floating-damage WIP.
+
+## 2026-10-08 heartbeat: single-active-session Verifier
+- Result: PASS. Independent Verifier: 8/8 ACs and both edge cases traced; backend 32/32, npm test 389/389, typecheck/lint green, session-replaced e2e 3/3; 14 of 17 mutants killed. Report in `.specs/features/single-active-session/validation.md`.
+- Gaps (decided in heartbeat: recorded as follow-ups, not blocking): survivors on the equal-to-cursor case (backend `<=` and client rebase `>`), no test for the Program.cs JwtBearer 401 `session-replaced` mapping (needs a WebApplicationFactory test), stale-reason string duplicated in TS and C# without a cross-check, sync-e2e and test:shell not run.
+- Commit: docs(specs): single-active-session validation
+- Pending for the developer: push; run test:sync-e2e; commit the floating-damage WIP.
