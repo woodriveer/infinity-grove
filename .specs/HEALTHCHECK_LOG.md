@@ -461,3 +461,9 @@
 - Commit: test(sync): stale reason matches backend constant
 - Decisions (decided in heartbeat): cross-check as a client unit test reading the C# source (no VectorGen family for a single literal). Left the unrelated uncommitted floating-damage WIP untouched.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. Queued: docs alignment with anime style (AD-005).
+
+## 2026-10-08 heartbeat: boss-drops Design
+- Result: done. `.specs/features/boss-drops/design.md` written and approved under autonomy. No code touched; no gate run (docs only).
+- Commit: docs(specs): boss-drops design
+- Decisions (decided in heartbeat): catalog generated from client content (`npm run gen:drops` -> `shared/drop-catalog`, `gen:check` staleness); hero grants via the existing HeroAcquired path; item grants in a `RewardGrants` table applied idempotently by grant id; `MonsterKillsBatch` event with a server-time token bucket (400 ms/kill, cap 108 000); bag-full as a client grant queue; rolls tested by xUnit only (no VectorGen family for rolls, a `drop-rules` family for shared numbers). Risk recorded: a modified client can still edit its own save (needs a server inventory, out of scope).
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e; commit the floating-damage WIP. Next run: boss-drops Tasks.
