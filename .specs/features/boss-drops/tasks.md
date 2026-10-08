@@ -96,8 +96,8 @@ Phase 4 (proof):              T14 → T15 → T16
 **Requirement**: DROP-01, DROP-03
 
 **Done when**:
-- [ ] xUnit: the embedded catalog loads, heroes and bands are non-empty, a malformed catalog is refused with a clear error
-- [ ] Backend gate passes
+- [x] xUnit: the embedded catalog loads, heroes and bands are non-empty, a malformed catalog is refused with a clear error
+- [x] Backend gate passes
 
 **Tests**: unit
 **Gate**: backend
