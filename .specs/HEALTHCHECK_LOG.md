@@ -501,3 +501,9 @@
 - Result: done. Kill token bucket on `PlayerProgress`, `ProgressOptions` kill settings, migration `AddKillAllowance`, `PlayerProgressKillAllowanceTests` (6). `dotnet test` 65 green.
 - Decisions (decided in heartbeat): `TryConsumeKills` takes interval and cap as arguments (Domain cannot see Application options); a refused claim does not persist the refill; at-cap refill resets the timestamp to now, otherwise partial intervals are kept.
 - Pending for the developer: push; ui-gate criterion 3; unrelated floating-damage WIP left uncommitted. Next run: boss-drops T6.
+
+## 2026-10-08 heartbeat: boss-drops T6
+- Result: done. `RewardGrant` entity (hero/item factories), `IRewardGrantRepository`, `RewardGrantRepository`, `RewardGrantDto`, table `reward_grants` with index `(account_id, source_client_event_id)`, migration `AddRewardGrants`, `RewardGrantTests` (4). `dotnet test` 69 green.
+- Commits: feat(backend): reward grants table; docs(specs): boss-drops T6 log
+- Decisions (decided in heartbeat): contract tested on an in-memory fake (`InMemoryRewardGrantRepository`, reused by T7/T8) instead of adding an EF InMemory package; affix rolls stored as jsonb text `AffixRollsJson`, DTO passes the string through (T9 decides the wire shape).
+- Pending for the developer: push; ui-gate criterion 3; unrelated floating-damage WIP left uncommitted. Next run: boss-drops T7.
