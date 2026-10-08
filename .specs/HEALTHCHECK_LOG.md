@@ -379,3 +379,8 @@
 - Task: single-active-session T1. Result: done; backend build + 22 tests green (3 new). Commit: feat(backend): account session id.
 - Decisions (decided in heartbeat): migration backfills existing rows with `gen_random_uuid()`. Floating-damage Client changes left untouched.
 - Pending for the developer: push; commit floating damage numbers; ui-gate criterion 3; combatJump flake; test:sync-e2e.
+
+## 2026-10-08 heartbeat (T2)
+- Task: single-active-session T2. Result: done; backend build + 26 tests green (4 new in `Auth/SessionTokenTests.cs`). Commit: feat(backend): session id in the access token.
+- Decisions (decided in heartbeat): `SteamAuthenticationService` already called `StartSession` (T1), so T2 only added the `sid` claim; the test project now references Infrastructure to exercise the real `JwtSessionTokenService`. Floating-damage Client changes left untouched.
+- Pending for the developer: push; commit floating damage numbers; ui-gate criterion 3; combatJump flake; test:sync-e2e.
