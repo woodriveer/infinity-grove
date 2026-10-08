@@ -6,6 +6,7 @@ using InfinityGrove.Backend.Application.Market;
 using InfinityGrove.Backend.Application.MarketAbuse;
 using InfinityGrove.Backend.Application.Progress;
 using InfinityGrove.Backend.Application.Purchases;
+using InfinityGrove.Backend.Application.Rewards;
 using InfinityGrove.Backend.Domain.Drops;
 using InfinityGrove.Backend.Domain.Heroes;
 using InfinityGrove.Backend.Domain.Market;
@@ -64,6 +65,7 @@ public static class DependencyInjection
 
         services.AddSingleton<ISummoningStoneCatalog, ConfiguredSummoningStoneCatalog>();
         services.AddScoped<ISummoningStonePurchaseRepository, SummoningStonePurchaseRepository>();
+        services.AddScoped<IRewardGrantRepository, RewardGrantRepository>();
         services.AddScoped<ISummoningStonePurchaseService, SummoningStonePurchaseService>();
 
         // AD-13: Market reference price caching (priceoverview polling).

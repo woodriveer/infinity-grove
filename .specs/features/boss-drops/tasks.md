@@ -149,8 +149,8 @@ Phase 4 (proof):              T14 → T15 → T16
 **Requirement**: DROP-04 (AC 1), DROP-05
 
 **Done when**:
-- [ ] xUnit (in-memory/fake repository contract): stored grants come back by source event id, only for the owning account
-- [ ] Backend gate passes
+- [x] xUnit (in-memory/fake repository contract): stored grants come back by source event id, only for the owning account
+- [x] Backend gate passes
 
 **Tests**: unit
 **Gate**: backend

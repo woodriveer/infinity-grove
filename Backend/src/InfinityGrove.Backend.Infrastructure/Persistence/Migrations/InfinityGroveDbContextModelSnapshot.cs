@@ -436,6 +436,54 @@ namespace InfinityGrove.Backend.Infrastructure.Persistence.Migrations
                     b.ToTable("summoning_stone_purchases", (string)null);
                 });
 
+            modelBuilder.Entity("InfinityGrove.Backend.Domain.Rewards.RewardGrant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("account_id");
+
+                    b.Property<string>("AffixRollsJson")
+                        .HasColumnType("jsonb")
+                        .HasColumnName("affix_rolls_json");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc");
+
+                    b.Property<Guid?>("HeroDefinitionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("hero_definition_id");
+
+                    b.Property<bool?>("IsNewHero")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_new_hero");
+
+                    b.Property<string>("ItemId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)")
+                        .HasColumnName("item_id");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)")
+                        .HasColumnName("kind");
+
+                    b.Property<Guid>("SourceClientEventId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("source_client_event_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId", "SourceClientEventId");
+
+                    b.ToTable("reward_grants", (string)null);
+                });
+
             modelBuilder.Entity("InfinityGrove.Backend.Domain.Progress.RosterEntry", b =>
                 {
                     b.HasOne("InfinityGrove.Backend.Domain.Progress.PlayerProgress", null)

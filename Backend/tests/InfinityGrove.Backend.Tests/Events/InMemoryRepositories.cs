@@ -1,9 +1,11 @@
 using InfinityGrove.Backend.Application.Cards;
 using InfinityGrove.Backend.Application.Events;
 using InfinityGrove.Backend.Application.Progress;
+using InfinityGrove.Backend.Application.Rewards;
 using InfinityGrove.Backend.Domain.Cards;
 using InfinityGrove.Backend.Domain.Events;
 using InfinityGrove.Backend.Domain.Progress;
+using InfinityGrove.Backend.Domain.Rewards;
 
 namespace InfinityGrove.Backend.Tests.Events;
 
@@ -66,6 +68,25 @@ internal sealed class InMemoryCardRepository : ICardInstanceRepository
     }
 
     public Task SaveChangesAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+}
+
+internal sealed class InMemoryRewardGrantRepository : IRewardGrantRepository
+{
+    private readonly List<RewardGrant> _grants = new();
+
+    public IReadOnlyList<RewardGrant> Grants => _grants;
+
+    public Task AddRangeAsync(IEnumerable<RewardGrant> grants, CancellationToken cancellationToken)
+    {
+        _grants.AddRange(grants);
+        return Task.CompletedTask;
+    }
+
+    public Task<IReadOnlyList<RewardGrant>> ListBySourceEventAsync(
+        Guid accountId, Guid sourceClientEventId, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<RewardGrant>>(_grants
+            .Where(g => g.AccountId == accountId && g.SourceClientEventId == sourceClientEventId)
+            .ToList());
 }
 
 internal sealed class FixedTimeProvider : TimeProvider

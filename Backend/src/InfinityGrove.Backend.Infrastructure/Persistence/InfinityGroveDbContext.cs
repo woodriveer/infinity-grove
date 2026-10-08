@@ -5,6 +5,7 @@ using InfinityGrove.Backend.Domain.Market;
 using InfinityGrove.Backend.Domain.MarketAbuse;
 using InfinityGrove.Backend.Domain.Progress;
 using InfinityGrove.Backend.Domain.Purchases;
+using InfinityGrove.Backend.Domain.Rewards;
 using Microsoft.EntityFrameworkCore;
 
 namespace InfinityGrove.Backend.Infrastructure.Persistence;
@@ -19,6 +20,7 @@ public class InfinityGroveDbContext(DbContextOptions<InfinityGroveDbContext> opt
     public DbSet<SummoningStonePurchase> SummoningStonePurchases => Set<SummoningStonePurchase>();
     public DbSet<MarketPriceSnapshot> MarketPriceSnapshots => Set<MarketPriceSnapshot>();
     public DbSet<MarketAbuseFlag> MarketAbuseFlags => Set<MarketAbuseFlag>();
+    public DbSet<RewardGrant> RewardGrants => Set<RewardGrant>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
