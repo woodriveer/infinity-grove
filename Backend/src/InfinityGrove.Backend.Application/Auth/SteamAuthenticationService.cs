@@ -48,7 +48,7 @@ public class SteamAuthenticationService(
         }
         else
         {
-            account.RecordLogin(nowUtc);
+            account.StartSession(nowUtc);
         }
 
         await accountRepository.SaveChangesAsync(cancellationToken);

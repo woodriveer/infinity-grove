@@ -29,5 +29,9 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
         builder.Property(a => a.LastLoginAtUtc)
             .HasColumnName("last_login_at_utc")
             .IsRequired();
+
+        builder.Property(a => a.SessionId)
+            .HasColumnName("session_id")
+            .IsRequired();
     }
 }

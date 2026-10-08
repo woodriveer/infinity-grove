@@ -374,3 +374,8 @@
 - Decisions (decided in heartbeat): see Design Tech Decisions table; new `AppLifecycle` port and bridge `app.quit` for the Quit button.
 - Not run: validate_tasks.py (search for the script timed out). Uncommitted floating-damage-number changes in Client/ left untouched.
 - Pending for the developer: push; commit/review floating damage numbers; ui-gate criterion 3; de-flake combatJump; run test:sync-e2e.
+
+## 2026-10-08 heartbeat (T1)
+- Task: single-active-session T1. Result: done; backend build + 22 tests green (3 new). Commit: feat(backend): account session id.
+- Decisions (decided in heartbeat): migration backfills existing rows with `gen_random_uuid()`. Floating-damage Client changes left untouched.
+- Pending for the developer: push; commit floating damage numbers; ui-gate criterion 3; combatJump flake; test:sync-e2e.

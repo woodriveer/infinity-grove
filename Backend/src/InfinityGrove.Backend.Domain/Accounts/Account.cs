@@ -10,6 +10,9 @@ public class Account
     public DateTimeOffset CreatedAtUtc { get; private set; }
     public DateTimeOffset LastLoginAtUtc { get; private set; }
 
+    /// <summary>Identifies the one live session (AD-006); a new login replaces it.</summary>
+    public Guid SessionId { get; private set; }
+
     private Account()
     {
     }
@@ -20,6 +23,7 @@ public class Account
         SteamId64 = steamId64;
         CreatedAtUtc = nowUtc;
         LastLoginAtUtc = nowUtc;
+        SessionId = Guid.NewGuid();
     }
 
     public static Account CreateForSteamId(string steamId64, DateTimeOffset nowUtc)
@@ -32,8 +36,9 @@ public class Account
         return new Account(Guid.NewGuid(), steamId64, nowUtc);
     }
 
-    public void RecordLogin(DateTimeOffset nowUtc)
+    public void StartSession(DateTimeOffset nowUtc)
     {
         LastLoginAtUtc = nowUtc;
+        SessionId = Guid.NewGuid();
     }
 }

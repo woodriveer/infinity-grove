@@ -58,8 +58,8 @@ Phase 3 (modal):    T10 → T11
 **Requirement**: SESSION-01
 
 **Done when**:
-- [ ] xUnit: new account has a non-empty id; `StartSession` changes it and `LastLoginAtUtc`; two calls give two ids
-- [ ] Backend gate passes
+- [x] xUnit: new account has a non-empty id; `StartSession` changes it and `LastLoginAtUtc`; two calls give two ids
+- [x] Backend gate passes
 
 **Tests**: unit
 **Gate**: backend

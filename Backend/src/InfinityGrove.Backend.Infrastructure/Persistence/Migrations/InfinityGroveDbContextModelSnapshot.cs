@@ -38,6 +38,10 @@ namespace InfinityGrove.Backend.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_login_at_utc");
 
+                    b.Property<Guid>("SessionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("session_id");
+
                     b.Property<string>("SteamId64")
                         .IsRequired()
                         .HasMaxLength(32)
