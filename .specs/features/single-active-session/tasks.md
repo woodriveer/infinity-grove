@@ -181,9 +181,9 @@ Phase 3 (modal):    T10 → T11
 **Requirement**: SESSION-02 (AC 5)
 
 **Done when**:
-- [ ] Unit: each impl calls its mechanism (bridge mock / `window.close` spy)
-- [ ] `npm run test:shell` passes with the exact allowlist including `app.quit`
-- [ ] Full gate passes
+- [x] Unit: each impl calls its mechanism (bridge mock / `window.close` spy)
+- [x] `npm run test:shell` passes with the exact allowlist including `app.quit`
+- [x] Full gate passes
 
 **Tests**: unit + shell
 **Gate**: full

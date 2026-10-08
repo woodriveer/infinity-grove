@@ -79,6 +79,7 @@ function registerIpc(): void {
     atomicWrite(userPath('save', 'save.bin'), new Uint8Array(bytes));
     return true;
   });
+  ipcMain.on(IPC.appQuit, () => app.quit());
   ipcMain.on(IPC.logWrite, (_e, entry: { level: string; message: string }) => log(String(entry?.level), String(entry?.message)));
 }
 

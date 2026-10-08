@@ -25,6 +25,8 @@ export interface IgPlatformBridge {
     onResume(cb: () => void): () => void;
     /** cb may return a promise; the shell waits at most timeoutMs before quitting. */
     onBeforeQuit(cb: () => Promise<void> | void, timeoutMs: number): () => void;
+    /** Asks the shell to quit; before-quit still gives the renderer its persist window. */
+    quit(): void;
   };
   log: { write(entry: { level: 'info' | 'warn' | 'error'; message: string }): void };
 }
@@ -33,7 +35,7 @@ export interface IgPlatformBridge {
 export const BRIDGE_ALLOWLIST = {
   steam: ['getAuthTicket', 'cloud', 'overlay', 'onOverlayActivated', 'onMicroTxnAuthorization'],
   save: ['read', 'write'],
-  app: ['onSuspend', 'onResume', 'onBeforeQuit'],
+  app: ['onSuspend', 'onResume', 'onBeforeQuit', 'quit'],
   log: ['write'],
 } as const;
 
@@ -50,6 +52,7 @@ export const IPC = {
   appSuspend: 'ig:app:suspend',
   appResume: 'ig:app:resume',
   appBeforeQuit: 'ig:app:before-quit',
+  appQuit: 'ig:app:quit',
   appQuitReady: 'ig:app:quit-ready',
   logWrite: 'ig:log:write',
 } as const;

@@ -1,4 +1,4 @@
-import type { Clock, ContentEntry, ContentSource, HttpPort, Logger, SaveStore } from '../../services/ports';
+import type { AppLifecycle, Clock, ContentEntry, ContentSource, HttpPort, Logger, SaveStore } from '../../services/ports';
 
 /** Content bundled by Vite (AD-8). The only place import.meta.glob appears. */
 export class GlobContentSource implements ContentSource {
@@ -88,5 +88,12 @@ export class MemorySaveStore implements SaveStore {
   }
   async write(bytes: Uint8Array): Promise<void> {
     this.bytes = bytes;
+  }
+}
+
+/** Plain browser: closes the tab (a browser may refuse for tabs it did not open). */
+export class BrowserLifecycle implements AppLifecycle {
+  quit(): void {
+    window.close();
   }
 }

@@ -1,5 +1,5 @@
 import type { IgPlatformBridge } from '../../../desktop/bridge';
-import type { CloudStore, SaveStore, SteamIdentity } from '../../services/ports';
+import type { AppLifecycle, CloudStore, SaveStore, SteamIdentity } from '../../services/ports';
 
 /** The preload bridge, when running inside the desktop shell (AD-13). */
 export function getBridge(): IgPlatformBridge | null {
@@ -14,6 +14,14 @@ export class ElectronSaveStore implements SaveStore {
   }
   async write(bytes: Uint8Array): Promise<void> {
     await this.bridge.save.write(bytes);
+  }
+}
+
+/** Quit through the shell; its before-quit hook still persists first. */
+export class ElectronLifecycle implements AppLifecycle {
+  constructor(private readonly bridge: IgPlatformBridge) {}
+  quit(): void {
+    this.bridge.app.quit();
   }
 }
 

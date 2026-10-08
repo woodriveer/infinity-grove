@@ -34,6 +34,7 @@ const bridge: IgPlatformBridge = {
         const done = () => ipcRenderer.send(IPC.appQuitReady);
         Promise.race([Promise.resolve(cb()), new Promise((r) => setTimeout(r, timeoutMs))]).then(done, done);
       }),
+    quit: () => ipcRenderer.send(IPC.appQuit),
   },
   log: { write: (entry) => ipcRenderer.send(IPC.logWrite, entry) },
 };

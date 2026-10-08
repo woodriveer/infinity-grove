@@ -1,5 +1,5 @@
-import { ConsoleLogger, FetchHttpPort, GlobContentSource, IndexedDbSaveStore, MemorySaveStore, SteppedClock, SystemClock } from '../platform/browser/BrowserPorts';
-import { ElectronSaveStore, getBridge, SteamCloudStore, SteamWebApiIdentity } from '../platform/electron/ElectronPorts';
+import { BrowserLifecycle, ConsoleLogger, FetchHttpPort, GlobContentSource, IndexedDbSaveStore, MemorySaveStore, SteppedClock, SystemClock } from '../platform/browser/BrowserPorts';
+import { ElectronLifecycle, ElectronSaveStore, getBridge, SteamCloudStore, SteamWebApiIdentity } from '../platform/electron/ElectronPorts';
 import { WebCryptoCipher } from '../platform/shared/WebCryptoCipher';
 import type { Clock, PlatformPorts } from '../services/ports';
 import { LocalOnlyCloudStore } from '../services/sync/LocalOnlyCloudStore';
@@ -33,6 +33,7 @@ export function createPlatform(config: AppConfig, opts: { seed?: number; manualC
       cipher: new WebCryptoCipher(),
       content: new GlobContentSource(),
       logger: new ConsoleLogger(),
+      lifecycle: bridge ? new ElectronLifecycle(bridge) : new BrowserLifecycle(),
       rngSeed: seed,
     },
     manualClock,

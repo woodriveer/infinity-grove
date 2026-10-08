@@ -74,8 +74,7 @@ export interface PlatformPorts {
   readonly cipher: Cipher;
   readonly content: ContentSource;
   readonly logger: Logger;
-  /** Absent until every platform implements it (T8 makes it required). */
-  readonly lifecycle?: AppLifecycle;
+  readonly lifecycle: AppLifecycle;
   /** Seed for the game's Rng (platform picks it at boot; tests and sim fix it). */
   readonly rngSeed: number;
 }
