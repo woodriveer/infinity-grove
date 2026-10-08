@@ -413,3 +413,9 @@
 - Commit: feat(sync): pause on session-replaced; Play here and Quit
 - Decisions (decided in heartbeat): `PlatformPorts.lifecycle` is optional until T8 adds the browser/electron impls, then becomes required; `SaveSyncService` takes `AppLifecycle | null` as last constructor arg. The 5 unrelated uncommitted floating-damage files were left untouched.
 - Pending for the developer: push; ui-gate criterion 3; commit or review the floating-damage work in progress.
+
+## 2026-10-08 heartbeat: single-active-session T8
+- Result: done. Bridge `app.quit` (IPC `ig:app:quit`, main calls `app.quit()` so before-quit still persists), `ElectronLifecycle` / `BrowserLifecycle`, `PlatformPorts.lifecycle` required. typecheck, lint, npm test (387) and test:shell green; full e2e not run this task.
+- Decisions (decided in heartbeat): Quit goes through `app.quit()` rather than closing the window, keeping the AD-20 persist window.
+- Left alone: uncommitted floating-damage-number work (WorldScene, StageCombatService, dev-hooks, e2e helpers/spec) belongs to the developer, not committed.
+- Pending for the developer: push; ui-gate criterion 3; that WIP.
