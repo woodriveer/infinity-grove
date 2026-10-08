@@ -507,3 +507,10 @@
 - Commits: feat(backend): reward grants table; docs(specs): boss-drops T6 log
 - Decisions (decided in heartbeat): contract tested on an in-memory fake (`InMemoryRewardGrantRepository`, reused by T7/T8) instead of adding an EF InMemory package; affix rolls stored as jsonb text `AffixRollsJson`, DTO passes the string through (T9 decides the wire shape).
 - Pending for the developer: push; ui-gate criterion 3; unrelated floating-damage WIP left uncommitted. Next run: boss-drops T7.
+
+
+## 2026-10-08 heartbeat: boss-drops T7
+- Result: done. `MonsterKillsBatch` event end to end in the backend (validation, kill bucket, item rolls, stored grants, resend), `MonsterKillsBatchIngestionTests` (9 cases incl. theory rows), `IngestionTestKit`. `dotnet test` 80 green; VectorGen builds.
+- Commit: feat(backend): monster kill batches and item drops
+- Decisions (decided in heartbeat): `ApplyMonsterKillsBatch` lives on `PlayerProgress` (Domain) and checks stage, boss, count, then the bucket, so a rejected batch never spends allowance; `EventIngestionResult` keeps a 3-arg constructor (empty grants); the API response DTO is not extended until T9 so openapi stays consistent; VectorGen event-validation uses a no-drop catalog.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e; commit the floating-damage WIP. Next run: boss-drops T8.
