@@ -390,3 +390,9 @@
 - Commit: feat(backend): answer replaced sessions with 401 session-replaced
 - Decisions (decided in heartbeat): the replaced flag travels in `HttpContext.Items` from `OnTokenValidated` to `OnChallenge`. Unrelated uncommitted client changes (dev-hooks, WorldScene, StageCombatService, e2e helpers) were present before the run and left untouched.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-08 heartbeat: single-active-session T4
+- Result: done. Stale unknown events return Rejected "Stale sequence; resend after login." (`EventRejections.StaleSequence`), not persisted, cursor unchanged. Backend build + 32 xUnit green (3 new in `Events/StaleSequenceIngestionTests.cs`; no existing test relied on the old silent no-op).
+- Commit: feat(backend): reject stale unknown events instead of dropping them
+- Decisions (decided in heartbeat): none new. Unrelated uncommitted client changes left untouched.
+- Pending for the developer: push; commit floating damage numbers; ui-gate criterion 3; test:sync-e2e.

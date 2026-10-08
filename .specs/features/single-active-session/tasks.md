@@ -111,8 +111,8 @@ Phase 3 (modal):    T10 → T11
 **Requirement**: SESSION-03 (AC 2)
 
 **Done when**:
-- [ ] xUnit: stale unknown -> Rejected with the exact reason, no row added, `LastAppliedSequence` unchanged; the same `clientEventId` renumbered above the cursor is then Accepted; a known id still returns its prior verdict; any existing test that expected the silent no-op is rewritten, not deleted
-- [ ] Backend gate passes
+- [x] xUnit: stale unknown -> Rejected with the exact reason, no row added, `LastAppliedSequence` unchanged; the same `clientEventId` renumbered above the cursor is then Accepted; a known id still returns its prior verdict; any existing test that expected the silent no-op is rewritten, not deleted
+- [x] Backend gate passes
 
 **Tests**: unit
 **Gate**: backend

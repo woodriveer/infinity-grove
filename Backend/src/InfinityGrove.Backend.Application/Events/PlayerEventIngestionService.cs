@@ -52,10 +52,10 @@ public class PlayerEventIngestionService(
 
             if (incoming.SequenceNumber <= progress.LastAppliedSequence)
             {
-                // A different ClientEventId than any on record, but a sequence number the
-                // account has already moved past (e.g. the client's local log was rebuilt) —
-                // treated as a stale no-op rather than replayed against no-longer-current state.
-                results.Add(new EventIngestionResult(incoming.ClientEventId, PlayerEventStatus.Accepted, null));
+                // An unknown ClientEventId behind the cursor (numbered before another session
+                // moved the account on): rejected without persisting, so the client renumbers
+                // above the cursor and resends the same id (AD-006).
+                results.Add(new EventIngestionResult(incoming.ClientEventId, PlayerEventStatus.Rejected, EventRejections.StaleSequence));
                 continue;
             }
 
