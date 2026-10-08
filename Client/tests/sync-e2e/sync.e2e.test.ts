@@ -2,7 +2,8 @@
  * RFR-29 / G2: the client's real services against the real backend + PostgreSQL,
  * with the fake-Steam stub behind the backend's Steam Web API seam. Drives
  * auth → actions → sync → reconciliation, including one deliberately rejected event
- * (a second device spending gold the account no longer has).
+ * (a second device spending gold the account no longer has) and the
+ * single-active-session handover (AD-006): the older device is replaced, plays here, none of its events is dropped.
  *
  * Needs a running backend: IG_SYNC_E2E_BACKEND=http://localhost:8080 npm run test:sync-e2e
  */
@@ -68,23 +69,37 @@ describe.skipIf(!BACKEND)('sync end-to-end against the real backend (RFR-29)', (
     await b.sync.connect();
     expect(b.store.get().gold).toBe(synced);
 
-    // B spends nearly all (accepted). A is now stale and still shows the old balance.
+    // B's login took the session over (AD-006): A is replaced, but nothing of A is lost yet.
+    // B spends nearly all (accepted).
     expect(b.combat.trySpendGold(synced - 10)).toBe(true);
     await b.sync.syncNow();
     expect(b.store.get().gold).toBe(10);
+    expect(b.store.get().sync.sessionReplaced).toBe(false);
 
-    // Both devices number events from the same server cursor, so A's next event
-    // reuses B's sequence number and the backend accepts it as a stale no-op
-    // (PORT_MAP B7). A farms a little first, so its spend gets a fresh sequence
-    // number and is actually validated — and rejected.
+    // A, still on the old balance, farms a little and spends the same gold. Its next call carries
+    // events, the backend answers 401 session-replaced, and A pauses with its events kept.
     a.combat.step(10_000);
     expect(a.combat.trySpendGold(synced - 10)).toBe(true);
+    const pendingBefore = a.store.get().eventLog.pending.length;
+    expect(pendingBefore).toBeGreaterThan(0);
     await a.sync.syncNow();
+    expect(a.store.get().sync.sessionReplaced).toBe(true);
+    expect(a.store.get().eventLog.pending).toHaveLength(pendingBefore);
+
+    // "Play here": A logs in again, rebases its events above B's and resends them. Every event is
+    // applied or rejected by game rules (the double spend); none is dropped as a stale no-op (B7).
+    await a.sync.playHere();
     const sa = a.store.get();
-    expect(sa.notices.filter((n) => n.kind === 'correction').map((n) => n.message)).toEqual([
-      expect.stringMatching(/^Your gold was corrected by the server: Insufficient gold: have 10.00, need /),
-    ]);
-    expect(sa.gold).toBe(10);
+    expect(sa.sync.sessionReplaced).toBe(false);
     expect(sa.eventLog.pending).toHaveLength(0);
+    expect(sa.notices.filter((n) => n.kind === 'correction').map((n) => n.message)).toEqual([
+      expect.stringMatching(/^Your gold was corrected by the server: Insufficient gold: have /),
+    ]);
+    expect(sa.gold).toBeGreaterThanOrEqual(10);
+
+    // B is now the replaced device; it never silently diverges.
+    b.combat.step(10_000);
+    await b.sync.syncNow();
+    expect(b.store.get().sync.sessionReplaced).toBe(true);
   });
 });

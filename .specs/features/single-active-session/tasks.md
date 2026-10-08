@@ -234,8 +234,8 @@ Phase 3 (modal):    T10 → T11
 **Requirement**: SESSION-01..04
 
 **Done when**:
-- [ ] Test compiles and typechecks; skipped without `IG_SYNC_E2E_BACKEND` as today; runs only with the Docker backend (recorded as pending for the developer)
-- [ ] Full + Backend gates pass
+- [x] Test compiles and typechecks; skipped without `IG_SYNC_E2E_BACKEND` as today; runs only with the Docker backend (recorded as pending for the developer)
+- [x] Full + Backend gates pass
 
 **Tests**: sync-e2e
 **Gate**: full

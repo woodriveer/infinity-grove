@@ -431,3 +431,9 @@
 - Commit: feat(ui): session-replaced modal
 - Decisions (decided in heartbeat): reused the existing dialog mechanism instead of a new Preact overlay component; it replaces a screen dialog if both would show. e2e needs `build:test` before a direct `playwright test` (stale bundle otherwise).
 - Pending for the developer: push; commit the floating-damage WIP; run test:sync-e2e.
+
+## 2026-10-08 heartbeat: single-active-session T11
+- Result: done. Two-device sync-e2e rewritten (B's login replaces A, A pauses with events kept, "Play here" rebases and resends, double spend rejected by rules, B then replaced); PORT_MAP B7 closed; spec traceability Done. `npm run verify` green. The sync-e2e itself was not run (needs the Docker backend).
+- Commit: test(sync): two-device scenario without the B7 workaround
+- Decisions (decided in heartbeat): correction message matched loosely (`have `) because A's farmed gold may change the balance.
+- Pending for the developer: push; run test:sync-e2e (expectations unverified against a real backend); commit the floating-damage WIP.

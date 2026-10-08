@@ -165,6 +165,9 @@ C# `out`/`Try*` shapes become `T | null` returns.
   the RFR-29 sync-e2e run (`tests/sync-e2e`). Unity had the same numbering; the fix
   (per-device sequence ranges, or rejecting stale-but-unknown events) is a backend and
   game-PRD change.
+  *Closed by single-active-session (AD-006):* each login starts a new session and replaces the
+  old one, clients renumber pending events above the server cursor, and the backend rejects
+  stale unknown events. Two-device scenario in `tests/sync-e2e` (needs the Docker backend).
 - **B8. The Unity Slime has no sprite.** `Slime.asset` has `sprite: {fileID: 0}`, so the Unity
   MonsterPresenter showed an empty Image. The Phaser client draws a placeholder slime body;
   real monster art is a content task (FIDELITY.md).

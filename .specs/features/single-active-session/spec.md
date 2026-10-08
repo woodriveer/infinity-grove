@@ -86,10 +86,10 @@ game never runs in two places at once (AD-006).
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| SESSION-01 | P1: One device at a time (AC 1–2) | T1-T3 | Pending |
-| SESSION-02 | P1: One device at a time (AC 3–5) | T7-T10 | Pending |
-| SESSION-03 | P1: No lost events | T4-T5 | Pending |
-| SESSION-04 | Edge cases | T2, T7 | Pending |
+| SESSION-01 | P1: One device at a time (AC 1–2) | T1-T3 | Done |
+| SESSION-02 | P1: One device at a time (AC 3–5) | T7-T10 | Done |
+| SESSION-03 | P1: No lost events | T4-T5 | Done |
+| SESSION-04 | Edge cases | T2, T7 | Done |
 
 **Coverage:** 4 total, 4 mapped to tasks, 0 unmapped
 
