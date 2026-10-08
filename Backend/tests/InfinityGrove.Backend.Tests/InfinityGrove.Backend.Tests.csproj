@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\InfinityGrove.Backend.Application\InfinityGrove.Backend.Application.csproj" />
     <ProjectReference Include="..\..\src\InfinityGrove.Backend.Domain\InfinityGrove.Backend.Domain.csproj" />
+    <ProjectReference Include="..\..\src\InfinityGrove.Backend.Infrastructure\InfinityGrove.Backend.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

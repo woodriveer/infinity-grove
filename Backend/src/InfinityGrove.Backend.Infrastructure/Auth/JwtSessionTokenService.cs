@@ -15,6 +15,7 @@ namespace InfinityGrove.Backend.Infrastructure.Auth;
 public class JwtSessionTokenService(IOptions<JwtOptions> options, TimeProvider timeProvider) : ISessionTokenService
 {
     public const string SteamIdClaimType = "steam_id64";
+    public const string SessionIdClaimType = "sid";
 
     public SessionToken CreateToken(Account account)
     {
@@ -26,6 +27,7 @@ public class JwtSessionTokenService(IOptions<JwtOptions> options, TimeProvider t
         {
             new Claim(JwtRegisteredClaimNames.Sub, account.Id.ToString()),
             new Claim(SteamIdClaimType, account.SteamId64),
+            new Claim(SessionIdClaimType, account.SessionId.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 

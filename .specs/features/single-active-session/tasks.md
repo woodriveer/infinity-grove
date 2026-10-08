@@ -75,9 +75,9 @@ Phase 3 (modal):    T10 → T11
 **Requirement**: SESSION-01 (AC 1), SESSION-04
 
 **Done when**:
-- [ ] xUnit (fake verifier/repository): a login returns a token whose `sid` equals the account's session; a second login yields a different `sid` and the first token's `sid` no longer matches
-- [ ] Failed ticket changes no session
-- [ ] Backend gate passes
+- [x] xUnit (fake verifier/repository): a login returns a token whose `sid` equals the account's session; a second login yields a different `sid` and the first token's `sid` no longer matches
+- [x] Failed ticket changes no session
+- [x] Backend gate passes
 
 **Tests**: unit
 **Gate**: backend
