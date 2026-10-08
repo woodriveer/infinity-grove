@@ -368,3 +368,9 @@
 - Decisions (decided in heartbeat): the verifier lock from 2026-10-07 22:25Z was stale (>2 h), deleted; the verifier run was redone via sub-agent. Uncommitted floating-damage-number changes in Client/ belong to no lock, so left untouched and uncommitted.
 - Commit: docs(specs): hero-art-pipeline validation
 - Pending for the developer: push; commit/review the floating damage numbers work in the tree; ui-gate criterion 3; de-flake combatJump timing test; run test:sync-e2e.
+
+## 2026-10-08 heartbeat
+- Task: single-active-session Design + Tasks. Result: done (`design.md`, `tasks.md`, 11 tasks; spec traceability mapped 4/4). Docs only, no gates run.
+- Decisions (decided in heartbeat): see Design Tech Decisions table; new `AppLifecycle` port and bridge `app.quit` for the Quit button.
+- Not run: validate_tasks.py (search for the script timed out). Uncommitted floating-damage-number changes in Client/ left untouched.
+- Pending for the developer: push; commit/review floating damage numbers; ui-gate criterion 3; de-flake combatJump; run test:sync-e2e.
