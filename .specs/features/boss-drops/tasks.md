@@ -223,10 +223,10 @@ Phase 4 (proof):              T14 → T15 → T16
 **Requirement**: DROP-03, DROP-04 (AC 2)
 
 **Done when**:
-- [ ] Unit: 25 kills then a flush produce one event with count 25; 2 300 kills split into 1000/1000/300; a stage change never mixes stages; boss kills are not counted
-- [ ] Unit: `fastForward` of a known duration counts the same kills as the live loop over that duration
-- [ ] Scenario p17 with an `expect` on the event log shows batches during farming
-- [ ] Quick gate passes
+- [x] Unit: 25 kills then a flush produce one event with count 25; 2 300 kills split into 1000/1000/300; a stage change never mixes stages; boss kills are not counted
+- [x] Unit: `fastForward` of a known duration counts the same kills as the live loop over that duration
+- [x] Scenario p17 with an `expect` on the event log shows batches during farming
+- [x] Quick gate passes
 
 **Tests**: unit + scenario
 **Gate**: quick

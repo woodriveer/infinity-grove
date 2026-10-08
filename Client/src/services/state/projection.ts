@@ -18,7 +18,7 @@ export function emptyGameState(): GameState {
     furthestStageCleared: 0,
     heroes: [],
     activeSquad: [],
-    stageCombat: { stageNumber: 1, autoAdvance: true, encounter: null, kills: 0, clicks: 0, pendingIncome: 0, lastBossResult: null },
+    stageCombat: { stageNumber: 1, autoAdvance: true, encounter: null, kills: 0, clicks: 0, pendingIncome: 0, pendingKills: null, lastBossResult: null },
     krellEquipmentId: null,
     equipment: { bag: [], equippedByHero: {} },
     presets: [],

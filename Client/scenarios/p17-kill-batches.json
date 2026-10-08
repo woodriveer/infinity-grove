@@ -1,0 +1,21 @@
+{
+  "description": "P17: a new player farming reports normal-monster kills as MonsterKillsBatch events, one stage per batch, in step with the clears",
+  "save": "new-player",
+  "seed": 3,
+  "steps": [{ "do": "advance", "ms": 120000 }],
+  "expect": {
+    "final": { "furthestStageCleared": 2 },
+    "events": [
+      { "type": "HeroAcquired" },
+      { "type": "ActiveSquadChanged" },
+      { "type": "StageCleared", "payload": { "stageNumber": 1 } },
+      { "type": "MonsterKillsBatch", "payload": { "stageNumber": 1, "count": 10 } },
+      { "type": "GoldEarned" },
+      { "type": "MonsterKillsBatch", "payload": { "stageNumber": 2, "count": 5 } },
+      { "type": "StageCleared", "payload": { "stageNumber": 2 } },
+      { "type": "MonsterKillsBatch", "payload": { "stageNumber": 2, "count": 5 } },
+      { "type": "GoldEarned" },
+      { "type": "MonsterKillsBatch", "payload": { "stageNumber": 3, "count": 6 } }
+    ]
+  }
+}

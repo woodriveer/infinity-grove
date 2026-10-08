@@ -51,7 +51,7 @@ describe('combat loop (P2, P3)', () => {
     expect(s.gold).toBe(5);
     expect(types(app)).not.toContain('GoldEarned');
     app.combat.flushIncome();
-    expect(types(app).at(-1)).toBe('GoldEarned');
+    expect(types(app).slice(-2)).toEqual(['GoldEarned', 'MonsterKillsBatch']);
     expect(app.store.get().stageCombat.pendingIncome).toBe(0);
   });
 

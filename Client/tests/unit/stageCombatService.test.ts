@@ -249,7 +249,7 @@ describe('StageCombatService', () => {
       const gold = store.get().gold;
       expect(gold).toBeGreaterThan(5);
       expect(svc.trySpendGold(5)).toBe(true);
-      expect(events().map((e) => e.split(':')[0])).toEqual(['GoldEarned', 'GoldSpent']);
+      expect(events().map((e) => e.split(':')[0])).toEqual(['GoldEarned', 'MonsterKillsBatch', 'GoldSpent']);
       expect(store.get().gold).toBe(gold - 5);
       expect(store.get().stageCombat.pendingIncome).toBe(0);
       expect(svc.trySpendGold(1e9)).toBe(false);
@@ -259,6 +259,81 @@ describe('StageCombatService', () => {
       const { svc, events } = setup(['strong'], 3, 2);
       svc.flushIncome();
       expect(events()).toHaveLength(0);
+    });
+  });
+
+  describe('kill batches (boss-drops T10)', () => {
+    const batches = (events: () => string[]): { stageNumber: number; count: number }[] =>
+      events().filter((e) => e.startsWith('MonsterKillsBatch:')).map((e) => JSON.parse(e.slice('MonsterKillsBatch:'.length)));
+
+    it('kills then a flush give one event with the kill count', () => {
+      const { svc, store, events } = setup(['strong'], 3, 2);
+      svc.setAutoAdvance(false);
+      svc.step(100);
+      for (let i = 0; i < 60; i++) svc.step(100);
+      const kills = store.get().stageCombat.kills;
+      expect(kills).toBeGreaterThan(0);
+      expect(store.get().stageCombat.pendingKills).toEqual({ stageNumber: 2, count: kills });
+      svc.flushIncome();
+      expect(batches(events)).toEqual([{ stageNumber: 2, count: kills }]);
+      expect(store.get().stageCombat.pendingKills).toBeNull();
+      svc.flushIncome();
+      expect(batches(events)).toHaveLength(1);
+    });
+
+    it('splits a long run into batches of at most 1000', () => {
+      const { svc, store, events } = setup(['strong'], 3, 2);
+      svc.setAutoAdvance(false);
+      svc.step(100);
+      store.commit({ ...store.get(), stageCombat: { ...store.get().stageCombat, pendingKills: { stageNumber: 2, count: 2300 } } });
+      svc.flushIncome();
+      expect(batches(events)).toEqual([
+        { stageNumber: 2, count: 1000 },
+        { stageNumber: 2, count: 1000 },
+        { stageNumber: 2, count: 300 },
+      ]);
+    });
+
+    it('a stage change never mixes stages', () => {
+      const { svc, events } = setup(['strong'], 0, 1);
+      svc.step(8000);
+      svc.flushIncome();
+      const b = batches(events);
+      expect(b.length).toBeGreaterThan(1);
+      expect(b.map((x) => x.stageNumber)).toEqual([...b.map((x) => x.stageNumber)].sort((x, y) => x - y));
+      expect(new Set(b.map((x) => x.stageNumber)).size).toBe(b.length);
+    });
+
+    it('boss kills are not counted', () => {
+      const { svc, store, events } = setup(['strong'], 4, 5);
+      svc.step(20000);
+      expect(store.get().furthestStageCleared).toBe(5);
+      svc.flushIncome();
+      expect(batches(events).every((x) => x.stageNumber !== 5)).toBe(true);
+      // The boss stage's own kills (escorts and the boss) count for gold but the backend takes no kill batches there.
+      expect(store.get().stageCombat.kills).toBeGreaterThan(0);
+      expect(batches(events)).toHaveLength(0);
+    });
+
+    it('fastForward counts the same kills as the live loop, on the farmed stage', () => {
+      const a = setup(['strong'], 3, 2);
+      a.svc.setAutoAdvance(false);
+      a.svc.step(100);
+      const b = setup(['strong'], 3, 2);
+      b.svc.setAutoAdvance(false);
+      b.svc.step(100);
+      for (let i = 0; i < 600; i++) a.svc.step(100);
+      const r = b.svc.fastForward(60000);
+      expect(r.kills).toBeGreaterThan(0);
+      expect(Math.abs(r.kills - a.store.get().stageCombat.kills)).toBeLessThanOrEqual(1);
+      expect(b.store.get().stageCombat.pendingKills).toEqual({ stageNumber: 2, count: r.kills });
+    });
+
+    it('farming a boss stage counts the stage before it', () => {
+      const { svc, store } = setup(['strong'], 4, 5);
+      svc.step(100);
+      const r = svc.fastForward(60000);
+      expect(store.get().stageCombat.pendingKills).toEqual({ stageNumber: 4, count: r.kills });
     });
   });
 });

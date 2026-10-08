@@ -20,7 +20,17 @@
           "goldMantissa": 5.76,
           "goldExponent": 4
         }
-      }
+      },
+      { "type": "MonsterKillsBatch", "payload": { "stageNumber": 2, "count": 1000 } },
+      { "type": "MonsterKillsBatch", "payload": { "stageNumber": 2, "count": 1000 } },
+      { "type": "MonsterKillsBatch", "payload": { "stageNumber": 2, "count": 1000 } },
+      { "type": "MonsterKillsBatch", "payload": { "stageNumber": 2, "count": 1000 } },
+      { "type": "MonsterKillsBatch", "payload": { "stageNumber": 2, "count": 1000 } },
+      { "type": "MonsterKillsBatch", "payload": { "stageNumber": 2, "count": 1000 } },
+      { "type": "MonsterKillsBatch", "payload": { "stageNumber": 2, "count": 1000 } },
+      { "type": "MonsterKillsBatch", "payload": { "stageNumber": 2, "count": 1000 } },
+      { "type": "MonsterKillsBatch", "payload": { "stageNumber": 2, "count": 1000 } },
+      { "type": "MonsterKillsBatch", "payload": { "stageNumber": 2, "count": 600 } }
     ]
   }
 }

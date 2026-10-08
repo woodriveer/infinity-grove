@@ -526,3 +526,9 @@
 - Commit: feat(contract): drop grants in the API and drop-rules vectors
 - Decisions (decided in heartbeat): grants travel as `{grantId, kind, sourceClientEventId, heroDefinitionId?, isNewHero?, itemId?, affixRolls?[{affix,value}]}`; the event-validation runner uses the real embedded catalog with a fixed random (0.999 = only the first boss defeat grants, 0.0 = everything drops) and the TS test applies the hero grants of the vector to the mirror roster; the kill bucket is not mirrored client-side (needs server time) and has backend tests only; stale-sequence rejection moved into the domain mirror (`STALE_SEQUENCE_REASON` re-exported by PlayerEventLog) and the AheadBackend test double now shifts sequences instead of relying on the old accepted no-op.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e; commit the floating-damage WIP. Next run: boss-drops T10.
+
+## 2026-10-08 heartbeat: boss-drops T10
+- Result: done. Kill counting in `StageCombatService` (pendingKills, batches split at 1000, stage change flushes, boss stage not counted, fastForward counts on the farmed stage); unit tests, scenario p17, p10/p14a expectations extended; typecheck, lint, npm test (421) green.
+- Commit: feat(combat): report monster kills in batches
+- Decisions (decided in heartbeat): kills on a boss stage (escorts) are not counted since the backend rejects batches on boss stages; committed only the T10 hunks of StageCombatService, the unrelated floating-damage WIP stays uncommitted.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.

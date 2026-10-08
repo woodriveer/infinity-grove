@@ -5,6 +5,6 @@
   "steps": [{ "do": "fightBoss" }, { "do": "advance", "ms": 40000 }],
   "expect": {
     "final": { "furthestStageCleared": 5, "combat": { "stageNumber": 6, "lastBossResult": null } },
-    "events": [{ "type": "BossDefeated", "payload": { "stageNumber": 5 } }, { "type": "StageCleared", "payload": { "stageNumber": 5 } }, { "type": "GoldEarned" }]
+    "events": [{ "type": "BossDefeated", "payload": { "stageNumber": 5 } }, { "type": "StageCleared", "payload": { "stageNumber": 5 } }, { "type": "GoldEarned" }, { "type": "MonsterKillsBatch", "payload": { "stageNumber": 6, "count": 6 } }]
   }
 }

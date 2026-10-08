@@ -48,6 +48,8 @@ export interface StageCombatSnapshot {
   readonly clicks: number;
   /** Gold earned since the last GoldEarned flush. */
   readonly pendingIncome: number;
+  /** Normal-monster kills since the last MonsterKillsBatch flush, all on one stage (boss kills are never counted). */
+  readonly pendingKills: { readonly stageNumber: number; readonly count: number } | null;
   readonly lastBossResult: { readonly stageNumber: number; readonly outcome: 'Success' | 'PowerGate' | 'CompositionMismatch' } | null;
 }
 
