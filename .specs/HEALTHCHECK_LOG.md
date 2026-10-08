@@ -473,3 +473,9 @@
 - Commit: docs(specs): boss-drops tasks
 - Decisions (decided in heartbeat): backend work split into one task per concern (catalog, rules, kill bucket, grants table, kill batch, boss grants, contract); T4/T5/T6 chained linearly although independent, to satisfy the plan validator; sync-e2e task written but not run (Docker). Floating-damage WIP left untouched.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e; commit the floating-damage WIP. Next run: boss-drops T1.
+
+## 2026-10-08 heartbeat: boss-drops T1
+- Result: done. Drop economy content + schema + loader rules, hero `minStage`. Typecheck, lint, validate:content, npm test (398) green.
+- Commit: feat(content): drop tables and hero minStage
+- Decisions (decided in heartbeat): six placeholder heroes get minStage 1/1/1/3/6/9 (dawn-cleric, druid, ember-warden, ranger, shade-stalker, tide-caller); krell and test-hero keep the default 1; item bands: stage 1 (bark-blade, leaf-mail, wind-boots), stage 6 adds sage-staff, thorn-gloves.
+- Pending for the developer: push; ui-gate criterion 3; unrelated floating-damage WIP left uncommitted.
