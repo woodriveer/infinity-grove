@@ -4,6 +4,9 @@ import type { PlayerEventType } from '../../domain/PlayerEventType';
 import type { EventLogState } from '../state/types';
 import { serializePayload, type PayloadOf } from './payloads';
 
+/** The backend's rejection text for an unknown event numbered at or below its cursor (exact match, spec SESSION-03). */
+export const STALE_SEQUENCE_REASON = 'Stale sequence; resend after login.';
+
 /**
  * Append-only local event log (Unity PlayerEventLog, AD-6). Pure functions over
  * EventLogState; services call append() inside the command that changed state (AD-5).
@@ -16,6 +19,17 @@ export const PlayerEventLog = {
   /** Raises the next sequence number, never lowers it. */
   seedSequence(log: EventLogState, nextSequenceNumber: number): EventLogState {
     return nextSequenceNumber > log.nextSequenceNumber ? { ...log, nextSequenceNumber } : log;
+  },
+
+  /**
+   * Renumbers pending events consecutively from cursor + 1 when any sits at or below the server
+   * cursor (another device advanced it). clientEventIds never change, so a lost response still dedupes.
+   */
+  rebase(log: EventLogState, cursor: number): EventLogState {
+    const first = log.pending[0];
+    if (!first || first.sequenceNumber > cursor) return log;
+    const pending = log.pending.map((e, i) => ({ ...e, sequenceNumber: cursor + 1 + i }));
+    return { ...log, pending, nextSequenceNumber: cursor + 1 + pending.length };
   },
 
   loadPending(log: EventLogState, pending: readonly PlayerEventRecord[]): EventLogState {

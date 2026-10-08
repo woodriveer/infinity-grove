@@ -396,3 +396,9 @@
 - Commit: feat(backend): reject stale unknown events instead of dropping them
 - Decisions (decided in heartbeat): none new. Unrelated uncommitted client changes left untouched.
 - Pending for the developer: push; commit floating damage numbers; ui-gate criterion 3; test:sync-e2e.
+
+## 2026-10-08 heartbeat: single-active-session T5
+- Result: done. `PlayerEventLog.rebase` + exported `STALE_SEQUENCE_REASON`; `applyCanonical` rebases; `flush` keeps stale-rejected events with no notice. 3 new tests in `services.test.ts`; typecheck, lint, npm test (373) green.
+- Commit: feat(sync): rebase pending events above the server cursor
+- Decisions (decided in heartbeat): test double `AheadBackend` (extends ReplayBackend) models the real stale rejection. Unrelated uncommitted client changes left untouched.
+- Pending for the developer: push; commit floating damage numbers; ui-gate criterion 3; test:sync-e2e.

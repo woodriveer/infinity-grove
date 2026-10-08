@@ -12,6 +12,7 @@ import { createNodePlatform } from '../../src/platform/node/nodePlatform';
 import { FsSaveStore, MemorySaveStore } from '../../src/platform/node/NodePorts';
 import { WebCryptoCipher } from '../../src/platform/shared/WebCryptoCipher';
 import type { BackendApi, EventVerdict } from '../../src/services/backend/BackendApi';
+import { PlayerEventLog, STALE_SEQUENCE_REASON } from '../../src/services/events/PlayerEventLog';
 import { SaveCodec } from '../../src/services/save/SaveCodec';
 import { SteamCloudSync } from '../../src/services/sync/SteamCloudSync';
 import { BackendAffixRollSource } from '../../src/services/crafting/BackendAffixRollSource';
@@ -289,6 +290,76 @@ describe('sync and reconciliation (P12, RFR-27)', () => {
     await app.sync.connect();
     expect(app.store.get().sync.authenticated).toBe(false);
     expect(app.store.get().eventLog.pending.length).toBeGreaterThan(0);
+  });
+});
+
+/** ReplayBackend that behaves like the real one after another device played: its cursor is ahead and stale unknown events are rejected. */
+class AheadBackend extends ReplayBackend {
+  cursor = 0;
+  rejectedStale: string[] = [];
+  sent: PlayerEventRecord[][] = [];
+  override async getState() {
+    return { ...this.ledger.state, lastAppliedSequence: this.cursor };
+  }
+  override async ingestBatch(events: readonly PlayerEventRecord[]) {
+    this.sent.push([...events]);
+    const fresh = events.filter((e) => e.sequenceNumber > this.cursor);
+    const stale = events.filter((e) => e.sequenceNumber <= this.cursor);
+    this.rejectedStale.push(...stale.map((e) => e.clientEventId));
+    const r = await super.ingestBatch(fresh.map((e) => ({ ...e, sequenceNumber: e.sequenceNumber - this.cursor })));
+    this.cursor += fresh.length;
+    const results: EventVerdict[] = [
+      ...stale.map((e) => ({ clientEventId: e.clientEventId, accepted: false, rejectionReason: STALE_SEQUENCE_REASON })),
+      ...r!.results,
+    ];
+    return { results, state: { ...r!.state, lastAppliedSequence: this.cursor } };
+  }
+}
+
+describe('pending events rebase above the server cursor (SESSION-03)', () => {
+  const rec = (id: string, seq: number) => ({ clientEventId: id, sequenceNumber: seq, type: 'GoldEarned', occurredAtMs: 0, payloadJson: '{}', syncStatus: 'Pending', rejectionReason: null }) as unknown as PlayerEventRecord;
+
+  it('PlayerEventLog.rebase is a no-op above the cursor and renumbers in order otherwise', () => {
+    const log = { pending: [rec('a', 3), rec('b', 4)], nextSequenceNumber: 5 };
+    expect(PlayerEventLog.rebase(log, 2)).toBe(log);
+    const r = PlayerEventLog.rebase(log, 10);
+    expect(r.pending.map((e) => [e.clientEventId, e.sequenceNumber])).toEqual([['a', 11], ['b', 12]]);
+    expect(r.nextSequenceNumber).toBe(13);
+    expect(PlayerEventLog.rebase(PlayerEventLog.empty(), 10).pending).toEqual([]);
+  });
+
+  it('a login with pending events at or below the server cursor sends them renumbered', async () => {
+    const backend = new AheadBackend();
+    backend.cursor = 50;
+    const app = compose({ ...defaultConfig('test'), backend: 'replay://in-process', devTicket: 'test-76561198000000001' }, createNodePlatform({ seed: 3 }), { backend });
+    await app.sync.load();
+    const ids = app.store.get().eventLog.pending.map((e) => e.clientEventId);
+    expect(ids.length).toBeGreaterThan(0);
+    await app.sync.connect();
+    expect(backend.rejectedStale).toEqual([]);
+    expect(backend.sent[0]?.map((e) => e.sequenceNumber)).toEqual(ids.map((_, i) => 51 + i));
+    expect(backend.sent[0]?.map((e) => e.clientEventId)).toEqual(ids);
+    expect(app.store.get().eventLog.pending).toHaveLength(0);
+  });
+
+  it('a stale rejection keeps the event, shows no notice, and the next sync resends it renumbered', async () => {
+    const backend = new AheadBackend();
+    const app = compose({ ...defaultConfig('test'), backend: 'replay://in-process', devTicket: 'test-76561198000000001' }, createNodePlatform({ seed: 3 }), { backend });
+    await app.sync.load();
+    await app.sync.connect();
+    app.combat.addGold(40);
+    const [event] = app.store.get().eventLog.pending;
+    expect(event).toBeDefined();
+    backend.cursor += 20; // another device played
+    const staleSeq = event!.sequenceNumber;
+    await app.sync.syncNow();
+    expect(backend.rejectedStale).toContain(event!.clientEventId);
+    expect(app.store.get().notices).toEqual([]);
+    const kept = app.store.get().eventLog.pending.find((e) => e.clientEventId === event!.clientEventId);
+    expect(kept?.sequenceNumber).toBeGreaterThan(backend.cursor);
+    expect(kept?.sequenceNumber).not.toBe(staleSeq);
+    await app.sync.syncNow();
+    expect(app.store.get().eventLog.pending).toHaveLength(0);
   });
 });
 

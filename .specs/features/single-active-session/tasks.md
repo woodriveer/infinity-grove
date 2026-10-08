@@ -128,9 +128,9 @@ Phase 3 (modal):    T10 → T11
 **Requirement**: SESSION-03 (AC 1, 3)
 
 **Done when**:
-- [ ] Unit: rebase is a no-op when pending are above the cursor; renumbers consecutively from `cursor + 1` in order, keeps `clientEventId`s, sets `nextSequenceNumber`
-- [ ] Unit (fake BackendApi): login with pending events at sequence <= server cursor sends them renumbered; a stale rejection leaves the event pending, no notice, and the next sync resends it renumbered; a game-rule rejection still notifies and drops
-- [ ] Quick gate passes
+- [x] Unit: rebase is a no-op when pending are above the cursor; renumbers consecutively from `cursor + 1` in order, keeps `clientEventId`s, sets `nextSequenceNumber`
+- [x] Unit (fake BackendApi): login with pending events at sequence <= server cursor sends them renumbered; a stale rejection leaves the event pending, no notice, and the next sync resends it renumbered; a game-rule rejection still notifies and drops
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick

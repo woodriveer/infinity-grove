@@ -6,7 +6,7 @@ import { SaveGameData } from '../../domain/SaveGameData';
 import type { BackendApi } from '../backend/BackendApi';
 import type { StageCombatService } from '../combat/StageCombatService';
 import type { ServiceDeps } from '../core';
-import { PlayerEventLog } from '../events/PlayerEventLog';
+import { PlayerEventLog, STALE_SEQUENCE_REASON } from '../events/PlayerEventLog';
 import type { SaveStore, SteamIdentity } from '../ports';
 import type { RosterService } from '../roster/RosterService';
 import type { SaveCodec } from '../save/SaveCodec';
@@ -153,6 +153,8 @@ export class SaveSyncService {
     let log = s.eventLog;
     for (const result of response.results) {
       const original = pending.find((e) => e.clientEventId === result.clientEventId);
+      // Another device advanced the cursor: keep the event, applyCanonical renumbers it for the next sync.
+      if (!result.accepted && result.rejectionReason === STALE_SEQUENCE_REASON) continue;
       if (!result.accepted && original) {
         this.pushNotice({
           kind: 'correction',
@@ -181,7 +183,10 @@ export class SaveSyncService {
       ...live,
       canonical: server,
       lastReconciledAtMs: this.deps.clock.nowMs(),
-      eventLog: PlayerEventLog.seedSequence(live.eventLog, server.lastAppliedSequence + 1),
+      eventLog: PlayerEventLog.rebase(
+        PlayerEventLog.seedSequence(live.eventLog, server.lastAppliedSequence + 1),
+        server.lastAppliedSequence,
+      ),
     });
   }
 
