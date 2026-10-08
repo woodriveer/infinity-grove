@@ -485,3 +485,9 @@
 - Commit: feat(tools): generate the drop catalog from content
 - Decisions (decided in heartbeat): heroes without a serverHeroId and the generated test-hero are left out of the catalog (krell is in, Dark, minStage 1).
 - Pending for the developer: push; ui-gate criterion 3; unrelated floating-damage WIP left uncommitted. Next run: boss-drops T3.
+
+## 2026-10-08 heartbeat: boss-drops T3
+- Result: done. Backend `DropCatalog` (validated), `EmbeddedDropCatalogLoader`, DI singleton, `DropCatalogTests` (12 cases). `dotnet test` 45 green.
+- Commit: feat(backend): embedded drop catalog
+- Decisions (decided in heartbeat): the catalog file is embedded from ../../../shared, so Docker builds get it through a compose `additional_contexts: shared` (needs Compose 2.17+); the Docker image build itself was not run.
+- Pending for the developer: push; ui-gate criterion 3; unrelated floating-damage WIP left uncommitted. Next run: boss-drops T4.

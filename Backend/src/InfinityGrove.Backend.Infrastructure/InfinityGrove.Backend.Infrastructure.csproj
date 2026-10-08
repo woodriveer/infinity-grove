@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <EmbeddedResource Include="..\..\..\shared\drop-catalog\drop-catalog.json" LogicalName="drop-catalog.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\InfinityGrove.Backend.Domain\InfinityGrove.Backend.Domain.csproj" />
     <ProjectReference Include="..\InfinityGrove.Backend.Application\InfinityGrove.Backend.Application.csproj" />
   </ItemGroup>

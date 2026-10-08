@@ -9,6 +9,7 @@ COPY src/InfinityGrove.Backend.Infrastructure/InfinityGrove.Backend.Infrastructu
 RUN dotnet restore src/InfinityGrove.Backend.Api/InfinityGrove.Backend.Api.csproj
 
 COPY src/ src/
+COPY --from=shared . /shared/
 RUN dotnet publish src/InfinityGrove.Backend.Api/InfinityGrove.Backend.Api.csproj -c Release -o /app --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime

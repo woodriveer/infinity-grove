@@ -19,6 +19,8 @@ services:
     build:
       context: .
       dockerfile: src/InfinityGrove.Backend.Api/Dockerfile
+      additional_contexts:
+        shared: ../shared
     ports:
       - "8080:8080"
     environment:

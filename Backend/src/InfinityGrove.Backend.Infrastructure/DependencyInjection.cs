@@ -6,10 +6,12 @@ using InfinityGrove.Backend.Application.Market;
 using InfinityGrove.Backend.Application.MarketAbuse;
 using InfinityGrove.Backend.Application.Progress;
 using InfinityGrove.Backend.Application.Purchases;
+using InfinityGrove.Backend.Domain.Drops;
 using InfinityGrove.Backend.Domain.Heroes;
 using InfinityGrove.Backend.Domain.Market;
 using InfinityGrove.Backend.Infrastructure.Auth;
 using InfinityGrove.Backend.Infrastructure.Cards;
+using InfinityGrove.Backend.Infrastructure.Drops;
 using InfinityGrove.Backend.Infrastructure.Heroes;
 using InfinityGrove.Backend.Infrastructure.Market;
 using InfinityGrove.Backend.Infrastructure.MarketAbuse;
@@ -36,6 +38,7 @@ public static class DependencyInjection
         services.Configure<MarketAbuseDetectionOptions>(configuration.GetSection(MarketAbuseDetectionOptions.SectionName));
 
         services.AddSingleton(TimeProvider.System);
+        services.AddSingleton<DropCatalog>(_ => EmbeddedDropCatalogLoader.Load());
 
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<ISessionTokenService, JwtSessionTokenService>();
