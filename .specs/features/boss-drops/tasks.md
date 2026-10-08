@@ -113,10 +113,10 @@ Phase 4 (proof):              T14 → T15 → T16
 **Requirement**: DROP-01 (AC 1-5), DROP-03 (AC 1-3)
 
 **Done when**:
-- [ ] xUnit with a scripted `IDropRandom`: favored type at 0.39 vs 0.41, each other type band, eligibility by `minStage`, empty-type reroll, affix values at both range ends, item template within the band
-- [ ] xUnit: 100 000 seeded rolls keep type shares within +-1 point of 40/15/15/15/15
-- [ ] `HeroDropChance` is 1.0 for first defeat and 0.01 otherwise
-- [ ] Backend gate passes
+- [x] xUnit with a scripted `IDropRandom`: favored type at 0.39 vs 0.41, each other type band, eligibility by `minStage`, empty-type reroll, affix values at both range ends, item template within the band
+- [x] xUnit: 100 000 seeded rolls keep type shares within +-1 point of 40/15/15/15/15
+- [x] `HeroDropChance` is 1.0 for first defeat and 0.01 otherwise
+- [x] Backend gate passes
 
 **Tests**: unit
 **Gate**: backend

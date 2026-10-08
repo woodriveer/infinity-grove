@@ -491,3 +491,8 @@
 - Commit: feat(backend): embedded drop catalog
 - Decisions (decided in heartbeat): the catalog file is embedded from ../../../shared, so Docker builds get it through a compose `additional_contexts: shared` (needs Compose 2.17+); the Docker image build itself was not run.
 - Pending for the developer: push; ui-gate criterion 3; unrelated floating-damage WIP left uncommitted. Next run: boss-drops T4.
+
+## 2026-10-08 heartbeat: boss-drops T4
+- Result: done. DropRules (pure) with scripted and 100k seeded tests; backend gate green (59 tests).
+- Decisions (heartbeat): type order = favored first, then ordinal; item band = highest fromStage <= stage.
+- Commit: feat(backend): drop rules
