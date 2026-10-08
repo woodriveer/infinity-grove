@@ -185,11 +185,11 @@ Phase 4 (proof):              T14 → T15 → T16
 **Requirement**: DROP-01 (AC 1-2), DROP-03 (AC 2), DROP-04 (AC 3), DROP-05 (two devices)
 
 **Done when**:
-- [ ] xUnit: first defeat always grants one hero card and the canonical roster contains it; repeat grants at 0.009 and not at 0.011 (scripted roll)
-- [ ] xUnit: boss item rolled independently (hero yes/item no and the reverse)
-- [ ] xUnit rejection: boss beyond furthest + 1 keeps the exact message "Cannot defeat boss of stage <n> before stage <m>.", no grant
-- [ ] xUnit: the same first defeat sent twice (second device) grants once; resent event returns stored grants
-- [ ] Backend gate passes
+- [x] xUnit: first defeat always grants one hero card and the canonical roster contains it; repeat grants at 0.009 and not at 0.011 (scripted roll)
+- [x] xUnit: boss item rolled independently (hero yes/item no and the reverse)
+- [x] xUnit rejection: boss beyond furthest + 1 keeps the existing message (actual text: "Cannot clear stage <n> before stage <m>.", shared with the client replay; the design text was wrong, decided in heartbeat), no grant
+- [x] xUnit: the same first defeat sent twice (second device) grants once; resent event returns stored grants
+- [x] Backend gate passes
 
 **Tests**: unit
 **Gate**: backend

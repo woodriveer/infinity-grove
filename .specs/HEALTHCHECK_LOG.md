@@ -514,3 +514,9 @@
 - Commit: feat(backend): monster kill batches and item drops
 - Decisions (decided in heartbeat): `ApplyMonsterKillsBatch` lives on `PlayerProgress` (Domain) and checks stage, boss, count, then the bucket, so a rejected batch never spends allowance; `EventIngestionResult` keeps a 3-arg constructor (empty grants); the API response DTO is not extended until T9 so openapi stays consistent; VectorGen event-validation uses a no-drop catalog.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e; commit the floating-damage WIP. Next run: boss-drops T8.
+
+## 2026-10-08 heartbeat: boss-drops T8
+- Result: done. `BossDefeated` grants a hero (first defeat always, repeat 1%) through the HeroAcquired path and an item at the boss chance, independently; grants stored/returned, resend returns stored ones. `BossDropsIngestionTests` (7 cases). `dotnet test` 88 green.
+- Commit: feat(backend): boss defeat drops
+- Decisions (decided in heartbeat): the out-of-order boss message stays "Cannot clear stage <n> before stage <m>." (the existing text, shared with the client replay; design.md's "Cannot defeat boss" wording was wrong); a second device's duplicate first defeat counts as a repeat (HighestBossDefeated already moved), so it grants a hero only at 1%.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e; commit the floating-damage WIP. Next run: boss-drops T9.

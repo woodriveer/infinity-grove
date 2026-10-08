@@ -130,7 +130,26 @@ public class PlayerEventIngestionService(
             case PlayerEventType.BossDefeated:
             {
                 var payload = Deserialize<BossDefeatedPayload>(incoming.Payload, "BossDefeated");
+                var firstDefeat = payload.StageNumber > progress.HighestBossDefeated;
                 progress.ApplyBossDefeated(payload.StageNumber, progressOptions.BossEvery, nowUtc);
+
+                // DROP-01: hero (always on the first defeat, 1% on repeats) and item (boss chance) roll independently.
+                if (dropRandom.NextDouble() < DropRules.HeroDropChance(firstDefeat))
+                {
+                    var heroId = DropRules.RollHero(dropCatalog, payload.StageNumber, dropRandom);
+                    var isNew = progress.Roster.All(r => r.HeroDefinitionId != heroId);
+                    progress.ApplyHeroAcquired(heroId, nowUtc);
+                    await cardInstanceRepository.AddAsync(CardInstance.Mint(progress.AccountId, heroId, nowUtc), cancellationToken);
+                    granted.Add(RewardGrant.ForHero(progress.AccountId, incoming.ClientEventId, heroId, isNew, nowUtc));
+                }
+
+                if (dropRandom.NextDouble() < dropCatalog.BossDropChance)
+                {
+                    var item = DropRules.RollItem(dropCatalog, payload.StageNumber, dropRandom);
+                    granted.Add(RewardGrant.ForItem(
+                        progress.AccountId, incoming.ClientEventId, item.ItemId, SerializeRolls(item.AffixRolls), nowUtc));
+                }
+
                 break;
             }
             case PlayerEventType.MonsterKillsBatch:
