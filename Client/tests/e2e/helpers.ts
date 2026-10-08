@@ -24,6 +24,7 @@ type Ig = {
   advance(ms: number): void;
   input(arg: unknown): number;
   click(id: string): void;
+  sessionReplaced(): void;
   state(): Record<string, unknown> & { gold: number; activeSquad: string[]; heroes: Array<{ heroId: string; starTier: number; duplicatesOwned: number }>; combat: { stageNumber: number; kills: number; clicks: number; phase: string | null; foe: { hp: number; maxHp: number } | null } };
   world(): { krellAnimation: string | null; field: Array<{ heroId: string; pose: string; attacks: number; portraitFallback: boolean; art: string; tag: string | null; weaponModel: string | null; tint: Record<string, string>; tintDark: Record<string, string>; enchantBand: number | null; effects: string[]; hits: number; attackSpeed: number }> };
 };

@@ -31,7 +31,8 @@ export async function boot(): Promise<void> {
     manualClock: params?.clock === 'manual',
     ephemeralSave: params?.save !== undefined,
   });
-  const app = compose(config, platform.ports);
+  const fakeBackend = params?.fakeBackend ? (devModule?.createFakeBackend() ?? null) : null;
+  const app = compose(config, platform.ports, fakeBackend ? { backend: fakeBackend } : {});
 
   // 1–2. Load (fixture in dev/test) and offline accrual.
   if (params?.save !== undefined) {
@@ -114,7 +115,7 @@ export async function boot(): Promise<void> {
   }
 
   if (devModule && params) {
-    devModule.install(window as unknown as Record<string, unknown>, { app, ui, input, world, manualClock: platform.manualClock, advance });
+    devModule.install(window as unknown as Record<string, unknown>, { app, fakeBackend, ui, input, world, manualClock: platform.manualClock, advance });
     if (params.scene) ui.goto(params.scene, params.sceneParams);
   }
 

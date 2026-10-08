@@ -419,3 +419,9 @@
 - Decisions (decided in heartbeat): Quit goes through `app.quit()` rather than closing the window, keeping the AD-20 persist window.
 - Left alone: uncommitted floating-damage-number work (WorldScene, StageCombatService, dev-hooks, e2e helpers/spec) belongs to the developer, not committed.
 - Pending for the developer: push; ui-gate criterion 3; that WIP.
+
+## 2026-10-08 heartbeat: single-active-session T9
+- Result: done. `ReplaceableBackend` (dev-only, in-memory, real replay rules), `&backend=fake`, `__ig.sessionReplaced()`, unit test; `npm run verify` green.
+- Commit: test(sync): dev hook for a replaced session
+- Decisions (decided in heartbeat): double is opt-in via URL so existing e2e keep NoBackend; the typed 401 appears on the next call that reaches the backend with pending events (as the real server); committed only T9 hunks of dev-hooks.ts/helpers.ts, the unrelated floating-damage WIP stays uncommitted.
+- Pending for the developer: push; run test:sync-e2e.

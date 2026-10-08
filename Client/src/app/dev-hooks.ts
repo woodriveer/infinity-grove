@@ -14,6 +14,7 @@ import type { SemanticAction, UiController } from '../presentation/UiController'
 import type { SteppedClock } from '../platform/browser/BrowserPorts';
 import { SaveCodec } from '../services/save/SaveCodec';
 import type { AppContext } from './compose';
+import { ReplaceableBackend } from './dev-backend';
 
 const FIXTURES = import.meta.glob('/fixtures/saves/*.json', { eager: true, import: 'default' });
 const SCREENS: readonly ScreenId[] = ['menu', 'settings', 'game', 'roster', 'fusion', 'equipment', 'stages'];
@@ -26,6 +27,8 @@ export interface DevParams {
   clock: 'manual' | 'real';
   /** `?effects=on` shows enchant effects on the test build (off there by default). */
   effects: boolean;
+  /** `&backend=fake` swaps in the in-memory `ReplaceableBackend` so `__ig.sessionReplaced()` works. */
+  fakeBackend: boolean;
 }
 
 export function parseParams(search: string): DevParams {
@@ -39,7 +42,12 @@ export function parseParams(search: string): DevParams {
     seed: seed !== null && Number.isFinite(Number(seed)) ? Number(seed) : undefined,
     clock: q.get('clock') === 'manual' ? 'manual' : 'real',
     effects: q.get('effects') === 'on',
+    fakeBackend: q.get('backend') === 'fake',
   };
+}
+
+export function createFakeBackend(): ReplaceableBackend {
+  return new ReplaceableBackend();
 }
 
 export function fixture(name: string): SaveGameData {
@@ -52,9 +60,9 @@ type InputArg = SemanticAction | { key: string } | { gamepad: GamepadButton } | 
 
 export function install(
   target: Record<string, unknown>,
-  deps: { app: AppContext; ui: UiController; input: InputRouter; world: WorldScene; manualClock: SteppedClock | null; advance: (frameDelta: number) => void },
+  deps: { app: AppContext; fakeBackend: ReplaceableBackend | null; ui: UiController; input: InputRouter; world: WorldScene; manualClock: SteppedClock | null; advance: (frameDelta: number) => void },
 ): void {
-  const { app, ui, input, world, manualClock, advance } = deps;
+  const { app, fakeBackend, ui, input, world, manualClock, advance } = deps;
   target['__ig'] = {
     get ready() {
       return world.isReady();
@@ -79,6 +87,11 @@ export function install(
       return performance.now();
     },
     click: (id: string) => ui.activate(id),
+    /** Simulates a login on another device: the next sync gets the typed 401 (needs `&backend=fake`). */
+    sessionReplaced: () => {
+      if (!fakeBackend) throw new Error('__ig.sessionReplaced needs &backend=fake');
+      fakeBackend.replace();
+    },
     state: () => {
       const s = app.store.get();
       return {

@@ -199,8 +199,8 @@ Phase 3 (modal):    T10 → T11
 **Requirement**: SESSION-02 (test seam)
 
 **Done when**:
-- [ ] Unit: the double returns the typed 401 once armed and recovers after `playHere`
-- [ ] Full gate passes (hook absent from the production bundle, as with the other dev hooks)
+- [x] Unit: the double returns the typed 401 once armed and recovers after `playHere`
+- [x] Full gate passes (hook absent from the production bundle, as with the other dev hooks)
 
 **Tests**: unit
 **Gate**: full
