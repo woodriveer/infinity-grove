@@ -496,3 +496,8 @@
 - Result: done. DropRules (pure) with scripted and 100k seeded tests; backend gate green (59 tests).
 - Decisions (heartbeat): type order = favored first, then ordinal; item band = highest fromStage <= stage.
 - Commit: feat(backend): drop rules
+
+## 2026-10-08 heartbeat: boss-drops T5
+- Result: done. Kill token bucket on `PlayerProgress`, `ProgressOptions` kill settings, migration `AddKillAllowance`, `PlayerProgressKillAllowanceTests` (6). `dotnet test` 65 green.
+- Decisions (decided in heartbeat): `TryConsumeKills` takes interval and cap as arguments (Domain cannot see Application options); a refused claim does not persist the refill; at-cap refill resets the timestamp to now, otherwise partial intervals are kept.
+- Pending for the developer: push; ui-gate criterion 3; unrelated floating-damage WIP left uncommitted. Next run: boss-drops T6.
