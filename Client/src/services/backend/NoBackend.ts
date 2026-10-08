@@ -4,6 +4,7 @@ import type { BackendApi } from './BackendApi';
 export class NoBackend implements BackendApi {
   readonly isAuthenticated = false;
   readonly steamId64 = null;
+  readonly sessionReplaced = false;
 
   async authenticateWithSteam(): Promise<boolean> {
     return false;

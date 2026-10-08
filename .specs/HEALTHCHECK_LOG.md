@@ -402,3 +402,8 @@
 - Commit: feat(sync): rebase pending events above the server cursor
 - Decisions (decided in heartbeat): test double `AheadBackend` (extends ReplayBackend) models the real stale rejection. Unrelated uncommitted client changes left untouched.
 - Pending for the developer: push; commit floating damage numbers; ui-gate criterion 3; test:sync-e2e.
+
+## 2026-10-08 heartbeat: single-active-session T6
+- Result: done. typecheck, lint, npm test (379) green; full verify not run (Quick gate task).
+- Decisions (decided in heartbeat): typed 401 is read from openapi-fetch's parsed `error` (the response body is already consumed); 5 unrelated uncommitted files (floating damage numbers) left untouched and uncommitted.
+- Pending for the developer: push; ui-gate criterion 3; commit or review the floating-damage work in progress.

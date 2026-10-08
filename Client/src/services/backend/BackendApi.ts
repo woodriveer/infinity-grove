@@ -15,6 +15,8 @@ export interface EventVerdict {
 export interface BackendApi {
   readonly isAuthenticated: boolean;
   readonly steamId64: string | null;
+  /** True after a 401 `session-replaced` (the account signed in elsewhere); a successful login clears it. */
+  readonly sessionReplaced: boolean;
   authenticateWithSteam(ticketHex: string | null): Promise<boolean>;
   getState(): Promise<PlayerStateSnapshot | null>;
   ingestBatch(events: readonly PlayerEventRecord[]): Promise<{ results: EventVerdict[]; state: PlayerStateSnapshot } | null>;

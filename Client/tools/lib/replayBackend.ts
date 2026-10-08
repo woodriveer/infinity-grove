@@ -15,6 +15,7 @@ export class ReplayBackend implements BackendApi {
   ledger: ProgressLedger;
   isAuthenticated = false;
   steamId64: string | null = null;
+  sessionReplaced = false;
   batches = 0;
 
   constructor(initial: PlayerStateSnapshot = PlayerStateSnapshot.empty()) {

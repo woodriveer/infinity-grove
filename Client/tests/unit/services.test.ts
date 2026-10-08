@@ -237,6 +237,7 @@ class ReplayBackend implements BackendApi {
   ledger: ProgressLedger = PlayerProgressReplay.newLedger();
   isAuthenticated = false;
   steamId64: string | null = null;
+  sessionReplaced = false;
   received: PlayerEventRecord[][] = [];
   async authenticateWithSteam(ticket: string | null): Promise<boolean> {
     this.isAuthenticated = ticket === 'test-76561198000000001';

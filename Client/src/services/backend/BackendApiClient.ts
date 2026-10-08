@@ -17,6 +17,7 @@ export class BackendApiClient implements BackendApi {
   private readonly client;
   private sessionToken: string | null = null;
   private steamId: string | null = null;
+  private replaced = false;
 
   constructor(
     baseUrl: string,
@@ -38,12 +39,17 @@ export class BackendApiClient implements BackendApi {
     return this.steamId;
   }
 
+  get sessionReplaced(): boolean {
+    return this.replaced;
+  }
+
   async authenticateWithSteam(ticketHex: string | null): Promise<boolean> {
     if (!ticketHex) return false;
     const r = await this.call('auth/steam', () => this.client.POST('/api/v1/auth/steam', { body: { ticket: ticketHex } }));
     if (!r?.sessionToken) return false;
     this.sessionToken = r.sessionToken;
     this.steamId = r.steamId64 ?? null;
+    this.replaced = false;
     return true;
   }
 
@@ -78,10 +84,13 @@ export class BackendApiClient implements BackendApi {
 
   private async call<T>(label: string, send: () => Promise<{ data?: T; error?: unknown; response: Response }>): Promise<T | null> {
     try {
-      const { data, response } = await send();
+      const { data, error, response } = await send();
       if (!response.ok) {
         this.logger.warn(`BackendApiClient: ${label} failed with HTTP ${response.status}.`);
-        if (response.status === 401) this.sessionToken = null;
+        if (response.status === 401) {
+          this.sessionToken = null;
+          if (isSessionReplaced(error)) this.replaced = true;
+        }
         return null;
       }
       return data ?? null;
@@ -90,6 +99,11 @@ export class BackendApiClient implements BackendApi {
       return null;
     }
   }
+}
+
+/** The backend's 401 problem body (already parsed by openapi-fetch) carries `type: "session-replaced"`; anything else is a plain 401. */
+function isSessionReplaced(error: unknown): boolean {
+  return typeof error === 'object' && error !== null && (error as { type?: unknown }).type === 'session-replaced';
 }
 
 function wireEvent(e: PlayerEventRecord): string {

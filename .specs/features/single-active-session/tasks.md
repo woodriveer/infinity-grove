@@ -146,8 +146,8 @@ Phase 3 (modal):    T10 → T11
 **Requirement**: SESSION-02 (AC 3 transport)
 
 **Done when**:
-- [ ] Unit over a fake `HttpPort`: typed 401 sets the flag and drops the token; plain 401 drops the token only; a later successful login clears it; unparsable body is treated as plain
-- [ ] Quick gate passes
+- [x] Unit over a fake `HttpPort`: typed 401 sets the flag and drops the token; plain 401 drops the token only; a later successful login clears it; unparsable body is treated as plain
+- [x] Quick gate passes
 
 **Tests**: unit
 **Gate**: quick
