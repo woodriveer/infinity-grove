@@ -37,10 +37,14 @@ export interface LocalProgress {
   readonly krellEquipmentId: string | null;
   /** The stage being fought and whether a clear advances (stage-combat COMBAT-03). The encounter itself is not saved. */
   readonly combat: { readonly stageNumber: number; readonly autoAdvance: boolean };
+  /** Granted items waiting for bag room (boss-drops DROP-03), oldest first. */
+  readonly grantQueue: readonly EquipmentInstance[];
+  /** The last 500 applied reward grant ids (DROP-05 idempotence). */
+  readonly appliedGrantIds: readonly string[];
 }
 
 export const SaveGameData = {
-  CurrentFormatVersion: 2,
+  CurrentFormatVersion: 3,
 
   createNew(nowMs: number, krellEquipmentId: string | null): SaveGameData {
     return {
@@ -57,6 +61,8 @@ export const SaveGameData = {
         presets: [],
         krellEquipmentId,
         combat: { stageNumber: 1, autoAdvance: true },
+        grantQueue: [],
+        appliedGrantIds: [],
       },
     };
   },

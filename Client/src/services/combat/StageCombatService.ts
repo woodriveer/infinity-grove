@@ -36,8 +36,7 @@ export class StageCombatService {
     const enc = s.stageCombat.encounter;
     if (!enc) return;
     const params = this.params(s);
-    const next = this.commit(s, click(enc, params), params);
-    this.deps.store.commit({ ...next, stageCombat: { ...next.stageCombat, clicks: s.stageCombat.clicks + 1 } });
+    this.commit(s, click(enc, params), params, s.stageCombat.clicks + 1);
   }
 
   /** Jumps to a cleared stage or the one after the furthest; auto-advance goes off (COMBAT-03 AC 2, 3). */
@@ -164,7 +163,7 @@ export class StageCombatService {
   }
 
   /** Applies a result: the encounter, then each outcome in order. */
-  private commit(s: GameState, result: CombatResult, params: CombatParams): GameState {
+  private commit(s: GameState, result: CombatResult, params: CombatParams, clicks = s.stageCombat.clicks): GameState {
     const { enc, outcomes } = result;
     let next: GameState = s;
     let sc: StageCombatSnapshot = { ...s.stageCombat };
@@ -184,7 +183,7 @@ export class StageCombatService {
         killStage = Math.max(1, o.stageNumber - 1);
       }
     });
-    sc = { ...sc, stageNumber: enc.stageNumber, autoAdvance: enc.autoAdvance, encounter: enc };
+    sc = { ...sc, stageNumber: enc.stageNumber, autoAdvance: enc.autoAdvance, encounter: enc, clicks };
     next = { ...next, stageCombat: sc };
     this.deps.store.commit(next);
     return next;

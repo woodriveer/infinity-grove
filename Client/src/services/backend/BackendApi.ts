@@ -1,3 +1,4 @@
+import type { AffixType } from '../../domain/AffixType';
 import type { PlayerEventRecord } from '../../domain/PlayerEventRecord';
 import type { PlayerStateSnapshot } from '../../domain/PlayerStateSnapshot';
 
@@ -6,6 +7,18 @@ export interface EventVerdict {
   readonly clientEventId: string;
   readonly accepted: boolean;
   readonly rejectionReason: string | null;
+  readonly grants?: readonly RewardGrant[];
+}
+
+/** One drop the backend decided (boss-drops DROP-05); the client only displays and stores it. */
+export interface RewardGrant {
+  readonly grantId: string;
+  readonly kind: 'Hero' | 'Item';
+  readonly sourceClientEventId: string;
+  readonly heroDefinitionId?: string;
+  readonly isNewHero?: boolean;
+  readonly itemId?: string;
+  readonly affixRolls?: Readonly<Partial<Record<AffixType, number>>>;
 }
 
 /**

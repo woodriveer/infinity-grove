@@ -5,6 +5,7 @@ import { Assets, TEST_ASSET_KEYS, type AsepriteKey, type ImageKey } from '../../
 import type { AppServices } from '../../services/AppServices';
 import type { EffectData } from '../../services/content/schema';
 import type { GameState } from '../../services/state/types';
+import { formatBig } from '../../domain/bignum/format';
 import { colorHex, phaserColor } from '../theme/tokens';
 import { FieldHeroView } from './FieldHeroView';
 
@@ -50,6 +51,8 @@ export class WorldScene extends Phaser.Scene {
   private monsterBody!: Phaser.GameObjects.Graphics;
   private fireflies: Phaser.GameObjects.Particles.ParticleEmitter | null = null;
   private lastAttackCount = 0;
+  private damageShown: Array<{ text: string; click: boolean }> = [];
+  private foeTrack: { stage: number; index: number; hp: number } | null = null;
   private lastState: GameState | null = null;
   private unsubscribe: (() => void) | null = null;
   private fieldOrigin = { x: 0, y: 0 };
@@ -264,11 +267,58 @@ export class WorldScene extends Phaser.Scene {
     this.monster.setVisible(fighting);
     this.drawBoss(s);
 
-    if (s.stageCombat.clicks !== this.lastAttackCount) {
+    const clicked = s.stageCombat.clicks !== this.lastAttackCount;
+    this.showDamage(enc, clicked);
+    if (clicked) {
       this.lastAttackCount = s.stageCombat.clicks;
       if (fighting) this.hitFlash();
     }
     this.lastState = s;
+  }
+
+  /** Floats the HP the current foe just lost; the click's number is bigger and gold. */
+  private showDamage(enc: GameState['stageCombat']['encounter'], clicked: boolean): void {
+    const foe = enc?.phase === 'fighting' ? enc.foe : null;
+    if (!enc || !foe) {
+      this.foeTrack = null;
+      return;
+    }
+    const prev = this.foeTrack;
+    this.foeTrack = { stage: enc.stageNumber, index: enc.monsterIndex, hp: foe.hp };
+    if (!prev || prev.stage !== enc.stageNumber || prev.index !== enc.monsterIndex) return;
+    const dealt = prev.hp - foe.hp;
+    if (dealt <= 0) return;
+    this.spawnDamageText(dealt, clicked);
+  }
+
+  /** Recent floating numbers, for the dev hook. */
+  damageLog(): Array<{ text: string; click: boolean }> {
+    return this.damageShown;
+  }
+
+  private spawnDamageText(amount: number, click: boolean): void {
+    const label = amount < 10 ? amount.toFixed(1) : formatBig(amount, 0);
+    this.damageShown.push({ text: label, click });
+    if (this.damageShown.length > 20) this.damageShown.shift();
+    const text = this.add
+      .text(Phaser.Math.Between(-50, 50), -170, label, {
+        fontFamily: 'sans-serif',
+        fontSize: click ? '52px' : '36px',
+        fontStyle: 'bold',
+        color: click ? colorHex.accentGoldLight : colorHex.ink,
+        stroke: colorHex.black,
+        strokeThickness: 6,
+      })
+      .setOrigin(0.5);
+    this.monster.add(text);
+    this.tweens.add({
+      targets: text,
+      y: text.y - (this.opts.reducedMotion ? 30 : 110),
+      alpha: 0,
+      duration: 700,
+      ease: 'Cubic.easeOut',
+      onComplete: () => text.destroy(),
+    });
   }
 
   private drawBoss(s: GameState): void {

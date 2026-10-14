@@ -532,3 +532,127 @@
 - Commit: feat(combat): report monster kills in batches
 - Decisions (decided in heartbeat): kills on a boss stage (escorts) are not counted since the backend rejects batches on boss stages; committed only the T10 hunks of StageCombatService, the unrelated floating-damage WIP stays uncommitted.
 - Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11
+- Result: no work started. A live lock `boss-drops-T11` exists (heartbeat 05:10Z, under 2 h old at 06:00Z) with uncommitted T11 changes in the working tree (RewardService, SaveSyncService, state, save codec, BackendApi*, compose). Tasks of one feature run in order, and the only queued item (docs alignment) was not started as a parallel worktree task to keep this run a no-op.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. If T11 was abandoned, the lock turns stale after 07:10Z and the next run will take over.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (second check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:01Z, under 2 h) and the T11 files are still uncommitted in the working tree. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (third check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:03Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (fourth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:04Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (fifth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:05Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (sixth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:07Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (seventh check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:08Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (eighth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:09Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (ninth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:11Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (tenth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:12Z, under 2 h; newest T11 file edit 05:14Z) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (eleventh check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:13Z, under 2 h; newest T11 file edit 05:14Z) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (twelfth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:15Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (thirteenth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:16Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (fourteenth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:18Z, under 2 h; newest T11 file edit 05:14Z) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (fifteenth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:19Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (sixteenth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:20Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (seventeenth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:22Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (eighteenth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:23Z, under 2 h; newest T11 file edit 05:14Z) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (nineteenth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:25Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (twentieth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:26Z, under 2 h; newest T11 file edit 05:14Z) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (twenty-first check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:27Z, under 2 h; newest T11 file edit 05:14Z) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (twenty-second check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:28Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (twenty-third check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:30Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (twenty-fourth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:31Z, under 2 h; newest T11 file edit 05:14Z) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (twenty-fifth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:32Z, under 2 h) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (twenty-sixth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:34Z, under 2 h; newest T11 file edit 05:14Z) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (twenty-seventh check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:35Z, under 2 h; newest T11 file edit 05:14Z) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (twenty-eighth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:37Z, under 2 h; newest T11 file edit 05:14Z) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (twenty-ninth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:38Z, under 2 h; newest T11 file edit 05:14Z) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (thirtieth check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:39Z, under 2 h; newest T11 file edit 05:14Z) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.
+
+## 2026-10-08 heartbeat: waiting for boss-drops-T11 (thirty-first check)
+- Result: no work started. Lock `boss-drops-T11` is still live (heartbeat 05:10:44Z, now 06:40Z, under 2 h; newest T11 file edit 05:14Z) and the T11 files are still uncommitted. Same-feature tasks run in order; no parallel task started.
+- Pending for the developer: push; ui-gate criterion 3; run test:sync-e2e. The lock turns stale after 07:10Z and the next run will take over T11.

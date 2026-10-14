@@ -29,6 +29,10 @@ export interface GameState {
   readonly krellEquipmentId: string | null;
   readonly equipment: EquipmentState;
   readonly presets: readonly LoadoutPreset[];
+  /** Granted items that did not fit the bag, oldest first (boss-drops DROP-03); a sale drains it. */
+  readonly grantQueue: readonly EquipmentInstance[];
+  /** The last 500 reward grant ids applied, so a resent batch never adds an item twice. */
+  readonly appliedGrantIds: readonly string[];
 
   readonly eventLog: EventLogState;
   readonly sync: SyncStatus;
@@ -83,7 +87,8 @@ export type Notice =
       readonly hoursCredited: number;
       readonly wasCapped: boolean;
     }
-  | { readonly id: number; readonly kind: 'correction'; readonly message: string };
+  | { readonly id: number; readonly kind: 'correction'; readonly message: string }
+  | { readonly id: number; readonly kind: 'reward'; readonly message: string };
 
 export type Listener = (state: GameState, previous: GameState) => void;
 

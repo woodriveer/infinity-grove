@@ -1,9 +1,10 @@
 import createClient from 'openapi-fetch';
+import { AFFIX_TYPES, type AffixType } from '../../domain/AffixType';
 import type { PlayerEventRecord } from '../../domain/PlayerEventRecord';
 import type { PlayerStateSnapshot } from '../../domain/PlayerStateSnapshot';
 import type { components, paths } from '../../generated/api/schema';
 import type { HttpPort, Logger } from '../ports';
-import type { BackendApi, EventVerdict } from './BackendApi';
+import type { BackendApi, EventVerdict, RewardGrant } from './BackendApi';
 
 type StateDto = components['schemas']['PlayerStateDto'];
 
@@ -74,6 +75,7 @@ export class BackendApiClient implements BackendApi {
       clientEventId: (v.clientEventId ?? '').toLowerCase(),
       accepted: (v.status ?? '').toLowerCase() === 'accepted',
       rejectionReason: v.rejectionReason ?? null,
+      grants: (v.grants ?? []).flatMap(toGrant),
     }));
     return { results, state: toSnapshot(r.state) };
   }
@@ -104,6 +106,27 @@ export class BackendApiClient implements BackendApi {
 /** The backend's 401 problem body (already parsed by openapi-fetch) carries `type: "session-replaced"`; anything else is a plain 401. */
 function isSessionReplaced(error: unknown): boolean {
   return typeof error === 'object' && error !== null && (error as { type?: unknown }).type === 'session-replaced';
+}
+
+/** A malformed grant (no id, unknown kind) is dropped rather than half-applied. */
+function toGrant(g: components['schemas']['RewardGrantResponseDto']): RewardGrant[] {
+  if (!g.grantId || (g.kind !== 'Hero' && g.kind !== 'Item')) return [];
+  const affixRolls: Partial<Record<AffixType, number>> = {};
+  for (const r of g.affixRolls ?? []) {
+    const affix = AFFIX_TYPES.find((a) => a === r.affix);
+    if (affix && r.value !== undefined) affixRolls[affix] = r.value;
+  }
+  return [
+    {
+      grantId: g.grantId.toLowerCase(),
+      kind: g.kind,
+      sourceClientEventId: (g.sourceClientEventId ?? '').toLowerCase(),
+      ...(g.heroDefinitionId ? { heroDefinitionId: g.heroDefinitionId.toLowerCase() } : {}),
+      ...(g.isNewHero != null ? { isNewHero: g.isNewHero } : {}),
+      ...(g.itemId ? { itemId: g.itemId } : {}),
+      affixRolls,
+    },
+  ];
 }
 
 function wireEvent(e: PlayerEventRecord): string {

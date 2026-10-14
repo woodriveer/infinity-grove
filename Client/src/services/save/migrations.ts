@@ -3,7 +3,8 @@ import { SaveGameData } from '../../domain/SaveGameData';
 /**
  * Save format migrations (AD-12). A formatVersion bump adds a step here that turns
  * version n into n + 1; the codec runs them in order before validating. Version 1
- * is the first format; version 2 adds local.combat (stage-combat T14).
+ * is the first format; version 2 adds local.combat (stage-combat T14); version 3 adds the
+ * grant queue and applied grant ids (boss-drops T11).
  */
 const STEPS: Record<number, (save: Record<string, unknown>) => Record<string, unknown>> = {
   // v1 -> v2: fight the stage after the furthest cleared; the loader caps it to the content.
@@ -12,6 +13,11 @@ const STEPS: Record<number, (save: Record<string, unknown>) => Record<string, un
     const furthest = typeof state['furthestStageCleared'] === 'number' ? (state['furthestStageCleared'] as number) : 0;
     const local = (save['local'] ?? {}) as Record<string, unknown>;
     return { ...save, local: { ...local, combat: { stageNumber: furthest + 1, autoAdvance: true } } };
+  },
+  // v2 -> v3: nothing granted yet.
+  2: (save) => {
+    const local = (save['local'] ?? {}) as Record<string, unknown>;
+    return { ...save, local: { ...local, grantQueue: [], appliedGrantIds: [] } };
   },
 };
 

@@ -8,6 +8,7 @@ import type { StageCombatService } from '../combat/StageCombatService';
 import type { ServiceDeps } from '../core';
 import { PlayerEventLog, STALE_SEQUENCE_REASON } from '../events/PlayerEventLog';
 import type { AppLifecycle, SaveStore, SteamIdentity } from '../ports';
+import type { RewardService } from '../rewards/RewardService';
 import type { RosterService } from '../roster/RosterService';
 import type { SaveCodec } from '../save/SaveCodec';
 import { applySnapshotToLive, project, saveFromState, stateFromSave } from '../state/projection';
@@ -23,6 +24,7 @@ import type { SteamCloudSync } from './SteamCloudSync';
  */
 export class SaveSyncService {
   private lastEncoded: Uint8Array | null = null;
+  private pendingRewardsShown = false;
 
   constructor(
     private readonly deps: ServiceDeps,
@@ -33,6 +35,7 @@ export class SaveSyncService {
     private readonly backend: BackendApi,
     private readonly combat: StageCombatService,
     private readonly roster: RosterService,
+    private readonly rewards: RewardService,
     private readonly lifecycle: AppLifecycle | null = null,
   ) {}
 
@@ -90,7 +93,10 @@ export class SaveSyncService {
 
   /** Authenticates, pulls canonical state, flushes pending events, persists. Never throws. */
   async connect(): Promise<void> {
-    if (!this.isReplaced() && (await this.authenticate())) await this.pullAndFlush();
+    if (!this.isReplaced()) {
+      if (await this.authenticate()) await this.pullAndFlush();
+      else this.noteRewardsPending();
+    }
     await this.persist();
   }
 
@@ -141,6 +147,7 @@ export class SaveSyncService {
     this.setSync({ inFlight: true });
     try {
       if (this.backend.isAuthenticated || (await this.authenticate())) await this.flush();
+      else this.noteRewardsPending();
       await this.persist();
     } finally {
       this.setSync({ inFlight: false });
@@ -183,11 +190,18 @@ export class SaveSyncService {
 
   private async flush(): Promise<void> {
     const pending = this.deps.store.get().eventLog.pending;
-    if (!this.backend.isAuthenticated || pending.length === 0) return;
+    if (pending.length === 0) return;
+    if (!this.backend.isAuthenticated) {
+      this.noteRewardsPending();
+      return;
+    }
     const response = await this.backend.ingestBatch(pending);
     if (!response) {
       this.noteReplaced();
-      if (!this.isReplaced()) this.setSync({ online: false });
+      if (!this.isReplaced()) {
+        this.setSync({ online: false });
+        this.noteRewardsPending();
+      }
       return;
     }
     let s = this.deps.store.get();
@@ -211,9 +225,18 @@ export class SaveSyncService {
     }
     this.deps.store.commit({ ...s, eventLog: log });
     this.applyCanonical(response.state);
+    this.rewards.applyGrants(response.results.flatMap((r) => r.grants ?? []));
     this.setSync({ online: true, lastSyncAtMs: this.deps.clock.nowMs() });
     await this.persist();
     if (this.lastEncoded) await this.cloud.write(this.lastEncoded);
+  }
+
+  /** Drops are decided by the backend: while kill or boss events wait, say so once per session (DROP-05). */
+  private noteRewardsPending(): void {
+    if (this.pendingRewardsShown || this.isReplaced()) return;
+    if (!this.deps.store.get().eventLog.pending.some((e) => e.type === 'MonsterKillsBatch' || e.type === 'BossDefeated')) return;
+    this.pendingRewardsShown = true;
+    this.pushNotice({ kind: 'reward', message: 'Rewards pending sync' });
   }
 
   /** ApplyCanonicalStateSilently: adopt the backend's state, re-project what is still pending. */

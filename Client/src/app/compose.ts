@@ -22,6 +22,7 @@ import { emptyGameState } from '../services/state/projection';
 import { StageService } from '../services/stages/StageService';
 import { SaveSyncService } from '../services/sync/SaveSyncService';
 import { SteamCloudSync } from '../services/sync/SteamCloudSync';
+import { RewardService } from '../services/rewards/RewardService';
 import { TickDriver } from '../services/tick/TickDriver';
 import type { AppServices } from '../services/AppServices';
 import type { AppConfig } from './config';
@@ -60,7 +61,7 @@ export function compose(config: AppConfig, platform: PlatformPorts, overrides: C
   const stages = new StageService(deps);
   const codec = new SaveCodec(platform.cipher, platform.logger);
   const cloudSync = new SteamCloudSync(platform.cloudStore, codec, platform.logger);
-  const sync = new SaveSyncService(deps, platform.saveStore, codec, cloudSync, identity, backend, combat, roster, platform.lifecycle);
+  const sync = new SaveSyncService(deps, platform.saveStore, codec, cloudSync, identity, backend, combat, roster, new RewardService(deps), platform.lifecycle);
   const tick = new TickDriver(deps, combat, sync, content.settings.syncIntervalSeconds * 1000);
   const notices = new NoticeService(deps);
 

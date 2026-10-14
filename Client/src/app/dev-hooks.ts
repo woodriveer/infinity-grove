@@ -113,6 +113,6 @@ export function install(
         notices: s.notices,
       };
     },
-    world: () => ({ krellAnimation: world.krellAnimation(), field: world.fieldState() }),
+    world: () => ({ krellAnimation: world.krellAnimation(), field: world.fieldState(), damage: world.damageLog() }),
   };
 }

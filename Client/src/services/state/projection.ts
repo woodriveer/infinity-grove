@@ -22,6 +22,8 @@ export function emptyGameState(): GameState {
     krellEquipmentId: null,
     equipment: { bag: [], equippedByHero: {} },
     presets: [],
+    grantQueue: [],
+    appliedGrantIds: [],
     eventLog: PlayerEventLog.empty(),
     sync: { authenticated: false, online: false, lastSyncAtMs: 0, inFlight: false, sessionReplaced: false },
     notices: [],
@@ -70,6 +72,8 @@ export function stateFromSave(save: SaveGameData, content: ContentCatalog): Game
     krellEquipmentId: save.local.krellEquipmentId,
     equipment: { bag: save.local.equipmentBag, equippedByHero: save.local.equippedByHero },
     presets: save.local.presets,
+    grantQueue: save.local.grantQueue,
+    appliedGrantIds: save.local.appliedGrantIds,
     eventLog: log,
   };
   const live = applySnapshotToLive(s, project(save.lastReconciledState, save.unsyncedEvents), content);
@@ -91,6 +95,8 @@ export function saveFromState(s: GameState, nowMs: number): SaveGameData {
       equipmentBag: s.equipment.bag,
       equippedByHero: s.equipment.equippedByHero,
       presets: s.presets,
+      grantQueue: s.grantQueue,
+      appliedGrantIds: s.appliedGrantIds,
       krellEquipmentId: s.krellEquipmentId,
       combat: { stageNumber: s.stageCombat.stageNumber, autoAdvance: s.stageCombat.autoAdvance },
     },

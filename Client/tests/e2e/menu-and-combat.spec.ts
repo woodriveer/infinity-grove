@@ -47,6 +47,17 @@ test('combat: the squad searches, fights on its own and gamepad clicks add damag
   expect(await node(page, 'game.progress')).toMatchObject({ value: '2/10' });
 });
 
+test('combat: damage floats over the foe, and the click shows its own number', async ({ page }) => {
+  await open(page, { save: 'new-player', scene: 'game' });
+  await advance(page, 300);
+  await pad(page, 'A');
+  const clickHit = (await ig(page, (g) => g.world())).damage.at(-1);
+  expect(clickHit).toMatchObject({ text: '0.9', click: true });
+  await advance(page, 1000);
+  const hits = (await ig(page, (g) => g.world())).damage;
+  expect(hits.some((d) => !d.click)).toBe(true);
+});
+
 test('combat: keyboard Space clicks while the Combat View is focused (RFR-43)', async ({ page }) => {
   await open(page, { save: 'new-player', scene: 'game' });
   await advance(page, 300);

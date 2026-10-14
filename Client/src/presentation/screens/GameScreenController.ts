@@ -134,7 +134,7 @@ export class GameScreenController implements ScreenController {
           id: 'notices',
           rows: s.notices.map((n) => ({
             id: `notice-${n.id}`,
-            nodes: [{ id: `game.notice.${n.id}`, role: 'text' as const, label: n.message, tone: n.kind === 'offline-accrual' ? ('success' as const) : ('muted' as const) }],
+            nodes: [{ id: `game.notice.${n.id}`, role: 'text' as const, label: n.message, tone: n.kind === 'offline-accrual' || n.kind === 'reward' ? ('success' as const) : ('muted' as const) }],
           })),
         },
       ],

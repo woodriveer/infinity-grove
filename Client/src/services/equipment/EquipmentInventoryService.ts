@@ -26,6 +26,20 @@ export class EquipmentInventoryService {
     this.deps.store.commit({ ...s, equipment: { ...s.equipment, bag: [...s.equipment.bag, item] } });
   }
 
+  /**
+   * Removes an item from the bag for good (a sale or discard) and moves granted items
+   * from the queue into the freed room, oldest first (boss-drops DROP-03).
+   */
+  removeFromBag(instanceId: string): boolean {
+    const s = this.deps.store.get();
+    if (!s.equipment.bag.some((i) => i.instanceId === instanceId)) return false;
+    let bag = s.equipment.bag.filter((i) => i.instanceId !== instanceId);
+    const room = Math.max(this.deps.content.drops.bagCapacity - bag.length, 0);
+    bag = [...bag, ...s.grantQueue.slice(0, room)];
+    this.deps.store.commit({ ...s, equipment: { ...s.equipment, bag }, grantQueue: s.grantQueue.slice(room) });
+    return true;
+  }
+
   getEquipped(heroId: string): Readonly<Partial<Record<EquipmentSlot, EquipmentInstance>>> {
     return this.deps.store.get().equipment.equippedByHero[heroId] ?? {};
   }
