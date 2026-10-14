@@ -124,9 +124,11 @@ describe('RewardService via sync', () => {
   });
 
   it('offline with kill or boss events pending shows "Rewards pending sync" once per session', async () => {
-    const { app, backend } = await boot();
+    // Never connected: the fake backend's empty canonical state would drop the starter hero, and with it every kill.
+    const backend = new GrantBackend();
     backend.offline = true;
-    backend.isAuthenticated = false;
+    const app = compose({ ...defaultConfig('test'), backend: 'fake://grants', devTicket: 'test-1' }, createNodePlatform({ seed: 9 }), { backend });
+    app.sync.loadFrom(null);
     for (let i = 0; i < 30 && !app.store.get().eventLog.pending.some((e) => e.type === 'MonsterKillsBatch'); i++) {
       app.combat.step(10_000);
       app.combat.flushIncome();

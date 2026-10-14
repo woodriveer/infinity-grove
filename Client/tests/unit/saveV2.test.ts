@@ -16,7 +16,7 @@ describe('save v2', () => {
     const v1 = readJson('fixtures/legacy/save-v1-mid-game.json') as { formatVersion: number; lastReconciledState: { furthestStageCleared: number } };
     expect(v1.formatVersion).toBe(1);
     const save = SaveCodec.parsePlain(v1);
-    expect(save.formatVersion).toBe(2);
+    expect(save.formatVersion).toBe(SaveGameData.CurrentFormatVersion);
     expect(save.local.combat).toEqual({ stageNumber: v1.lastReconciledState.furthestStageCleared + 1, autoAdvance: true });
   });
 

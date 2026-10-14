@@ -43,7 +43,7 @@ jobs:
       - run: dotnet test Backend/InfinityGrove.Backend.sln -c Release --no-build
 
   contracts:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest # vectors are committed from Windows; Math.Pow differs by 1 ULP on Linux
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
